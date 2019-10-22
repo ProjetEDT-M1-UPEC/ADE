@@ -110,6 +110,10 @@ public class Constants {
 		public static final String TACHE_LIST = "/vue/taskList.fxml";
 
 		public static final String FAV_POPUP = "/vue/FavPopUp.fxml";
+		
+		public static final String ADDVERSION_POPUP = "/vue/AddVersionForm.fxml";
+		
+		public static final String VIEWVERSION_POPUP = "/vue/ViewVersion.fxml";
 
 		public static final String MAIN_SCREEN = "/vue/MainScreen.fxml";
 

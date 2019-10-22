@@ -89,6 +89,7 @@
             <Button fx:id="filter" mnemonicParsing="false" onAction="#show_Filter_PopUp" text="Filtrer" />
             <Button mnemonicParsing="false" onAction="#restoreAgenda" text="Restaurer" />
           
+        	<Button mnemonicParsing="false" onAction="#versioningCRUD" text="Versionning" />
         </items>
       </ToolBar>
       <HBox>

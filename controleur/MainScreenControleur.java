@@ -826,7 +826,79 @@ return k;
 			e1.printStackTrace();
 		}			
      }
+	
+	@FXML
+	public void versioningCRUD(ActionEvent ae) {   
+		final Stage popUp = new Stage();
+		
+		popUp.setTitle("Arborescence");
+	    popUp.initModality(Modality.APPLICATION_MODAL);
+	    
+	    BorderPane root;
+	    
+	    try {
+	    	
+	    	root = (BorderPane)FXMLLoader.load(getClass().getResource(Constants.VIEWVERSION_POPUP));
+			
+	    	Scene scene = new Scene(root);
+			
+	    	popUp.setScene(scene);
+			popUp.initOwner(Main.mainStage);
+			popUp.setOnHidden(e->{
+				/*select(importedPathI);
+				
+				try {
+					if(!Dialog_Import_ADE()) {
+						getDataShowData(importedPathI);
+						}
+						else {
+						getDataShowDataInSameTab(importedPathI);
+				}
 
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}*/
+						
+			});
+			
+			popUp.show();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		/*final Stage popUp = new Stage();
+		
+		popUp.setTitle("Arborescence");        
+		popUp.initModality(Modality.APPLICATION_MODAL);
+	    
+	    AnchorPane root;
+	    try {
+	    	
+	    	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(Constants.VIEWVERSION_POPUP));
+	    	ViewVersionController controller = new ViewVersionController();
+		    fxmlLoader.setController(controller);
+			root = fxmlLoader.load();				
+			Scene scene = new Scene(root);
+			
+			
+	        TreeItem<String> rootItem = new TreeItem<String> ("Inbox", new ImageView(
+	                new Image(getClass().getResourceAsStream("folder_16.png"))
+	        	    ));
+	        rootItem.setExpanded(true);
+	        
+	        for (int i = 1; i < 6; i++) {
+	            TreeItem<String> item = new TreeItem<String> ("Message" + i);            
+	            rootItem.getChildren().add(item);
+	        }        
+	        TreeView<String> tree = new TreeView<String> (rootItem);        
+	        
+	        root.getChildren().add(tree);
+	        popUp.setScene(scene);
+			popUp.initOwner(Main.mainStage);
+			popUp.show();
+	    } catch (IOException e1) {
+			e1.printStackTrace();
+		}*/
+     }
 	
 	private String getFileName() {
 		

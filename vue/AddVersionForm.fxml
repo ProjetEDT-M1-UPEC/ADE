@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="152.0" prefWidth="510.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TextField fx:id="nameVersionField" layoutX="245.0" layoutY="30.0" />
+      <Label layoutX="110.0" layoutY="35.0" text="Nom de cette version :" />
+      
+      <Button fx:id="filterButton" onAction="#add" layoutX="185.0" layoutY="112.0" mnemonicParsing="false" text="Ajouter" />
+      <Button fx:id="filterCancel" onAction="#close" layoutX="269.0" layoutY="112.0" mnemonicParsing="false" text="Annuler" />
+   </children>
+</AnchorPane>
