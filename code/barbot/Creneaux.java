@@ -561,6 +561,12 @@ public class Creneaux extends Agenda.AppointmentImpl implements Comparable<Crene
 		return listV2;
 	}
 
+	//retourne une copie du creneaux actuel
+	public Creneaux cpyCreneaux(){
+		Creneaux creneau = (Creneaux)this.clone();
+		return creneau;
+	}
+
 	public void setParent(Tab parent) {
 	     this.parent = parent;
     }
