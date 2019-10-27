@@ -1,5 +1,6 @@
 package modeles;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -35,8 +36,14 @@ public class Version { //TODO Mettre comparable<Version> plus tard
 	public Version getVersion(Long t) {
 		if(timestamp == t)
 			return this;
-		else
-			return alternativeVersions.get(t);
+		Iterator<Version> i = alternativeVersions.values().iterator();
+		Version v;
+		while(i.hasNext()) {
+			v = i.next().getVersion(t);
+			if(v!=null)
+				return v;
+		}
+		return null;
 	}
 	
 	public String toString() {
