@@ -1,97 +1,112 @@
 package controleur;
 
-import java.io.File;
 import java.net.URL;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXListView;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import modeles.Version;
 
-public class ViewVersionController implements Initializable{
-
-	@FXML
-	private Label jsp;
+public class ViewVersionController implements Initializable {
 
 	@FXML
-	private JFXButton btnCharge,btnCancel,btnDelete;
+	private JFXButton btnCharge, btnCancel, btnDelete;
 
-	@FXML
-	private JFXListView<String> branchList;
-
+	private TreeView<String> treeView = new TreeView<>(); 
+	private String selectedVersion = null;
+	
+	public ViewVersionController() {
+		treeView.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+			@Override
+            public void handle(MouseEvent e) {
+				String str = e.getTarget().toString();
+				Pattern pattern = Pattern.compile("@ (.*?)\"", Pattern.DOTALL);
+				Matcher matcher = pattern.matcher(str);
+				if (matcher.find()) {
+				    selectedVersion = matcher.group(1);
+				    System.out.println(selectedVersion);
+				}
+				else {
+					selectedVersion = null;
+				}
+				
+				
+            }
+        });
+	}
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub
 	}
+	
+	private TreeItem<String> getTree(){
+		Version ver = AddVersionController.rootVersion;
+		if(ver == null) return new TreeItem<String>("Aucune version enregistrée");
+		return ver.toTreeItemString();
+	}
+	
+	@FXML
+	private void charge(ActionEvent e) {
+		treeView.setRoot(getTree());
+		JFXButton btnImport = new JFXButton ("Choisir cette version");
+		Stage primaryStage = new Stage();
+		BorderPane b = new BorderPane();
+		btnImport.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				if(selectedVersion!=null) {
+					try {
+					      DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy à HH:mm:ss.SSS");
+					      Date date = formatter.parse(selectedVersion);
+					      Timestamp timeStampDate = new Timestamp(date.getTime());
+					      AddVersionController.changeVersion(timeStampDate.getTime());
+					    } catch (Exception excep) {
+					      System.out.println("Exception btnImport :" + excep);
+					    }
+					primaryStage.close();
+					cancel(null);
+				}
+			}
+		});
 
-	 public TreeItem<String> getNodesForDirectory(File directory) { //Returns a TreeItem representation of the specified directory
-	        TreeItem<String> root = new TreeItem<String>(directory.getName());
-	        for(File f : directory.listFiles()) {
-	         System.out.println("Loading " + f.getName());
-	         if(f.isDirectory()) { //Then we call the function recursively
-	          root.getChildren().add(getNodesForDirectory(f));
-	         } else {
-	          root.getChildren().add(new TreeItem<String>(f.getName()));
-	         }
-	        }
-	        return root;
-	       }
+		b.setTop(btnImport);
+		b.setCenter(treeView);
+		primaryStage.setScene(new Scene(b, 600, 400));
+		primaryStage.setTitle("Folder View");
+		primaryStage.show();
 
-		@FXML
-		private void charge(ActionEvent e) {
-			TreeView<String> a = new TreeView<String>();
-			Stage primaryStage= (Stage) btnCharge.getScene().getWindow();
-			 BorderPane b = new BorderPane();
-			btnCharge.setOnAction(new EventHandler<ActionEvent>() {
-			      @Override public void handle(ActionEvent e) {
-			       DirectoryChooser dc = new DirectoryChooser();
-			       dc.setInitialDirectory(new File(System.getProperty("user.home")));
-			       File choice = dc.showDialog(primaryStage);
-			       if(choice == null || ! choice.isDirectory()) {
-			        Alert alert = new Alert(AlertType.ERROR);
-			        alert.setHeaderText("Could not open directory");
-			        alert.setContentText("The file is invalid.");
+	}
 
-			        alert.showAndWait();
-			       } else {
-			        a.setRoot(getNodesForDirectory(choice));
-			       }
-			      }
-			     });
-
-		     b.setTop(btnCharge);
-		     b.setCenter(a);
-		     primaryStage.setScene(new Scene(b, 600, 400));
-		     primaryStage.setTitle("Folder View");
-		     primaryStage.show();
-
-		}
 	@FXML
 	private void compare(ActionEvent e) {
 
 	}
+
 	@FXML
-    private void cancel(ActionEvent e) {
-		 Stage stage = (Stage) btnCancel.getScene().getWindow();
-		 stage.close();
-    }
+	private void cancel(ActionEvent e) {
+		Stage stage = (Stage) btnCancel.getScene().getWindow();
+		stage.close();
+	}
+
 	@FXML
 	private void selectVersion(ActionEvent e) {
 
 	}
-
 
 }
