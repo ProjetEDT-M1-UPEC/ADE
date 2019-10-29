@@ -1,12 +1,15 @@
 package modeles;
 
-import java.util.Iterator;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import code.barbot.Creneaux;
+import javafx.scene.control.TreeItem;
 
 public class Version implements Comparable<Version> { // TODO Mettre
 														// comparable<Version>
@@ -41,7 +44,7 @@ public class Version implements Comparable<Version> { // TODO Mettre
 	}
 
 	public Version getVersion(Long t) {
-		if (timestamp == t)
+		if (timestamp.compareTo(t) == 0)
 			return this;
 		Iterator<Version> i = alternativeVersions.values().iterator();
 		Version v;
@@ -61,7 +64,19 @@ public class Version implements Comparable<Version> { // TODO Mettre
 		});
 		return sb.toString();
 	}
-
+	
+	public TreeItem<String> toTreeItemString() {
+		Date date = new Date(timestamp);
+		String s = new SimpleDateFormat("dd-MM-yyyy à HH:mm:ss.SSS").format(date);
+		TreeItem<String> tree = new TreeItem<>(name+" @ "+s);
+		if (alternativeVersions!=null && !alternativeVersions.isEmpty()) {
+			alternativeVersions.values().forEach(alt -> {
+				tree.getChildren().add(alt.toTreeItemString());
+			});
+		}
+		return tree;
+	}
+	
 	@Override
 	public int compareTo(Version o) {
 		return 0;

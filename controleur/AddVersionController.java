@@ -53,11 +53,13 @@ public class AddVersionController implements Initializable{
 			currentVersion = currentVersion.addAltVer(key, value);
 		}
 		String v = value+"@"+key;
-		System.out.println(rootVersion);
+		//System.out.println(rootVersion);
+		System.out.println(v);
 		this.close();
 	}
 	
-	public void changeVersion(Long t) {
+	public static void changeVersion(Long t) {
+		System.out.println(t);
 		Version wantedVersion = rootVersion.getVersion(t);
 		if(wantedVersion!=null)
 			currentVersion = wantedVersion;

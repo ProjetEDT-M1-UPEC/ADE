@@ -112,7 +112,10 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) {
+<<<<<<< HEAD
 		
+=======
+>>>>>>> 2dc79f27e2fa2a004bc56a99ab18d7a63e2cc15f
 		launch(args);
 	}
 }
