@@ -67,7 +67,7 @@ public class Version implements Comparable<Version> { // TODO Mettre
 	
 	public TreeItem<String> toTreeItemString() {
 		Date date = new Date(timestamp);
-		String s = new SimpleDateFormat("dd-MM-yyyy à HH:mm:ss.SSS").format(date);
+		String s = new SimpleDateFormat(Constants.DATE_FORMAT).format(date);
 		TreeItem<String> tree = new TreeItem<>(name+" @ "+s);
 		if (alternativeVersions!=null && !alternativeVersions.isEmpty()) {
 			alternativeVersions.values().forEach(alt -> {

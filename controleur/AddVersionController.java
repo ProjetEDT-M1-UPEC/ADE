@@ -11,9 +11,6 @@ import javafx.stage.Stage;
 import modeles.Version;
 
 public class AddVersionController implements Initializable{
-	
-	
-	private MainScreenControleur mainScreenCtr;
 	private Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 	
 	private static Version currentVersion = null;
@@ -24,9 +21,7 @@ public class AddVersionController implements Initializable{
 	@FXML
 	TextField nameVersionField;
 	
-	public AddVersionController(MainScreenControleur sc) {
-		mainScreenCtr = sc;
-	}
+	
 	public AddVersionController() {
 		//VIDE CTRL V
 	}

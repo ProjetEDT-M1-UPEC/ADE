@@ -180,4 +180,5 @@ public static final String EDIT_SHORTCUT = "Modifier le raccourci";
 
 		public static final String NEW_TASKFXML = "/vue/newTask.fxml";
 		
+		public static final String DATE_FORMAT = "EEEE, d MMMM yyyy, HH:mm:ss.SSS, zzz"; 
 }

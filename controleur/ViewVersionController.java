@@ -1,5 +1,6 @@
 package controleur;
 
+import java.io.File;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -16,76 +17,80 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import modeles.Constants;
 import modeles.Version;
 
 public class ViewVersionController implements Initializable {
 
 	@FXML
-	private JFXButton btnCharge, btnCancel, btnDelete;
+	private JFXButton btnView, btnCharge, btnCancel;
 
-	private TreeView<String> treeView = new TreeView<>(); 
+	private TreeView<String> treeView = new TreeView<>();
 	private String selectedVersion = null;
-	
+
 	public ViewVersionController() {
-		treeView.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+		treeView.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 			@Override
-            public void handle(MouseEvent e) {
+			public void handle(MouseEvent e) {
 				String str = e.getTarget().toString();
 				Pattern pattern = Pattern.compile("@ (.*?)\"", Pattern.DOTALL);
 				Matcher matcher = pattern.matcher(str);
 				if (matcher.find()) {
-				    selectedVersion = matcher.group(1);
-				    System.out.println(selectedVersion);
-				}
-				else {
+					selectedVersion = matcher.group(1);
+					System.out.println(selectedVersion);
+				} else {
 					selectedVersion = null;
 				}
-				
-				
-            }
-        });
+
+			}
+		});
 	}
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub
 	}
-	
-	private TreeItem<String> getTree(){
+
+	private TreeItem<String> getTree() {
 		Version ver = AddVersionController.rootVersion;
-		if(ver == null) return new TreeItem<String>("Aucune version enregistrée");
+		if (ver == null)
+			return new TreeItem<String>("Aucune version enregistrée");
 		return ver.toTreeItemString();
 	}
-	
+
 	@FXML
-	private void charge(ActionEvent e) {
+	private void view(ActionEvent e) {
 		treeView.setRoot(getTree());
-		JFXButton btnImport = new JFXButton ("Choisir cette version");
+		JFXButton btnSelect = new JFXButton("Choisir cette version");
 		Stage primaryStage = new Stage();
 		BorderPane b = new BorderPane();
-		btnImport.setOnAction(new EventHandler<ActionEvent>() {
+		btnSelect.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				if(selectedVersion!=null) {
+				if (selectedVersion != null) {
 					try {
-					      DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy à HH:mm:ss.SSS");
-					      Date date = formatter.parse(selectedVersion);
-					      Timestamp timeStampDate = new Timestamp(date.getTime());
-					      AddVersionController.changeVersion(timeStampDate.getTime());
-					    } catch (Exception excep) {
-					      System.out.println("Exception btnImport :" + excep);
-					    }
+						DateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT);
+						Date date = formatter.parse(selectedVersion);
+						Timestamp timeStampDate = new Timestamp(date.getTime());
+						AddVersionController.changeVersion(timeStampDate.getTime());
+					} catch (Exception excep) {
+						System.out.println("Exception btnImport :" + excep);
+					}
 					primaryStage.close();
 					cancel(null);
 				}
 			}
 		});
 
-		b.setTop(btnImport);
+		b.setTop(btnSelect);
 		b.setCenter(treeView);
 		primaryStage.setScene(new Scene(b, 600, 400));
 		primaryStage.setTitle("Folder View");
@@ -93,9 +98,40 @@ public class ViewVersionController implements Initializable {
 
 	}
 
-	@FXML
-	private void compare(ActionEvent e) {
+	public TreeItem<String> getNodesForDirectory(File directory) {
+		TreeItem<String> root = new TreeItem<String>(directory.getName());
+		for (File f : directory.listFiles()) {
+			System.out.println("Loading " + f.getName());
+			if (f.isDirectory()) { // Then we call the function recursively
+				root.getChildren().add(getNodesForDirectory(f));
+			} else {
+				root.getChildren().add(new TreeItem<String>(f.getName()));
+			}
+		}
+		return root;
+	}
 
+	@FXML
+	private void charge(ActionEvent e) {
+		TreeView<String> a = new TreeView<String>();
+		Stage primaryStage = new Stage();
+		BorderPane b = new BorderPane();
+		
+		DirectoryChooser dc = new DirectoryChooser();
+		dc.setInitialDirectory(new File(System.getProperty("user.home")));
+		File choice = dc.showDialog(primaryStage);
+		if (choice == null || !choice.isDirectory()) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setHeaderText("Could not open directory");
+			alert.setContentText("The file is invalid.");
+			alert.showAndWait();
+		} else {
+			a.setRoot(getNodesForDirectory(choice));
+			b.setCenter(a);
+			primaryStage.setScene(new Scene(b, 600, 400));
+			primaryStage.setTitle("Folder View");
+			primaryStage.show();
+		}		
 	}
 
 	@FXML

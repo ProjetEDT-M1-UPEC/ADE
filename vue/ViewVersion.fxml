@@ -13,8 +13,8 @@
    <bottom>
       <ButtonBar prefHeight="40.0" prefWidth="1" BorderPane.alignment="CENTER">
          <buttons>
+            <JFXButton fx:id="btnView" buttonType="RAISED" cache="true" onAction="#view" ripplerFill="#050f9e" text="Visualiser" />
             <JFXButton fx:id="btnCharge" buttonType="RAISED" cache="true" onAction="#charge" ripplerFill="#050f9e" text="Charger" />
-            <JFXButton fx:id="btnDelete" buttonType="RAISED" cache="true" onAction="#compare" ripplerFill="#050f9e" text="Comparer" />
             <JFXButton fx:id="btnCancel" buttonType="RAISED" cache="true" onAction="#cancel" ripplerFill="#050f9e" text="Annuler   " />
          </buttons>
       </ButtonBar>
