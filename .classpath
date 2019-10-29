@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path=""/>
+	<classpathentry kind="lib" path="C:/Users/pc/Desktop/projet long M1/ADE_FX(1)/ADE_FX/app/libs/controlsfx-8.40.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/pc/Desktop/projet long M1/ADE_FX(1)/ADE_FX/app/libs/jackson-annotations-2.9.8.jar"/>
+	<classpathentry kind="lib" path="C:/Users/pc/Desktop/projet long M1/ADE_FX(1)/ADE_FX/app/libs/jackson-core-2.9.8.jar"/>
+	<classpathentry kind="lib" path="C:/Users/pc/Desktop/projet long M1/ADE_FX(1)/ADE_FX/app/libs/jackson-databind-2.9.8.jar"/>
+	<classpathentry kind="lib" path="C:/Users/pc/Desktop/projet long M1/ADE_FX(1)/ADE_FX/app/libs/jfoenix-8.0.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/pc/Desktop/projet long M1/ADE_FX(1)/ADE_FX/app/libs/jfxtras-all-8.0-r6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/pc/Desktop/projet long M1/ADE_FX(1)/ADE_FX/app/libs/jsoup-1.10.2.jar"/>
+	<classpathentry kind="output" path=""/>
+</classpath>

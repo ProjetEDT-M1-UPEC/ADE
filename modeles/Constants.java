@@ -143,13 +143,18 @@ public static final String EDIT_SHORTCUT = "Modifier le raccourci";
 		
 		public static final String PICS_ADD = "pics/add_icon.png";
 		
-		public static final String PICS_UNDO = "pics/undo.png";
+		public static final String PICS_UNDO = "pics/undo_simple.png";
 		
-		public static final String PICS_REDO = "pics/redo.png";
+		public static final String PICS_REDO = "pics/redo_simple.png";
 		
-		public static final String PICS_OPEN = "pics/open.png";
 		
-		public static final String PICS_SAVE = "pics/save.png";
+		public static final String PICS_OPEN = "pics/open_simple.png";
+		
+		public static final String PICS_OPEN_hover = "pics/open_hover.png"; //** lety
+		
+		public static final String PICS_SAVE = "pics/save_simple.png";
+		
+		public static final String PICS_SAVE_hover = "pics/save_hover.png"; // ** lety
 		
 		public static final String PICS_DIFF = "pics/diff_icon.png";
 		

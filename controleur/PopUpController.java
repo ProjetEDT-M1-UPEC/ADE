@@ -3,6 +3,8 @@ package controleur;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javax.swing.JOptionPane;
+
 import code.barbot.Creneaux;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -78,9 +80,9 @@ public class PopUpController implements Initializable{
 		
 			if((creneaux.getStartTime().after(creneaux.getStartTime()) && creneaux.getStartTime().before(creneaux.getEndTime()))
 				||
-			(creneaux.getEndTime().after(creneaux.getStartTime()) && creneaux.getEndTime().before(creneaux.getEndTime()))	
+			(creneaux.getEndTime().after(creneaux.getStartTime()) && creneaux.getEndTime().before(creneaux.getEndTime()))	 
 				||
-			(creneaux.getStartTime().before(creneaux.getStartTime())&& creneaux.getEndTime().after(creneaux.getEndTime()))){
+			(creneaux.getStartTime().before(creneaux.getStartTime())&& creneaux.getEndTime().after(creneaux.getEndTime()))){	
 				
 				if(!Controle(creneaux.getProf(),prof.getText(),labProf)) return;
 				if(!Controle(creneaux.getSalle(),classroom.getText(),labSalle)) return;
@@ -97,8 +99,17 @@ public class PopUpController implements Initializable{
 		
 		if(!group.getText().equals(creneaux.getGroup())) creneaux.setGroup(group.getText());
 		// from localdatetime to cal
-		if(!start.getLocalDateTime().equals(creneaux.getStartLocalDateTime())) creneaux.setStartLocalDateTime(start.getLocalDateTime());
+		//***** deb Lety
+		if((!start.getLocalDateTime().equals(creneaux.getStartLocalDateTime()) ) && (start.getLocalDateTime().isBefore(creneaux.getEndLocalDateTime())) ) 
+			{ creneaux.setStartLocalDateTime(start.getLocalDateTime());
+			  System.out.println("heeey kikouu !! ");
+			}
 		
+		else if (start.getLocalDateTime().isAfter(creneaux.getEndLocalDateTime())) { 
+			System.out.println("m*** ps kikouu !! ");
+			JOptionPane.showMessageDialog(null, "votre date et/ou heure de debut et de fin sont incohérant", "Erreur", JOptionPane.ERROR_MESSAGE);
+		}
+		//** fin lety
 		if(!end.getLocalDateTime().equals(creneaux.getEndLocalDateTime())) creneaux.setEndLocalDateTime(end.getLocalDateTime());
 		
 		Stage stage = (Stage) save.getScene().getWindow();

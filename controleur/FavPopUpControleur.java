@@ -29,6 +29,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -36,8 +37,11 @@ import modeles.Constants;
 import modeles.Shortcut;
 
 public class FavPopUpControleur implements Initializable{
-
-	private static final String PICS_ADD = "pics/add_icon.png";
+	
+	private static final String PICS_ADD = "pics/add_simple.png";
+	private static final String PICS_ADD_hover = "pics/add_survol.png";
+	
+	//private static final String PICS_ADD = "pics/add_icon.png";
 	private static final String PICS_EDIT = "pics/edit_icon.png";
 	private static final String PICS_DELETE = "pics/delete_icon.png";
 	private static final String PICS_SHORTUCT = "pics/shortuct1.png";
@@ -83,8 +87,30 @@ public class FavPopUpControleur implements Initializable{
 	private void setScortuctMenuStyle() {
 		int size=30;
 			ImageView addImage=new ImageView(PICS_ADD);
+			ImageView addImageHover=new ImageView(PICS_ADD_hover); // ** lety
 			addImage.setFitWidth(size);
 			addImage.setFitHeight(size);
+			
+			//  deb lety** 
+					addImage.setFitWidth(size);
+					addImage.setFitHeight(size);
+					
+					addButton.addEventHandler(MouseEvent.MOUSE_ENTERED,
+					        new EventHandler<MouseEvent>() {
+					          @Override
+					          public void handle(MouseEvent e) {
+					        	  addButton.setGraphic(addImageHover);
+					          }
+					        });
+					addButton.addEventHandler(MouseEvent.MOUSE_EXITED,
+					        new EventHandler<MouseEvent>() {
+					          @Override
+					          public void handle(MouseEvent e) {
+					        	  addButton.setGraphic(addImage);
+					          }
+					        });
+					//** fin lety
+			
 			addButton.setGraphic(addImage);
 			ImageView editImage=new ImageView(PICS_EDIT);
 			editImage.setFitWidth(size);

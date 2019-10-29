@@ -5,13 +5,18 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.swing.JOptionPane;
+
 import jfxtras.scene.control.agenda.Agenda;
 import jfxtras.scene.control.agenda.Agenda.AppointmentGroup;
 import jfxtras.scene.control.agenda.Agenda.LocalDateTimeRange;
@@ -515,6 +520,26 @@ public class Creneaux extends Agenda.AppointmentImpl implements Comparable<Crene
 		old_StartCal=getStartTime();
 		super.setStartTime(value);
 	}
+	/*
+	//**** lety deb
+	@Override
+	public void setStartTime(Calendar value) { //*****************lety
+		System.out.println("kikouu000!!!!");
+      TimeZone tz = value.getTimeZone();
+      ZoneId zid = tz == null ? ZoneId.systemDefault() : tz.toZoneId();
+      LocalDateTime newD = LocalDateTime.ofInstant(value.toInstant(), zid);
+		if ( this.getEndLocalDateTime().isAfter(newD) ) { //** letyy 
+			System.out.println("kikouu11!!!!");
+		old_StartCal=getStartTime();
+		super.setStartTime(value);
+		
+		}
+		else {
+			System.out.println("kikouu2222!!!!");
+			//JOptionPane.showMessageDialog(null, "votre date et/ou heure de debut et de fin sont incohérant", "Erreur", JOptionPane.ERROR_MESSAGE);
+		}
+	}*/
+	//** fin lety
 
 	public void back() {
 		super.setStartTime(old_StartCal);

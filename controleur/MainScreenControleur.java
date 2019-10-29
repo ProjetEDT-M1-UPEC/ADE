@@ -42,6 +42,7 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -140,20 +141,64 @@ public class MainScreenControleur implements Initializable {
 	 * Initialise les styles des boutons présents sur l'écran principal
 	 */
     private void initButtons() {
-    	int size=15;
+    	int size=20;
+    	int size2= 30;
     	ImageView openImage=new ImageView(Constants.PICS_OPEN);
-		openImage.setFitHeight(size);
-		openImage.setFitWidth(size);
+    	ImageView openImageHover=new ImageView(Constants.PICS_OPEN_hover); // lety*****
+		
+		
+	//  deb lety** 
+				
+		openButton.addEventHandler(MouseEvent.MOUSE_ENTERED,
+		        new EventHandler<MouseEvent>() {
+		          @Override
+		          public void handle(MouseEvent e) {
+		        	  
+		        	  openButton.setGraphic(openImageHover);
+		        	  
+		          }
+		        });
+		openButton.addEventHandler(MouseEvent.MOUSE_EXITED,
+		        new EventHandler<MouseEvent>() {
+		          @Override
+		          public void handle(MouseEvent e) {
+		        	  openButton.setGraphic(openImage);
+		          }
+		        });
+		//** fin lety
+		
 		openButton.setGraphic(openImage);
 		ImageView saveImage=new ImageView(Constants.PICS_SAVE);
-		saveImage.setFitHeight(size);
-		saveImage.setFitWidth(size);
+		
+		//---lety*****~~ debut ~~
+		ImageView saveImageHover=new ImageView(Constants.PICS_SAVE_hover);
+		
+		
+		
+		saveButton.addEventHandler(MouseEvent.MOUSE_ENTERED,
+		        new EventHandler<MouseEvent>() {
+		          @Override
+		          public void handle(MouseEvent e) {
+		        	  saveButton.setGraphic(saveImageHover);
+		          }
+		        });
+		saveButton.addEventHandler(MouseEvent.MOUSE_EXITED,
+		        new EventHandler<MouseEvent>() {
+		          @Override
+		          public void handle(MouseEvent e) {
+		        	  saveButton.setGraphic(saveImage);
+		          }
+		        });
+		//---lety*****~~ fin ~~
+		
 		saveButton.setGraphic(saveImage);
     	ImageView undoImage=new ImageView(Constants.PICS_UNDO);
 		undoImage.setFitHeight(size);
 		undoImage.setFitWidth(size);
 		undoButton.setGraphic(undoImage);
+		
 		ImageView redoImage=new ImageView(Constants.PICS_REDO);
+		
 		redoImage.setFitHeight(size);
 		redoImage.setFitWidth(size);
 		redoButton.setGraphic(redoImage);
