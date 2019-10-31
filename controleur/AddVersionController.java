@@ -12,51 +12,56 @@ import modeles.Version;
 
 public class AddVersionController implements Initializable{
 	private Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-	
+
 	private static Version currentVersion = null;
 	public static Version rootVersion = null;
-	
-	
-	
+
+
+
 	@FXML
 	TextField nameVersionField;
-	
-	
+
+
 	public AddVersionController() {
 		//VIDE CTRL V
 	}
-	
+
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		//TODO ???
 	}
-	
+
 	public void close() {
 		Stage stage = (Stage) nameVersionField.getScene().getWindow();
 		stage.close();
 	}
-	
+
 	public void add() {
 		Long key = timestamp.getTime();
 		String value = nameVersionField.getText();
 		if(rootVersion == null) {
-			currentVersion = new Version(key, value);
+			currentVersion = new Version(null,key, value);
 			rootVersion = currentVersion;
 		}
 		else {
-			currentVersion = currentVersion.addAltVer(key, value);
+			currentVersion = currentVersion.addAltVer(currentVersion,key, value);
 		}
 		String v = value+"@"+key;
 		//System.out.println(rootVersion);
 		System.out.println(v);
 		this.close();
 	}
-	
+
 	public static void changeVersion(Long t) {
 		System.out.println(t);
 		Version wantedVersion = rootVersion.getVersion(t);
 		if(wantedVersion!=null)
 			currentVersion = wantedVersion;
 	}
+	public static Version dupliVersion(Long t) {
+		System.out.println(t);
+		return rootVersion.getVersion(t);
+	}
+
 }
