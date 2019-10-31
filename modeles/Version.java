@@ -18,12 +18,19 @@ public class Version implements Comparable<Version> { // TODO Mettre
 	private String name;
 	private Map<Long, Version> alternativeVersions = new TreeMap<>();
 	private List<Creneaux> creneauxList = new ArrayList<>();
+	private Version parent;
 	// TODO en plus de l'emploi du temps class TimeTable
 
-	public Version(Long t, String str) {
+	public Version(Version parent,Long t, String str) {
+		this.parent=parent;
 		timestamp = t;
 		name = str;
 	}
+
+	public Version getParent(){
+		return this.parent;
+	}
+
 
 	public String getName() {
 		return name;
@@ -33,10 +40,13 @@ public class Version implements Comparable<Version> { // TODO Mettre
 		return timestamp;
 	}
 
-	public Version addAltVer(Long t, String str) {
-		Version ver = new Version(t, str);
+	public Version addAltVer(Version parent,Long t, String str) {
+		Version ver = new Version(parent,t, str);
 		alternativeVersions.put(t, ver);
 		return ver;
+	}
+	public void addAltVer(Version v) {
+		alternativeVersions.put(v.timestamp,v);
 	}
 
 	public boolean containsAltVer(Long t) { // Utile ou pas ?
@@ -64,7 +74,7 @@ public class Version implements Comparable<Version> { // TODO Mettre
 		});
 		return sb.toString();
 	}
-	
+
 	public TreeItem<String> toTreeItemString() {
 		Date date = new Date(timestamp);
 		String s = new SimpleDateFormat(Constants.DATE_FORMAT).format(date);
@@ -76,7 +86,7 @@ public class Version implements Comparable<Version> { // TODO Mettre
 		}
 		return tree;
 	}
-	
+
 	@Override
 	public int compareTo(Version o) {
 		return 0;
