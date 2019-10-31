@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -70,6 +71,7 @@ public class ViewVersionController implements Initializable {
 	private void view(ActionEvent e) {
 		treeView.setRoot(getTree());
 		JFXButton btnSelect = new JFXButton("Choisir cette version");
+		JFXButton btnDuplicate = new JFXButton("Dupliquer cette version");
 		Stage primaryStage = new Stage();
 		BorderPane b = new BorderPane();
 		btnSelect.setOnAction(new EventHandler<ActionEvent>() {
@@ -89,13 +91,42 @@ public class ViewVersionController implements Initializable {
 				}
 			}
 		});
+		btnDuplicate.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				if (selectedVersion != null) {
+					try {
+						Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+						Long time = timestamp.getTime();
+						Version v=AddVersionController.dupliVersion(getTimeStamp(selectedVersion));
+                        Version vDupli=new Version(v.getParent(),time,v.getName());
+                        v.getParent().addAltVer(vDupli);
+
+					} catch (Exception excep) {
+						System.out.println("Exception btnImport :" + excep);
+					}
+					primaryStage.close();
+					cancel(null);
+				}
+			}
+		});
 
 		b.setTop(btnSelect);
+		b.setRight(btnDuplicate);
 		b.setCenter(treeView);
 		primaryStage.setScene(new Scene(b, 600, 400));
 		primaryStage.setTitle("Folder View");
 		primaryStage.show();
 
+	}
+
+
+
+	private Long getTimeStamp(String selectedVersion) throws ParseException {
+		DateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT);
+		Date date = formatter.parse(selectedVersion);
+		Timestamp timeStampDate = new Timestamp(date.getTime());
+		return timeStampDate.getTime();
 	}
 
 	public TreeItem<String> getNodesForDirectory(File directory) {
@@ -116,7 +147,7 @@ public class ViewVersionController implements Initializable {
 		TreeView<String> a = new TreeView<String>();
 		Stage primaryStage = new Stage();
 		BorderPane b = new BorderPane();
-		
+
 		DirectoryChooser dc = new DirectoryChooser();
 		dc.setInitialDirectory(new File(System.getProperty("user.home")));
 		File choice = dc.showDialog(primaryStage);
@@ -131,7 +162,7 @@ public class ViewVersionController implements Initializable {
 			primaryStage.setScene(new Scene(b, 600, 400));
 			primaryStage.setTitle("Folder View");
 			primaryStage.show();
-		}		
+		}
 	}
 
 	@FXML
