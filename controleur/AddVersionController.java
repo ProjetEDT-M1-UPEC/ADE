@@ -16,12 +16,10 @@ public class AddVersionController implements Initializable {
 	TextField nameVersionField;
 
 	public AddVersionController() {
-		// VIDE CTRL V
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		// TODO ???
 	}
 
 	@FXML

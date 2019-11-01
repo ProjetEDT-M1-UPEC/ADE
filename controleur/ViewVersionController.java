@@ -61,16 +61,11 @@ public class ViewVersionController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		// TODO Auto-generated method stub
-	}
-
-	private TreeItem<String> getTreeItem() {
-		return Version.getTreeItem();
 	}
 
 	@FXML
 	private void view(ActionEvent e) {
-		treeView.setRoot(getTreeItem());
+		treeView.setRoot(Version.getTreeItem());
 		JFXButton btnSelect = new JFXButton("Choisir cette version");
 		JFXButton btnDuplicate = new JFXButton("Dupliquer cette version");
 		JFXButton btnSave = new JFXButton("Sauvegarder cette version");
