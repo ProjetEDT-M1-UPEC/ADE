@@ -24,6 +24,7 @@ public class Tab extends javafx.scene.control.Tab{
 	private int limit=200;
 	private MainScreenControleur parent;
 	private UndoRedoManager<AgendaEvent> back,next;
+	private long versionId = 0;
 	
 	/**
 	 * Constructeur de la classe Tab
@@ -40,9 +41,20 @@ public class Tab extends javafx.scene.control.Tab{
 		back=new UndoRedoManager<AgendaEvent>(limit);
 		next=new  UndoRedoManager<AgendaEvent>(limit);
 		this.parent=parent;
-
 	}
 	
+	public Tab(AgendaCustom agenda, MainScreenControleur parent, long l) {
+		this(agenda, parent);
+		versionId = l;
+	}
+	
+	public long getVersionId() {
+		return versionId;
+	}
+	
+	public void setVersionId(long l) {
+		versionId = l;
+	}
 	/**
 	 * Constructeur de la classe Tab
 	 * @param agenda

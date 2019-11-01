@@ -10,13 +10,13 @@
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="controleur.ViewVersionController">
-   <bottom>
-      <ButtonBar prefHeight="40.0" prefWidth="1" BorderPane.alignment="CENTER">
+   <center>
+      <ButtonBar prefHeight="40.0" prefWidth="50" BorderPane.alignment="CENTER">
          <buttons>
-            <JFXButton fx:id="btnView" buttonType="RAISED" cache="true" onAction="#view" ripplerFill="#050f9e" text="Visualiser" />
-            <JFXButton fx:id="btnCharge" buttonType="RAISED" cache="true" onAction="#charge" ripplerFill="#050f9e" text="Charger" />
-            <JFXButton fx:id="btnCancel" buttonType="RAISED" cache="true" onAction="#cancel" ripplerFill="#050f9e" text="Annuler   " />
+            <JFXButton fx:id="btnView" cache="true" onAction="#view" text="Visualiser" style="-fx-cursor:hand;-fx-text-fill:black;-fx-background-color:#d5d6e6;"/>
+            <JFXButton fx:id="btnCharge" cache="true" onAction="#charge" text="Charger" style="-fx-cursor:hand;-fx-text-fill:black;-fx-background-color:#d5d6e6;"/>
+            <JFXButton fx:id="btnCancel" cache="true" onAction="#cancel" text="Annuler" style="-fx-cursor:hand;-fx-text-fill:black;-fx-background-color:#d5d6e6;"/>
          </buttons>
       </ButtonBar>
-   </bottom>
+   </center>
 </BorderPane>

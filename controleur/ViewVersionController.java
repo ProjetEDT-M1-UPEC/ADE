@@ -11,6 +11,8 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JOptionPane;
+
 import com.jfoenix.controls.JFXButton;
 
 import javafx.event.ActionEvent;
@@ -46,7 +48,7 @@ public class ViewVersionController implements Initializable {
 				Matcher matcher = pattern.matcher(str);
 				if (matcher.find()) {
 					selectedVersion = matcher.group(1);
-					System.out.println(selectedVersion);
+					// System.out.println(selectedVersion);
 				} else {
 					selectedVersion = null;
 				}
@@ -60,16 +62,13 @@ public class ViewVersionController implements Initializable {
 		// TODO Auto-generated method stub
 	}
 
-	private TreeItem<String> getTree() {
-		Version ver = AddVersionController.rootVersion;
-		if (ver == null)
-			return new TreeItem<String>("Aucune version enregistrée");
-		return ver.toTreeItemString();
+	private TreeItem<String> getTreeItem() {
+		return Version.getTreeItem();
 	}
 
 	@FXML
 	private void view(ActionEvent e) {
-		treeView.setRoot(getTree());
+		treeView.setRoot(getTreeItem());
 		JFXButton btnSelect = new JFXButton("Choisir cette version");
 		JFXButton btnDuplicate = new JFXButton("Dupliquer cette version");
 		Stage primaryStage = new Stage();
@@ -79,10 +78,7 @@ public class ViewVersionController implements Initializable {
 			public void handle(ActionEvent e) {
 				if (selectedVersion != null) {
 					try {
-						DateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT);
-						Date date = formatter.parse(selectedVersion);
-						Timestamp timeStampDate = new Timestamp(date.getTime());
-						AddVersionController.changeVersion(timeStampDate.getTime());
+						Version.changeVersion(getTimeStamp(selectedVersion));
 					} catch (Exception excep) {
 						System.out.println("Exception btnImport :" + excep);
 					}
@@ -96,17 +92,17 @@ public class ViewVersionController implements Initializable {
 			public void handle(ActionEvent e) {
 				if (selectedVersion != null) {
 					try {
-						Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-						Long time = timestamp.getTime();
-						Version v=AddVersionController.dupliVersion(getTimeStamp(selectedVersion));
-                        Version vDupli=new Version(v.getParent(),time,v.getName());
-                        v.getParent().addAltVer(vDupli);
-
+						if (Version.dupliVersion(getTimeStamp(selectedVersion))) {
+							primaryStage.close();
+							cancel(null);
+						} else {
+							JOptionPane.showMessageDialog(null,
+									"Vous ne pouvez pas dupliquer la racine de l'arborescence.", "Erreur",
+									JOptionPane.ERROR_MESSAGE);
+						}
 					} catch (Exception excep) {
-						System.out.println("Exception btnImport :" + excep);
+						System.out.println("Exception btnDuplic :" + excep);
 					}
-					primaryStage.close();
-					cancel(null);
 				}
 			}
 		});
@@ -119,8 +115,6 @@ public class ViewVersionController implements Initializable {
 		primaryStage.show();
 
 	}
-
-
 
 	private Long getTimeStamp(String selectedVersion) throws ParseException {
 		DateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT);
@@ -170,10 +164,4 @@ public class ViewVersionController implements Initializable {
 		Stage stage = (Stage) btnCancel.getScene().getWindow();
 		stage.close();
 	}
-
-	@FXML
-	private void selectVersion(ActionEvent e) {
-
-	}
-
 }

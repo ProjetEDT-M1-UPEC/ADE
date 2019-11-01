@@ -74,6 +74,7 @@ public class PopUpController implements Initializable {
 	 */
 	public void saveApt() {
 		// Kenza job ... extends Khaled job implemetns Lety job
+		
 		if (start.getLocalDateTime().isAfter(end.getLocalDateTime())) {
 			System.out.println("bad kikouu !!!");
 			JOptionPane.showMessageDialog(null, "Votre date et/ou heure de debut et de fin sont incohérentes !", "Erreur",
@@ -97,26 +98,28 @@ public class PopUpController implements Initializable {
 						return;
 				}
 			}
-
+						
 			if (!cours.getText().equals(creneaux.getCours()))
 				creneaux.setCours(cours.getText());
-
+						
 			if (!classroom.getText().equals(creneaux.getSalle()))
 				creneaux.setSalle(classroom.getText());
-
+			
 			if (!prof.getText().equals(creneaux.getProf()))
 				creneaux.setProf(prof.getText());
-
+			
 			if (!group.getText().equals(creneaux.getGroup()))
 				creneaux.setGroup(group.getText());
+			
 			// from localdatetime to cal
-
-			if ((!start.getLocalDateTime().equals(creneaux.getStartLocalDateTime()))) {
+			
+			if ((!start.getLocalDateTime().equals(creneaux.getStartLocalDateTime()))) 
 				creneaux.setStartLocalDateTime(start.getLocalDateTime());
-			}
-
-			if (!end.getLocalDateTime().equals(creneaux.getEndLocalDateTime()))
+			
+			if (!end.getLocalDateTime().equals(creneaux.getEndLocalDateTime())) 
 				creneaux.setEndLocalDateTime(end.getLocalDateTime());
+			
+			
 		}
 		Stage stage = (Stage) save.getScene().getWindow();
 		stage.close();

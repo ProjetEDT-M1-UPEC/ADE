@@ -64,6 +64,7 @@ import modeles.StateManager;
 import modeles.Tab;
 import modeles.TimeTable;
 import modeles.TimeTableV2;
+import modeles.Version;
 
 public class MainScreenControleur implements Initializable {
 
@@ -111,6 +112,11 @@ public class MainScreenControleur implements Initializable {
 	@FXML
 	private Button saveButton;
 
+	@FXML
+	private Button updateV;
+
+	private static Button updateVStatic;
+
 	public static Button undoButtonS, redoButtonS;
 	private static int color = 0;
 
@@ -126,7 +132,10 @@ public class MainScreenControleur implements Initializable {
 		tabPaneV2 = tabPane;
 		redoButtonS = redoButton;
 		undoButtonS = undoButton;
-
+		
+		updateVStatic = updateV;
+		updateVStatic.setDisable(true);
+		
 		setFavDiffItems();
 		setFavMenuItems();
 		initState();
@@ -134,6 +143,7 @@ public class MainScreenControleur implements Initializable {
 		setAddTabeHandler();
 		initButtons();
 
+		
 	}
 
 	/*
@@ -141,7 +151,7 @@ public class MainScreenControleur implements Initializable {
 	 */
 	private void initButtons() {
 		int size = 20;
-		int size2 = 30;
+
 		ImageView openImage = new ImageView(Constants.PICS_OPEN);
 		ImageView openImageHover = new ImageView(Constants.PICS_OPEN_hover); // lety*****
 
@@ -356,9 +366,17 @@ public class MainScreenControleur implements Initializable {
 			for (TimeTable timeTable : list) {
 
 				agenda = new AgendaCustom(timeTable);
+				Tab t = new Tab(agenda, this);
+				t.setOnSelectionChanged(new EventHandler<Event>() {
 
+					@Override
+					public void handle(Event event) {
+						updateVStatic.setDisable(true);
+					}
+					
+				});
 				// agenda.appointments().addAll(timeTable.getCreneauxsList());
-				agenda.setParent(new modeles.Tab(agenda, this));
+				agenda.setParent(t);
 				tabPane.getTabs().add(agenda.getparent());
 
 			}
@@ -501,6 +519,14 @@ public class MainScreenControleur implements Initializable {
 	static void addNewTab(AgendaCustom agenda) {
 		// create Tab
 		Tab tab = new Tab(agenda, me);
+		tab.setOnSelectionChanged(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event arg0) {
+				updateVStatic.setDisable(true);
+			}
+			
+		});
 		agenda.setParent(tab);
 
 		// add tab
@@ -509,10 +535,6 @@ public class MainScreenControleur implements Initializable {
 		// select the last tab
 		tabPaneV2.getSelectionModel().select(tabPaneV2.getTabs().size() - 2);
 
-	}
-
-	private Tab getSelectedTab() {
-		return (Tab) tabPane.getSelectionModel().getSelectedItem();
 	}
 
 	public static void updateUndoRedoStatic(Tab tab) {
@@ -885,6 +907,10 @@ public class MainScreenControleur implements Initializable {
 			e1.printStackTrace();
 		}
 	}
+	
+	private Tab getSelectedTab() {
+		return (Tab) tabPane.getSelectionModel().getSelectedItem();
+	}
 
 	@FXML
 	public void versioningCRUD(ActionEvent ae) {
@@ -906,6 +932,48 @@ public class MainScreenControleur implements Initializable {
 		}
 	}
 
+	@FXML
+	public void versioningUpdate(ActionEvent ae) {
+		Version.update(((Tab) tabPaneV2.getSelectionModel().getSelectedItem()).getVersionId());
+	}
+	
+	public static void setNewTabForVersionning(ArrayList<Creneaux> list, String name, Long l) {
+		AgendaCustom agenda = new AgendaCustom(new TimeTable(name, "Path", list, TimeTable.TYPE.EMPTY_BASED));
+		
+		Tab tab = new Tab(agenda, me, l.longValue());
+		agenda.setParent(tab);
+		
+		tabPaneV2.getTabs().add(tabPaneV2.getTabs().size() - 1, tab);
+		tabPaneV2.getSelectionModel().select(tabPaneV2.getTabs().size() - 2);
+		
+		setEventTab(tab);
+	}
+	
+	public static void setSelectedTabVerID(String name, long l) {
+		Tab tab = ((Tab) tabPaneV2.getSelectionModel().getSelectedItem());
+		tab.setVersionId(l);
+		tab.setName(name);
+		tab.setText(name);
+		setEventTab(tab);
+	}
+	
+	private static void setEventTab(Tab tab) {
+		tab.setOnSelectionChanged(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event arg0) {
+				updateVStatic.setDisable(false);
+			}
+			
+		});
+		
+		updateVStatic.setDisable(false);
+	}
+	public static ArrayList<Creneaux> getCreneauxList() {
+		return ((Tab) tabPaneV2.getSelectionModel().getSelectedItem()).getAgenda().getTimeTable()
+				.getCopiedCreneauxList();
+	}
+	
 	private String getFileName() {
 
 		TextInputDialog dialog = new TextInputDialog("");

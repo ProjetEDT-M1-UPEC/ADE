@@ -5,17 +5,15 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.JOptionPane;
+import org.jsoup.nodes.Element;
 
 import jfxtras.scene.control.agenda.Agenda;
 import jfxtras.scene.control.agenda.Agenda.AppointmentGroup;
@@ -24,8 +22,6 @@ import modeles.AgendaEvent;
 import modeles.CreneauxVersion2;
 import modeles.PairDate;
 import modeles.Tab;
-
-import org.jsoup.nodes.Element;
 
 
 /**
@@ -291,7 +287,7 @@ public class Creneaux extends Agenda.AppointmentImpl implements Comparable<Crene
 
 
 	private void setOppoitementDates() {
-		this .setStartLocalDateTime(LocalDateTime.ofInstant(this.getCal().toInstant(), this.getCal().getTimeZone().toZoneId()));
+		this.setStartLocalDateTime(LocalDateTime.ofInstant(this.getCal().toInstant(), this.getCal().getTimeZone().toZoneId()));
 		this.setEndLocalDateTime(LocalDateTime.ofInstant(this.getCal().toInstant().plusSeconds(duree*60), this.getCal().getTimeZone().toZoneId()));
 	}
 
@@ -475,7 +471,7 @@ public class Creneaux extends Agenda.AppointmentImpl implements Comparable<Crene
 
 	public CreneauxVersion2 getVersion2() {
 		CreneauxVersion2 crV2=new CreneauxVersion2();
-    	crV2.setNom(nom);
+    	crV2.setNom(cours);
     	crV2.setProf(prof);
     	crV2.setGroup(group);
     	crV2.setSalle(salle);
@@ -504,7 +500,8 @@ public class Creneaux extends Agenda.AppointmentImpl implements Comparable<Crene
 	public void setStartLocalDateTime(LocalDateTime v) {
 		this.getCal().set(v.getYear(), v.getMonthValue()-1, v.getDayOfMonth(),v.getHour(), v.getMinute(), v.getSecond());
 		super.setStartLocalDateTime(v);
-		if(this.getEndLocalDateTime()!=null) this.duree=getEndLocalDateTime().getSecond()-v.getSecond();
+		if(this.getEndLocalDateTime()!=null) //this.duree=getEndLocalDateTime().getSecond()-v.getSecond();
+			ChronoUnit.MINUTES.between(v, this.getEndLocalDateTime());
 	}
 
 	//save the old value
