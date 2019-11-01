@@ -11,6 +11,8 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JFileChooser;
+
 import com.jfoenix.controls.JFXButton;
 
 import javafx.event.ActionEvent;
@@ -27,6 +29,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import modeles.Constants;
+import modeles.JsonFileManager;
 import modeles.Version;
 
 public class ViewVersionController implements Initializable {
@@ -72,6 +75,7 @@ public class ViewVersionController implements Initializable {
 		treeView.setRoot(getTree());
 		JFXButton btnSelect = new JFXButton("Choisir cette version");
 		JFXButton btnDuplicate = new JFXButton("Dupliquer cette version");
+		JFXButton btnSave = new JFXButton("Sauvegarder cette version");
 		Stage primaryStage = new Stage();
 		BorderPane b = new BorderPane();
 		btnSelect.setOnAction(new EventHandler<ActionEvent>() {
@@ -110,7 +114,35 @@ public class ViewVersionController implements Initializable {
 				}
 			}
 		});
+		btnSave.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				if (selectedVersion != null) {
+					try {
+						Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+						Long time = timestamp.getTime();
+						Version v=AddVersionController.dupliVersion(getTimeStamp(selectedVersion));
 
+						JFileChooser fileChooser = new JFileChooser(new File(Constants.REP_OPEN_FILECHOSER));
+
+						fileChooser.setDialogTitle(Constants.SAVE_FILE);
+						fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+						if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+							JsonFileManager.getInstance().saveVersion(v,
+									(fileChooser.getSelectedFile().getAbsolutePath() + "/"));
+						}
+
+
+					} catch (Exception excep) {
+						System.out.println("Exception btnImport :" + excep);
+					}
+					primaryStage.close();
+					cancel(null);
+				}
+			}
+		});
+b.setBottom(btnSave);
 		b.setTop(btnSelect);
 		b.setRight(btnDuplicate);
 		b.setCenter(treeView);
