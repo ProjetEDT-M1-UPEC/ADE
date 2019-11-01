@@ -153,4 +153,13 @@ public class Version implements Comparable<Version> {
 		if(v != null)
 			v.creneauxList = MainScreenControleur.getCreneauxList();
 	}
+	
+	public static Version duplicatedVersion(Long l) {
+		Version v = rootVersion.getVersion(l);
+		if (v.parent == null)
+			return null;
+		else {
+			return new Version(v.parent, nowStamp(), v.name, v.getCreneauxListClone());
+		}
+	}
 }
