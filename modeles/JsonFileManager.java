@@ -37,14 +37,14 @@ assuré une seule instociation de JsonFileManage et ObjectMapper
 		TimeTableV2 tmv2;
 		try {
 			tmv2=objectMapper.readValue(file,TimeTableV2.class);
-		} 
+		}
 		catch(MismatchedInputException e1) {
-			JOptionPane.showMessageDialog(null,modeles.Constants.errLoadFile+MismatchFile,modeles.Constants.errMssg, JOptionPane.ERROR_MESSAGE);				
-			return null;	
+			JOptionPane.showMessageDialog(null,modeles.Constants.errLoadFile+MismatchFile,modeles.Constants.errMssg, JOptionPane.ERROR_MESSAGE);
+			return null;
 		}
 		catch (IOException e) {
-			
-			JOptionPane.showMessageDialog(null,modeles.Constants.errLoadFile+e.getMessage(),modeles.Constants.errMssg, JOptionPane.ERROR_MESSAGE);				
+
+			JOptionPane.showMessageDialog(null,modeles.Constants.errLoadFile+e.getMessage(),modeles.Constants.errMssg, JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
 		return tmv2.toTimeTable();
@@ -58,13 +58,28 @@ assuré une seule instociation de JsonFileManage et ObjectMapper
 	@Override
 	public boolean save(TimeTable tm , String path) {
 		TimeTableV2 listCr=tm.toTimeTableV2();
-		
+
 		try {
 			objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 			objectMapper.writeValue( new File(path+".json"),listCr );
 		} catch (IOException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,modeles.Constants.errSaveFile+e.getMessage() ,modeles.Constants.errMssg, JOptionPane.ERROR_MESSAGE);				
+			JOptionPane.showMessageDialog(null,modeles.Constants.errSaveFile+e.getMessage() ,modeles.Constants.errMssg, JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		return true;
+	}
+
+
+	public boolean saveVersion(Version tm , String path) {
+
+
+		try {
+			objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+			objectMapper.writeValue( new File(path+".json"),tm );
+		} catch (IOException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,modeles.Constants.errSaveFile+e.getMessage() ,modeles.Constants.errMssg, JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 		return true;
