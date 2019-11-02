@@ -3,19 +3,28 @@ package controleur;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.EmptyStackException;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSpinner;
 
 import application.Main;
@@ -42,6 +51,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -120,9 +130,25 @@ public class MainScreenControleur implements Initializable {
 
 	public static Button undoButtonS, redoButtonS;
 	private static int color = 0;
+	private TreeView<String> treeView = new TreeView<>();
+	private String selectedVersion = null;
 
 	public MainScreenControleur() {
+		treeView.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				String str = e.getTarget().toString();
+				Pattern pattern = Pattern.compile("@ (.*?)\"", Pattern.DOTALL);
+				Matcher matcher = pattern.matcher(str);
+				if (matcher.find()) {
+					selectedVersion = matcher.group(1);
+					// System.out.println(selectedVersion);
+				} else {
+					selectedVersion = null;
+				}
 
+			}
+		});
 	}
 
 	@Override
@@ -971,6 +997,7 @@ public class MainScreenControleur implements Initializable {
 		tab.setVersionId(l);
 		tab.setName(name);
 		tab.setText(name);
+		tab.getAgenda().getTimeTable().setName(name);
 		setEventTab(tab);
 	}
 	
@@ -1005,5 +1032,116 @@ public class MainScreenControleur implements Initializable {
 		}
 		return dialog.getEditor().getText();
 	}
+	
+	@FXML
+	private void Create_new_project (ActionEvent ae) {
+		
+	}
+	
+	@FXML
+	private void Open_project (ActionEvent ae) {
+		JFileChooser fileChooser = new JFileChooser(new File("."));
+		FileNameExtensionFilter filter = new FileNameExtensionFilter(Constants.FORMAT_JSON, "json");
+		fileChooser.setFileFilter(filter);
 
+		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			File file = fileChooser.getSelectedFile();
+			System.out.println("Ouverture : " + file.getName());
+		}
+	}
+	
+	@FXML
+	private void Save_project (ActionEvent ae) {
+		try {
+			JFileChooser fileChooser = new JFileChooser(new File(Version.getRootName()+Constants.REP_OPEN_FILECHOSER));
+
+			fileChooser.setDialogTitle(Constants.SAVE_FILE);
+			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+			if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				Version.saveRoot(fileChooser);
+			}
+
+		} catch (Exception excep) {
+			System.out.println("Exception Save project :" + excep);
+		}
+	}
+	
+	@FXML
+	private void Read_project (ActionEvent ae) {
+		treeView.setRoot(Version.getTreeItem());
+		JFXButton btnSelect = new JFXButton("Choisir cette version");
+		JFXButton btnDuplicate = new JFXButton("Dupliquer cette version");
+		
+		Stage primaryStage = new Stage();
+		BorderPane b = new BorderPane();
+		btnSelect.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				if (selectedVersion != null) {
+					try {
+						Version.changeVersion(getTimeStamp(selectedVersion));
+					} catch (Exception excep) {
+						System.out.println("Exception btnImport :" + excep);
+					}
+					primaryStage.close();
+				}
+			}
+		});
+		btnDuplicate.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				if (selectedVersion != null) {
+					try {
+						if (Version.dupliVersion(getTimeStamp(selectedVersion))) {
+							primaryStage.close();
+						} else {
+							JOptionPane.showMessageDialog(null,
+									"Vous ne pouvez pas dupliquer la racine de l'arborescence.", "Erreur",
+									JOptionPane.ERROR_MESSAGE);
+						}
+					} catch (Exception excep) {
+						System.out.println("Exception btnDuplic :" + excep);
+					}
+				}
+			}
+		});
+		
+		b.setTop(btnSelect);
+		b.setRight(btnDuplicate);
+		b.setCenter(treeView);
+		primaryStage.setScene(new Scene(b, 600, 400));
+		primaryStage.setTitle("L'arborescence");
+		primaryStage.show();
+	}
+	
+	@FXML
+	private void Create_version (ActionEvent ae) {
+		final Stage popUp = new Stage();
+
+		popUp.setTitle("Ajouter une version de l'agenda");
+		popUp.initModality(Modality.APPLICATION_MODAL);
+
+		AnchorPane root;
+
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(Constants.ADDVERSION_POPUP));
+			AddVersionController controller = new AddVersionController();
+			fxmlLoader.setController(controller);
+			root = fxmlLoader.load();
+			Scene scene = new Scene(root);
+			popUp.setScene(scene);
+			popUp.initOwner(Main.mainStage);
+			popUp.show();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	private Long getTimeStamp(String selectedVersion) throws ParseException {
+		DateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT);
+		Date date = formatter.parse(selectedVersion);
+		Timestamp timeStampDate = new Timestamp(date.getTime());
+		return timeStampDate.getTime();
+	}
 }

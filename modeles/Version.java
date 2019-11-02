@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.swing.JFileChooser;
+
 import code.barbot.Creneaux;
 import controleur.MainScreenControleur;
 import javafx.scene.control.TreeItem;
@@ -15,6 +17,7 @@ import javafx.scene.control.TreeItem;
 public class Version implements Comparable<Version> {
 	private static Version currentVersion = null;
 	private static Version rootVersion = null;
+	private static String rootName = "";
 
 	private Long timestamp;
 	private String name;
@@ -29,7 +32,10 @@ public class Version implements Comparable<Version> {
 		name = str;
 		creneauxList = l;
 	}
-
+	
+	public static String getRootName() {
+		return rootName;
+	}
 	public String getName() {
 		return name;
 	}
@@ -79,7 +85,7 @@ public class Version implements Comparable<Version> {
 		Version wantedVersion = rootVersion.getVersion(t);
 		if (wantedVersion != null) {
 			currentVersion = wantedVersion;
-			MainScreenControleur.setNewTabForVersionning(currentVersion.getCreneauxListClone(), currentVersion.name, currentVersion.timestamp);
+			MainScreenControleur.setNewTabForVersionning(currentVersion.getCreneauxList(), currentVersion.name, currentVersion.timestamp);
 		}
 	}
 
@@ -89,15 +95,15 @@ public class Version implements Comparable<Version> {
 			return false;
 		else {
 			Long time = nowStamp();
-			Version vDupli = new Version(v.parent, time, v.name, v.getCreneauxListClone());
+			Version vDupli = new Version(v.parent, time, v.name, v.getCreneauxList());
 			v.parent.alternativeVersions.put(vDupli.timestamp, vDupli);
 			currentVersion = vDupli;
-			MainScreenControleur.setNewTabForVersionning(currentVersion.getCreneauxListClone(), currentVersion.name, currentVersion.timestamp);
+			MainScreenControleur.setNewTabForVersionning(currentVersion.getCreneauxList(), currentVersion.name, currentVersion.timestamp);
 			return true;
 		}
 	}
 
-	private ArrayList<Creneaux> getCreneauxListClone() {
+	private ArrayList<Creneaux> getCreneauxList() {
 		ArrayList<Creneaux> clone = new ArrayList<>();
 		for (Creneaux o : creneauxList) {
 			clone.add((Creneaux) o.clone());
@@ -154,12 +160,7 @@ public class Version implements Comparable<Version> {
 			v.creneauxList = MainScreenControleur.getCreneauxList();
 	}
 	
-	public static Version duplicatedVersion(Long l) {
-		Version v = rootVersion.getVersion(l);
-		if (v.parent == null)
-			return null;
-		else {
-			return new Version(v.parent, nowStamp(), v.name, v.getCreneauxListClone());
-		}
+	public static void saveRoot(JFileChooser fileChooser) {
+		JsonFileManager.getInstance().saveVersion(rootVersion, (fileChooser.getSelectedFile().getAbsolutePath() + "/"));
 	}
 }
