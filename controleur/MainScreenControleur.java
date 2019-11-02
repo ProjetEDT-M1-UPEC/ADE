@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -452,32 +453,48 @@ public class MainScreenControleur implements Initializable {
 	@FXML
 	private void initDatePicker() {
 
-		Calendar c = Calendar.getInstance();
+		//Calendar c = Calendar.getInstance();
+		Agenda myagenda=getSelectedTab().getAgenda();
+		LocalDateTime time= myagenda.getDisplayedLocalDateTime().minusDays(1);
+		myagenda.setDisplayedLocalDateTime(time);
 
-		c.set(datePicker.getValue().getYear(), datePicker.getValue().getMonthValue() - 1,
-				datePicker.getValue().getDayOfMonth());
-
-		if (getSelectedTab().getAgenda().getTimeTable().getType() == (TimeTable.TYPE.ADE_BASED)) {
-
-			try {
-				select(getSelectedTab().getAgenda().getTimeTable().getPathList());
-				parseur.setWeek(calculWeek(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)), false);
-				parseur.setWeek(calculWeek(c.get(Calendar.WEEK_OF_YEAR)), true);
-				ArrayList<Creneaux> newTimeTbale = parseur.getTimeTable();
-				ArrayList<Creneaux> oldTimeTbale = getSelectedTab().getAgenda().getTimeTable().getCreneauxsList();
-				getSelectedTab().notifyChange(new AgendaEvent(getSelectedTab().getAgenda(), AgendaEvent.TYPE.WEEK,
-						oldTimeTbale, newTimeTbale));
-				getSelectedTab().getAgenda().getTimeTable().setCreneauxsList(newTimeTbale);
-				getSelectedTab().getAgenda()
-						.setDisplayedLocalDateTime(LocalDateTime.of(datePicker.getValue(), LocalTime.now()));
-				getSelectedTab().getAgenda().newTimeTable(getSelectedTab().getAgenda().getTimeTable());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+//		c.set(datePicker.getValue().getYear(), datePicker.getValue().getMonthValue() - 1,
+//				datePicker.getValue().getDayOfMonth());
+//
+//		if (getSelectedTab().getAgenda().getTimeTable().getType() == (TimeTable.TYPE.ADE_BASED)) {
+//
+//			try {
+//				select(getSelectedTab().getAgenda().getTimeTable().getPathList());
+//				parseur.setWeek(calculWeek(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)), false);
+//				parseur.setWeek(calculWeek(c.get(Calendar.WEEK_OF_YEAR)), true);
+//				ArrayList<Creneaux> newTimeTbale = parseur.getTimeTable();
+//				ArrayList<Creneaux> oldTimeTbale = getSelectedTab().getAgenda().getTimeTable().getCreneauxsList();
+//				getSelectedTab().notifyChange(new AgendaEvent(getSelectedTab().getAgenda(), AgendaEvent.TYPE.WEEK,
+//						oldTimeTbale, newTimeTbale));
+//				getSelectedTab().getAgenda().getTimeTable().setCreneauxsList(newTimeTbale);
+//				getSelectedTab().getAgenda()
+//						.setDisplayedLocalDateTime(LocalDateTime.of(datePicker.getValue(), LocalTime.now()));
+//				getSelectedTab().getAgenda().newTimeTable(getSelectedTab().getAgenda().getTimeTable());
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
 
 	}
 
+	@FXML
+	public void setButtonPrecedent(){
+		AgendaCustom myagenda= getSelectedTab().getAgenda();
+		LocalDateTime back= myagenda.getDisplayedLocalDateTime().minus(Period.ofWeeks(1));
+		myagenda.setDisplayedLocalDateTime(back);
+		}
+
+	@FXML
+	public void setButtonsuivant(){
+		Agenda myagenda=getSelectedTab().getAgenda();
+		LocalDateTime next= myagenda.getDisplayedLocalDateTime().plus(Period.ofWeeks(1));
+		myagenda.setDisplayedLocalDateTime(next);
+		}
 	public int calculWeek(int week) {
 		return (week + 18) % 52;
 	}
