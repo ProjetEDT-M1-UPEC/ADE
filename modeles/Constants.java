@@ -150,11 +150,13 @@ public static final String EDIT_SHORTCUT = "Modifier le raccourci";
 		
 		public static final String PICS_OPEN = "pics/open_simple.png";
 		
-		public static final String PICS_OPEN_hover = "pics/open_hover.png"; //** lety
+		public static final String PICS_OPEN_hover = "pics/open_hover.png"; 
 		
 		public static final String PICS_SAVE = "pics/save_simple.png";
 		
-		public static final String PICS_SAVE_hover = "pics/save_hover.png"; // ** lety
+		public static final String PICS_SAVE_hover = "pics/save_hover.png"; 
+		
+		public static final String PICS_VERSION = "pics/version_icon.png";	
 		
 		public static final String PICS_DIFF = "pics/diff_icon.png";
 		

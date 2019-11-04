@@ -13,6 +13,7 @@ import javax.swing.JFileChooser;
 import code.barbot.Creneaux;
 import controleur.MainScreenControleur;
 import javafx.scene.control.TreeItem;
+import javafx.scene.image.ImageView;
 
 public class Version implements Comparable<Version> {
 	private static Version currentVersion = null;
@@ -122,8 +123,11 @@ public class Version implements Comparable<Version> {
 
 	public TreeItem<String> toTreeItemString() {
 		Date date = new Date(timestamp);
+		ImageView imageVersion = new ImageView(Constants.PICS_VERSION); 
+		
+		
 		String s = new SimpleDateFormat(Constants.DATE_FORMAT).format(date);
-		TreeItem<String> tree = new TreeItem<>(name + " @ " + s);
+		TreeItem<String> tree = new TreeItem<>(name + " @ " + s, imageVersion);
 		if (alternativeVersions != null && !alternativeVersions.isEmpty()) {
 			alternativeVersions.values().forEach(alt -> {
 				tree.getChildren().add(alt.toTreeItemString());

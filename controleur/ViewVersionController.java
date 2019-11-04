@@ -1,5 +1,5 @@
 package controleur;
-
+ 
 import java.io.File;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
-
+import javafx.scene.control.Button;
 import com.jfoenix.controls.JFXButton;
 
 import javafx.event.ActionEvent;
@@ -22,8 +22,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.DirectoryChooser;
@@ -63,14 +66,23 @@ public class ViewVersionController implements Initializable {
 
 	@FXML
 	private void view(ActionEvent e) {
+		
+		
 		treeView.setRoot(Version.getTreeItem());
-		JFXButton btnSelect = new JFXButton("Choisir cette version");
-		JFXButton btnDuplicate = new JFXButton("Dupliquer cette version");
+		
 		Stage primaryStage = new Stage();
 		BorderPane b = new BorderPane();
-		btnSelect.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent e) {
+		
+		
+	
+		// Create ContextMenu
+        ContextMenu contextMenu = new ContextMenu();
+ 
+        MenuItem itemSelect = new MenuItem("Choisir cette version");
+        itemSelect.setOnAction(new EventHandler<ActionEvent>() {
+ 
+            @Override
+            public void handle(ActionEvent e) {
 				if (selectedVersion != null) {
 					try {
 						Version.changeVersion(getTimeStamp(selectedVersion));
@@ -81,10 +93,12 @@ public class ViewVersionController implements Initializable {
 					cancel(null);
 				}
 			}
-		});
-		btnDuplicate.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent e) {
+        });
+        MenuItem itemDuplicate = new MenuItem("Dupliquer cette version");
+        itemDuplicate.setOnAction(new EventHandler<ActionEvent>() {
+ 
+            @Override
+            public void handle(ActionEvent e) {
 				if (selectedVersion != null) {
 					try {
 						if (Version.dupliVersion(getTimeStamp(selectedVersion))) {
@@ -100,14 +114,27 @@ public class ViewVersionController implements Initializable {
 					}
 				}
 			}
-		});
+        });
+        
 		
-		b.setTop(btnSelect);
-		b.setRight(btnDuplicate);
+        contextMenu.getItems().addAll(itemSelect, itemDuplicate);
+        // When user right-click on Circle
+        treeView.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+ 
+            @Override
+            public void handle(ContextMenuEvent event) {
+ 
+                contextMenu.show(treeView, event.getScreenX(), event.getScreenY());
+            }
+        });
+ 
+       
+        
 		b.setCenter(treeView);
 		primaryStage.setScene(new Scene(b, 600, 400));
 		primaryStage.setTitle("Folder View");
 		primaryStage.show();
+		
 
 	}
 
