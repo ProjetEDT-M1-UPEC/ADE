@@ -8,9 +8,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.Period;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EmptyStackException;
@@ -62,7 +61,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import jfxtras.scene.control.agenda.Agenda;
 import modeles.AgendaCustom;
-import modeles.AgendaEvent;
 import modeles.Branch;
 import modeles.Category;
 import modeles.Constants;
@@ -158,10 +156,10 @@ public class MainScreenControleur implements Initializable {
 		tabPaneV2 = tabPane;
 		redoButtonS = redoButton;
 		undoButtonS = undoButton;
-		
+
 		updateVStatic = updateV;
 		updateVStatic.setDisable(true);
-		
+
 		setFavDiffItems();
 		setFavMenuItems();
 		initState();
@@ -169,7 +167,6 @@ public class MainScreenControleur implements Initializable {
 		setAddTabeHandler();
 		initButtons();
 
-		
 	}
 
 	/*
@@ -399,7 +396,7 @@ public class MainScreenControleur implements Initializable {
 					public void handle(Event event) {
 						updateVStatic.setDisable(true);
 					}
-					
+
 				});
 				// agenda.appointments().addAll(timeTable.getCreneauxsList());
 				agenda.setParent(t);
@@ -478,30 +475,47 @@ public class MainScreenControleur implements Initializable {
 	@FXML
 	private void initDatePicker() {
 
-		Calendar c = Calendar.getInstance();
+		// Calendar c = Calendar.getInstance();
+		Agenda myagenda = getSelectedTab().getAgenda();
+		LocalDateTime time = myagenda.getDisplayedLocalDateTime().minusDays(1);
+		myagenda.setDisplayedLocalDateTime(time);
 
-		c.set(datePicker.getValue().getYear(), datePicker.getValue().getMonthValue() - 1,
-				datePicker.getValue().getDayOfMonth());
+//		c.set(datePicker.getValue().getYear(), datePicker.getValue().getMonthValue() - 1,
+//				datePicker.getValue().getDayOfMonth());
+//
+//		if (getSelectedTab().getAgenda().getTimeTable().getType() == (TimeTable.TYPE.ADE_BASED)) {
+//
+//			try {
+//				select(getSelectedTab().getAgenda().getTimeTable().getPathList());
+//				parseur.setWeek(calculWeek(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)), false);
+//				parseur.setWeek(calculWeek(c.get(Calendar.WEEK_OF_YEAR)), true);
+//				ArrayList<Creneaux> newTimeTbale = parseur.getTimeTable();
+//				ArrayList<Creneaux> oldTimeTbale = getSelectedTab().getAgenda().getTimeTable().getCreneauxsList();
+//				getSelectedTab().notifyChange(new AgendaEvent(getSelectedTab().getAgenda(), AgendaEvent.TYPE.WEEK,
+//						oldTimeTbale, newTimeTbale));
+//				getSelectedTab().getAgenda().getTimeTable().setCreneauxsList(newTimeTbale);
+//				getSelectedTab().getAgenda()
+//						.setDisplayedLocalDateTime(LocalDateTime.of(datePicker.getValue(), LocalTime.now()));
+//				getSelectedTab().getAgenda().newTimeTable(getSelectedTab().getAgenda().getTimeTable());
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
 
-		if (getSelectedTab().getAgenda().getTimeTable().getType() == (TimeTable.TYPE.ADE_BASED)) {
+	}
 
-			try {
-				select(getSelectedTab().getAgenda().getTimeTable().getPathList());
-				parseur.setWeek(calculWeek(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)), false);
-				parseur.setWeek(calculWeek(c.get(Calendar.WEEK_OF_YEAR)), true);
-				ArrayList<Creneaux> newTimeTbale = parseur.getTimeTable();
-				ArrayList<Creneaux> oldTimeTbale = getSelectedTab().getAgenda().getTimeTable().getCreneauxsList();
-				getSelectedTab().notifyChange(new AgendaEvent(getSelectedTab().getAgenda(), AgendaEvent.TYPE.WEEK,
-						oldTimeTbale, newTimeTbale));
-				getSelectedTab().getAgenda().getTimeTable().setCreneauxsList(newTimeTbale);
-				getSelectedTab().getAgenda()
-						.setDisplayedLocalDateTime(LocalDateTime.of(datePicker.getValue(), LocalTime.now()));
-				getSelectedTab().getAgenda().newTimeTable(getSelectedTab().getAgenda().getTimeTable());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+	@FXML
+	public void setButtonPrecedent() {
+		AgendaCustom myagenda = getSelectedTab().getAgenda();
+		LocalDateTime back = myagenda.getDisplayedLocalDateTime().minus(Period.ofWeeks(1));
+		myagenda.setDisplayedLocalDateTime(back);
+	}
 
+	@FXML
+	public void setButtonsuivant() {
+		Agenda myagenda = getSelectedTab().getAgenda();
+		LocalDateTime next = myagenda.getDisplayedLocalDateTime().plus(Period.ofWeeks(1));
+		myagenda.setDisplayedLocalDateTime(next);
 	}
 
 	public int calculWeek(int week) {
@@ -551,7 +565,7 @@ public class MainScreenControleur implements Initializable {
 			public void handle(Event arg0) {
 				updateVStatic.setDisable(true);
 			}
-			
+
 		});
 		agenda.setParent(tab);
 
@@ -933,7 +947,7 @@ public class MainScreenControleur implements Initializable {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	private Tab getSelectedTab() {
 		return (Tab) tabPane.getSelectionModel().getSelectedItem();
 	}
@@ -962,19 +976,19 @@ public class MainScreenControleur implements Initializable {
 	public void versioningUpdate(ActionEvent ae) {
 		Version.update(((Tab) tabPaneV2.getSelectionModel().getSelectedItem()).getVersionId());
 	}
-	
+
 	public static void setNewTabForVersionning(ArrayList<Creneaux> list, String name, Long l) {
 		AgendaCustom agenda = new AgendaCustom(new TimeTable(name, "Path", list, TimeTable.TYPE.EMPTY_BASED));
-		
+
 		Tab tab = new Tab(agenda, me, l.longValue());
 		agenda.setParent(tab);
-		
+
 		tabPaneV2.getTabs().add(tabPaneV2.getTabs().size() - 1, tab);
 		tabPaneV2.getSelectionModel().select(tabPaneV2.getTabs().size() - 2);
-		
+
 		setEventTab(tab);
 	}
-	
+
 	public static void setSelectedTabVerID(String name, long l) {
 		Tab tab = ((Tab) tabPaneV2.getSelectionModel().getSelectedItem());
 		tab.setVersionId(l);
@@ -983,7 +997,7 @@ public class MainScreenControleur implements Initializable {
 		tab.getAgenda().getTimeTable().setName(name);
 		setEventTab(tab);
 	}
-	
+
 	private static void setEventTab(Tab tab) {
 		tab.setOnSelectionChanged(new EventHandler<Event>() {
 
@@ -991,16 +1005,17 @@ public class MainScreenControleur implements Initializable {
 			public void handle(Event arg0) {
 				updateVStatic.setDisable(false);
 			}
-			
+
 		});
-		
+
 		updateVStatic.setDisable(false);
 	}
+
 	public static ArrayList<Creneaux> getCreneauxList() {
 		return ((Tab) tabPaneV2.getSelectionModel().getSelectedItem()).getAgenda().getTimeTable()
 				.getCopiedCreneauxList();
 	}
-	
+
 	private String getFileName() {
 
 		TextInputDialog dialog = new TextInputDialog("");
@@ -1015,14 +1030,14 @@ public class MainScreenControleur implements Initializable {
 		}
 		return dialog.getEditor().getText();
 	}
-	
+
 	@FXML
-	private void Create_new_project (ActionEvent ae) {
-		
+	private void Create_new_project(ActionEvent ae) {
+
 	}
-	
+
 	@FXML
-	private void Open_project (ActionEvent ae) {
+	private void Open_project(ActionEvent ae) {
 		JFileChooser fileChooser = new JFileChooser(new File("."));
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(Constants.FORMAT_JSON, "json");
 		fileChooser.setFileFilter(filter);
@@ -1032,11 +1047,12 @@ public class MainScreenControleur implements Initializable {
 			System.out.println("Ouverture : " + file.getName());
 		}
 	}
-	
+
 	@FXML
-	private void Save_project (ActionEvent ae) {
+	private void Save_project(ActionEvent ae) {
 		try {
-			JFileChooser fileChooser = new JFileChooser(new File(Version.getRootName()+Constants.REP_OPEN_FILECHOSER));
+			JFileChooser fileChooser = new JFileChooser(
+					new File(Version.getRootName() + Constants.REP_OPEN_FILECHOSER));
 
 			fileChooser.setDialogTitle(Constants.SAVE_FILE);
 			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -1049,13 +1065,13 @@ public class MainScreenControleur implements Initializable {
 			System.out.println("Exception Save project :" + excep);
 		}
 	}
-	
+
 	@FXML
-	private void Read_project (ActionEvent ae) {
+	private void Read_project(ActionEvent ae) {
 		treeView.setRoot(Version.getTreeItem());
 		JFXButton btnSelect = new JFXButton("Choisir cette version");
 		JFXButton btnDuplicate = new JFXButton("Dupliquer cette version");
-		
+
 		Stage primaryStage = new Stage();
 		BorderPane b = new BorderPane();
 		btnSelect.setOnAction(new EventHandler<ActionEvent>() {
@@ -1079,9 +1095,7 @@ public class MainScreenControleur implements Initializable {
 						if (Version.dupliVersion(getTimeStamp(selectedVersion))) {
 							primaryStage.close();
 						} else {
-							JOptionPane.showMessageDialog(null,
-									"Vous ne pouvez pas dupliquer la racine de l'arborescence.", "Erreur",
-									JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(null, Constants.errDup, "Erreur", JOptionPane.ERROR_MESSAGE);
 						}
 					} catch (Exception excep) {
 						System.out.println("Exception btnDuplic :" + excep);
@@ -1089,7 +1103,7 @@ public class MainScreenControleur implements Initializable {
 				}
 			}
 		});
-		
+
 		b.setTop(btnSelect);
 		b.setRight(btnDuplicate);
 		b.setCenter(treeView);
@@ -1097,9 +1111,9 @@ public class MainScreenControleur implements Initializable {
 		primaryStage.setTitle("L'arborescence");
 		primaryStage.show();
 	}
-	
+
 	@FXML
-	private void Create_version (ActionEvent ae) {
+	private void Create_version(ActionEvent ae) {
 		final Stage popUp = new Stage();
 
 		popUp.setTitle("Ajouter une version de l'agenda");
@@ -1120,7 +1134,7 @@ public class MainScreenControleur implements Initializable {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	private Long getTimeStamp(String selectedVersion) throws ParseException {
 		DateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT);
 		Date date = formatter.parse(selectedVersion);

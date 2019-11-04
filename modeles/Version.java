@@ -15,7 +15,7 @@ import controleur.MainScreenControleur;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
 
-public class Version implements Comparable<Version> {
+public class Version {
 	private static Version currentVersion = null;
 	private static Version rootVersion = null;
 	private static String rootName = "";
@@ -104,7 +104,7 @@ public class Version implements Comparable<Version> {
 		}
 	}
 
-	private ArrayList<Creneaux> getCreneauxList() {
+	public ArrayList<Creneaux> getCreneauxList() {
 		ArrayList<Creneaux> clone = new ArrayList<>();
 		for (Creneaux o : creneauxList) {
 			clone.add((Creneaux) o.clone());
@@ -140,11 +140,6 @@ public class Version implements Comparable<Version> {
 		if (rootVersion == null)
 			return new TreeItem<String>("Aucune version enregistrée");
 		return rootVersion.toTreeItemString();
-	}
-
-	@Override
-	public int compareTo(Version o) {
-		return 0;
 	}
 
 	// comparaison de la list de crenaux d'une version a une autre

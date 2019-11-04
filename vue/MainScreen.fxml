@@ -104,6 +104,7 @@
        		    <Button fx:id="undoButton" mnemonicParsing="false" onAction="#back" prefHeight="10.0" prefWidth="18.0" />
 	            <Button fx:id="redoButton" mnemonicParsing="false" onAction="#next" prefHeight="19.0" prefWidth="18.0" />
 	            <Separator layoutX="54.0" layoutY="10.0" orientation="VERTICAL" prefHeight="14.0" prefWidth="1.0" />
+<<<<<<< HEAD
     	        <Button fx:id="filter" mnemonicParsing="false" onAction="#show_Filter_PopUp" prefHeight="29.0" prefWidth="110.0" style="-fx-cursor: hand; -fx-background-color: #035f90; -fx-font-size: 14; -fx-text-fill: white; -fx-background-radius: 22; -fx-border-color: #003e6b; -fx-border-radius: 22;" text="Filtrer">
                <effect>
                   <Glow level="0.8" />
@@ -121,6 +122,16 @@
                <effect>
                   <Glow level="0.8" />
                </effect></Button>
+=======
+    	        <Button fx:id="filter" mnemonicParsing="false" onAction="#show_Filter_PopUp" text="Filtrer" style="-fx-cursor:hand;-fx-background-color:#3A9D23;-fx-font-size:16;-fx-text-fill:white;-fx-background-radius:22;"  />
+        	    <Button mnemonicParsing="false" onAction="#restoreAgenda" text="Restaurer" style="-fx-cursor:hand;-fx-background-color:#3A9D23;-fx-font-size:16;-fx-text-fill:white;-fx-background-radius:22;"/>
+				<Separator orientation="VERTICAL" prefHeight="14.0" prefWidth="1.0" />
+        		<Button mnemonicParsing="false" onAction="#versioningCRUD" text="Versionning" style="-fx-cursor:hand;-fx-background-color:#3A9D23;-fx-font-size:16;-fx-text-fill:white;-fx-background-radius:22;"/>
+        		<Button fx:id="updateV" mnemonicParsing="false" onAction="#versioningUpdate" text="Update" style="-fx-cursor:hand;-fx-background-color:#3A9D23;-fx-font-size:16;-fx-text-fill:white;-fx-background-radius:22;"/>
+        		<Pane HBox.hgrow="ALWAYS" />
+			    <Button fx:id="last_week" mnemonicParsing="false" onAction="#setButtonPrecedent" text="Semaine Precedente" />
+		    	<Button fx:id="next_week" mnemonicParsing="false" onAction="#setButtonsuivant" text="Semaine suivante" />
+>>>>>>> 721c43fc7f291b67bd0f983ca19c6cd9be46ad83
         	</items>
       	</ToolBar>
 		<HBox>
