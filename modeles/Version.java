@@ -16,7 +16,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
 
 public class Version {
-	private static Version currentVersion = null;
 	private static Version rootVersion = null;
 	private static String rootName = "";
 	
@@ -25,7 +24,6 @@ public class Version {
 	private Map<Long, Version> alternativeVersions = new TreeMap<>();
 	private ArrayList<Creneaux> creneauxList;
 	private Version parent;
-	// TODO en plus de l'emploi du temps class TimeTable
 
 	public Version(Version parent, Long t, String str, ArrayList<Creneaux> l) {
 		this.parent = parent;
@@ -59,20 +57,19 @@ public class Version {
 
 	public static void addNewVersion(String value) {
 		Long key = nowStamp();
-
+		
 		if (rootVersion == null) {
-			currentVersion = new Version(null, key, value, MainScreenControleur.getCreneauxList());
-			rootVersion = currentVersion;
+			rootVersion = new Version(null, key, value, MainScreenControleur.getCreneauxList());
 		} else {
-			currentVersion = currentVersion.addAltVer(key, value);
+			Version parent = rootVersion.getVersion(new Long(MainScreenControleur.getSelectedTabVersionId())); 
+			parent.addAltVer(key, value);
 		}
 		MainScreenControleur.setSelectedTabVerID(value, key.longValue());
 	}
 
-	private Version addAltVer(Long t, String str) {
+	private void addAltVer(Long t, String str) {
 		Version ver = new Version(this, t, str, MainScreenControleur.getCreneauxList());
 		alternativeVersions.put(t, ver);
-		return ver;
 	}
 
 	public Version getVersion(Long t) {
@@ -91,8 +88,7 @@ public class Version {
 	public static void changeVersion(Long t) {
 		Version wantedVersion = rootVersion.getVersion(t);
 		if (wantedVersion != null) {
-			currentVersion = wantedVersion;
-			MainScreenControleur.setNewTabForVersionning(currentVersion.getCreneauxList(), currentVersion.name, currentVersion.timestamp);
+			MainScreenControleur.setNewTabForVersionning(wantedVersion.getCreneauxList(), wantedVersion.name, wantedVersion.timestamp);
 		}
 	}
 
@@ -104,8 +100,7 @@ public class Version {
 			Long time = nowStamp();
 			Version vDupli = new Version(v.parent, time, v.name, v.getCreneauxList());
 			v.parent.alternativeVersions.put(vDupli.timestamp, vDupli);
-			currentVersion = vDupli;
-			MainScreenControleur.setNewTabForVersionning(currentVersion.getCreneauxList(), currentVersion.name, currentVersion.timestamp);
+			MainScreenControleur.setNewTabForVersionning(vDupli.getCreneauxList(), vDupli.name, vDupli.timestamp);
 			return true;
 		}
 	}
@@ -155,17 +150,6 @@ public class Version {
 	public boolean compareCreneaux(Version o) {
 		boolean isEqual = this.creneauxList.equals(o.creneauxList);
 		return isEqual;
-	}
-	
-	public static void update(long id) {
-		if(id==0 || rootVersion==null) {
-			System.out.println("loupé");
-			return;
-		}
-		
-		Version v = rootVersion.getVersion(id);
-		if(v != null)
-			v.creneauxList = MainScreenControleur.getCreneauxList();
 	}
 	
 	public static void saveRoot(JFileChooser fileChooser) {

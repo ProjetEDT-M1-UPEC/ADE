@@ -930,9 +930,8 @@ public class MainScreenControleur implements Initializable {
 		return (Tab) tabPane.getSelectionModel().getSelectedItem();
 	}
 
-	@FXML
-	public void versioningUpdate(ActionEvent ae) {
-		Version.update(((Tab) tabPaneV2.getSelectionModel().getSelectedItem()).getVersionId());
+	public static long getSelectedTabVersionId() {
+		return ((Tab) tabPaneV2.getSelectionModel().getSelectedItem()).getVersionId();
 	}
 
 	public static void setNewTabForVersionning(ArrayList<Creneaux> list, String name, Long l) {
