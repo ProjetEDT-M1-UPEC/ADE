@@ -19,7 +19,7 @@ public class Version {
 	private static Version currentVersion = null;
 	private static Version rootVersion = null;
 	private static String rootName = "";
-
+	
 	private Long timestamp;
 	private String name;
 	private Map<Long, Version> alternativeVersions = new TreeMap<>();
@@ -37,14 +37,22 @@ public class Version {
 	public static String getRootName() {
 		return rootName;
 	}
+	public static void setRootName(String str) {
+		rootName = str;
+	}
 	public String getName() {
 		return name;
 	}
-
+	public void setName(String str) {
+		name = str;
+	}
 	public Long getTimestamp() {
 		return timestamp;
 	}
-
+	public Map<Long, Version> getAlternativeVersions(){
+		return alternativeVersions;
+	}
+	
 	private static Long nowStamp() {
 		return new Timestamp(System.currentTimeMillis()).getTime();
 	}
@@ -58,8 +66,6 @@ public class Version {
 		} else {
 			currentVersion = currentVersion.addAltVer(key, value);
 		}
-		// String v = value + "@" + key;
-		// System.out.println(v);
 		MainScreenControleur.setSelectedTabVerID(value, key.longValue());
 	}
 
@@ -122,9 +128,8 @@ public class Version {
 	}
 
 	public TreeItem<String> toTreeItemString() {
-		Date date = new Date(timestamp);
+		Date date = new Date(timestamp);		
 		ImageView imageVersion = new ImageView(Constants.PICS_VERSION); 
-		
 		
 		String s = new SimpleDateFormat(Constants.DATE_FORMAT).format(date);
 		TreeItem<String> tree = new TreeItem<>(name + " @ " + s, imageVersion);
@@ -142,6 +147,10 @@ public class Version {
 		return rootVersion.toTreeItemString();
 	}
 
+	public static boolean rootIsEmpty() {
+		return rootVersion == null;
+	}
+	
 	// comparaison de la list de crenaux d'une version a une autre
 	public boolean compareCreneaux(Version o) {
 		boolean isEqual = this.creneauxList.equals(o.creneauxList);

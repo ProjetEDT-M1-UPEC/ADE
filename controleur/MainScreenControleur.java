@@ -22,7 +22,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSpinner;
 
 import application.Main;
@@ -42,6 +41,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -51,6 +51,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -120,11 +121,6 @@ public class MainScreenControleur implements Initializable {
 	@FXML
 	private Button saveButton;
 
-	@FXML
-	private Button updateV;
-
-	private static Button updateVStatic;
-
 	public static Button undoButtonS, redoButtonS;
 	private static int color = 0;
 	private TreeView<String> treeView = new TreeView<>();
@@ -156,9 +152,6 @@ public class MainScreenControleur implements Initializable {
 		tabPaneV2 = tabPane;
 		redoButtonS = redoButton;
 		undoButtonS = undoButton;
-
-		updateVStatic = updateV;
-		updateVStatic.setDisable(true);
 
 		setFavDiffItems();
 		setFavMenuItems();
@@ -389,17 +382,9 @@ public class MainScreenControleur implements Initializable {
 			for (TimeTable timeTable : list) {
 
 				agenda = new AgendaCustom(timeTable);
-				Tab t = new Tab(agenda, this);
-				t.setOnSelectionChanged(new EventHandler<Event>() {
 
-					@Override
-					public void handle(Event event) {
-						updateVStatic.setDisable(true);
-					}
-
-				});
 				// agenda.appointments().addAll(timeTable.getCreneauxsList());
-				agenda.setParent(t);
+				agenda.setParent(new Tab(agenda, this));
 				tabPane.getTabs().add(agenda.getparent());
 
 			}
@@ -559,14 +544,7 @@ public class MainScreenControleur implements Initializable {
 	static void addNewTab(AgendaCustom agenda) {
 		// create Tab
 		Tab tab = new Tab(agenda, me);
-		tab.setOnSelectionChanged(new EventHandler<Event>() {
 
-			@Override
-			public void handle(Event arg0) {
-				updateVStatic.setDisable(true);
-			}
-
-		});
 		agenda.setParent(tab);
 
 		// add tab
@@ -953,26 +931,6 @@ public class MainScreenControleur implements Initializable {
 	}
 
 	@FXML
-	public void versioningCRUD(ActionEvent ae) {
-		final Stage popUp = new Stage();
-
-		popUp.setTitle("Arborescence");
-		popUp.initModality(Modality.APPLICATION_MODAL);
-
-		BorderPane root;
-
-		try {
-			root = (BorderPane) FXMLLoader.load(getClass().getResource(Constants.VIEWVERSION_POPUP));
-			Scene scene = new Scene(root);
-			popUp.setScene(scene);
-			popUp.initOwner(Main.mainStage);
-			popUp.show();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-	}
-
-	@FXML
 	public void versioningUpdate(ActionEvent ae) {
 		Version.update(((Tab) tabPaneV2.getSelectionModel().getSelectedItem()).getVersionId());
 	}
@@ -985,8 +943,6 @@ public class MainScreenControleur implements Initializable {
 
 		tabPaneV2.getTabs().add(tabPaneV2.getTabs().size() - 1, tab);
 		tabPaneV2.getSelectionModel().select(tabPaneV2.getTabs().size() - 2);
-
-		setEventTab(tab);
 	}
 
 	public static void setSelectedTabVerID(String name, long l) {
@@ -995,20 +951,6 @@ public class MainScreenControleur implements Initializable {
 		tab.setName(name);
 		tab.setText(name);
 		tab.getAgenda().getTimeTable().setName(name);
-		setEventTab(tab);
-	}
-
-	private static void setEventTab(Tab tab) {
-		tab.setOnSelectionChanged(new EventHandler<Event>() {
-
-			@Override
-			public void handle(Event arg0) {
-				updateVStatic.setDisable(false);
-			}
-
-		});
-
-		updateVStatic.setDisable(false);
 	}
 
 	public static ArrayList<Creneaux> getCreneauxList() {
@@ -1029,6 +971,48 @@ public class MainScreenControleur implements Initializable {
 			dialog.showAndWait();
 		}
 		return dialog.getEditor().getText();
+	}
+
+	private ContextMenu getContextMenu(Stage primaryStage) {
+		ContextMenu contextMenu = new ContextMenu();
+
+		MenuItem itemSelect = new MenuItem("Choisir cette version");
+		itemSelect.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent e) {
+				if (selectedVersion != null) {
+					try {
+						Version.changeVersion(getTimeStamp(selectedVersion));
+					} catch (Exception excep) {
+						System.out.println("Exception btnImport :" + excep);
+					}
+					primaryStage.close();
+				}
+			}
+		});
+		MenuItem itemDuplicate = new MenuItem("Dupliquer cette version");
+		itemDuplicate.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent e) {
+				if (selectedVersion != null) {
+					try {
+						if (Version.dupliVersion(getTimeStamp(selectedVersion))) {
+							primaryStage.close();
+						} else {
+							JOptionPane.showMessageDialog(null, Constants.errDup, Constants.errMssg,
+									JOptionPane.ERROR_MESSAGE);
+						}
+					} catch (Exception excep) {
+						System.out.println("Exception btnDuplic :" + excep);
+					}
+				}
+			}
+		});
+
+		contextMenu.getItems().addAll(itemSelect, itemDuplicate);
+		return contextMenu;
 	}
 
 	@FXML
@@ -1069,46 +1053,23 @@ public class MainScreenControleur implements Initializable {
 	@FXML
 	private void Read_project(ActionEvent ae) {
 		treeView.setRoot(Version.getTreeItem());
-		JFXButton btnSelect = new JFXButton("Choisir cette version");
-		JFXButton btnDuplicate = new JFXButton("Dupliquer cette version");
 
 		Stage primaryStage = new Stage();
 		BorderPane b = new BorderPane();
-		btnSelect.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent e) {
-				if (selectedVersion != null) {
-					try {
-						Version.changeVersion(getTimeStamp(selectedVersion));
-					} catch (Exception excep) {
-						System.out.println("Exception btnImport :" + excep);
-					}
-					primaryStage.close();
-				}
-			}
-		});
-		btnDuplicate.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent e) {
-				if (selectedVersion != null) {
-					try {
-						if (Version.dupliVersion(getTimeStamp(selectedVersion))) {
-							primaryStage.close();
-						} else {
-							JOptionPane.showMessageDialog(null, Constants.errDup, "Erreur", JOptionPane.ERROR_MESSAGE);
-						}
-					} catch (Exception excep) {
-						System.out.println("Exception btnDuplic :" + excep);
-					}
-				}
-			}
-		});
+		if (!Version.rootIsEmpty()) {
+			ContextMenu contextMenu = getContextMenu(primaryStage);
 
-		b.setTop(btnSelect);
-		b.setRight(btnDuplicate);
+			treeView.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+				@Override
+				public void handle(ContextMenuEvent event) {
+					contextMenu.show(treeView, event.getScreenX(), event.getScreenY());
+				}
+			});
+		}
+
 		b.setCenter(treeView);
 		primaryStage.setScene(new Scene(b, 600, 400));
-		primaryStage.setTitle("L'arborescence");
+		primaryStage.setTitle("L'arborescence " + Version.getRootName());
 		primaryStage.show();
 	}
 

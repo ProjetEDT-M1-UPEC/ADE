@@ -54,10 +54,11 @@ public class Constants {
 
 	public static String cherSet = "8859_1";
 
-	public static String errcertificate = "Impossible de parser le site \n" + "problÃ©me de certificat\n";
-	public static String errMssg = "Message D'erreure";
+	public static String errcertificate = "Impossible de parser le site \n" + "probléme de certificat\n";
+	
+	public static String errMssg = "Message D'erreur";
 
-	public static String errConnection = "Impossible de parser le site \n" + "problÃ©me de Conection\n";
+	public static String errConnection = "Impossible de parser le site \n" + "probléme de Conection\n";
 
 	public static String errPath = "Lien Invalid !\n";
 
@@ -75,7 +76,7 @@ public class Constants {
 
 	public static String rootPath = "standard/gui/tree.jsp";
 
-	public static String errcategory = "Impossible de charger les catÃ©gories";
+	public static String errcategory = "Impossible de charger les catégories";
 	public static String errBranche = "Impossible de charger les Branches";
 
 	public static String openCategoryURL = "standard/gui/tree.jsp";
@@ -109,8 +110,6 @@ public class Constants {
 
 	public static final String ADDVERSION_POPUP = "/vue/AddVersionForm.fxml";
 
-	public static final String VIEWVERSION_POPUP = "/vue/ViewVersion.fxml";
-
 	public static final String MAIN_SCREEN = "/vue/MainScreen.fxml";
 
 	public static final String getMethod = "GET";
@@ -121,52 +120,7 @@ public class Constants {
 
 	public static final String PIANOWEEK = "custom/modules/plannings/pianoWeeks.jsp";
 
-<<<<<<< HEAD
-		public static final String CLOSE = "Fermer";
-		
-public static final String EDIT_SHORTCUT = "Modifier le raccourci";
-		
-		public static final String ADD_SHORTCUT =  "Ajouter le raccourci";
-		
-		public static final String PICS_SHORTUCT = "pics/shortuct1.png";
-		
-		public static final String PICS_DELETE = "pics/delete_icon.png";
-		
-		public static final String PICS_EDIT = "pics/edit_icon.png";
-		
-		public static final String PICS_ADD = "pics/add_icon.png";
-		
-		public static final String PICS_UNDO = "pics/undo_simple.png";
-		
-		public static final String PICS_REDO = "pics/redo_simple.png";
-		
-		
-		public static final String PICS_OPEN = "pics/open_simple.png";
-		
-		public static final String PICS_OPEN_hover = "pics/open_hover.png"; 
-		
-		public static final String PICS_SAVE = "pics/save_simple.png";
-		
-		public static final String PICS_SAVE_hover = "pics/save_hover.png"; 
-		
-		public static final String PICS_VERSION = "pics/version_icon.png";	
-		
-		public static final String PICS_DIFF = "pics/diff_icon.png";
-		
-		
-		public final static String SHORTUCT_FILE = "Shortcuts.txt";
-		public final static String Shortcut_FILE = "Shortcuts.txt";
-		
-		final public static String IMPORT_ADE_PopUp="Importer Ã  partir d'ADE";
-		
-		public static final String NAME = "Nom:";
-		
-		public static final String SAVE_SHORTCUT ="Enregistrer le raccourci";
-		
-		public static final String SHORTCUT = "Raccourci_";
-=======
 	public static final String CLOSE_ALL = "Fermer tout";
->>>>>>> 721c43fc7f291b67bd0f983ca19c6cd9be46ad83
 
 	public static final String CLOSE_RIGHT = "Fermer Les Onglets De  Droit";
 
@@ -190,18 +144,20 @@ public static final String EDIT_SHORTCUT = "Modifier le raccourci";
 
 	public static final String PICS_OPEN = "pics/open_simple.png";
 
-	public static final String PICS_OPEN_hover = "pics/open_hover.png"; // ** lety
+	public static final String PICS_OPEN_hover = "pics/open_hover.png";
 
 	public static final String PICS_SAVE = "pics/save_simple.png";
 
-	public static final String PICS_SAVE_hover = "pics/save_hover.png"; // ** lety
+	public static final String PICS_SAVE_hover = "pics/save_hover.png";
+	
+	public static final String PICS_VERSION = "pics/version_icon.png";
 
 	public static final String PICS_DIFF = "pics/diff_icon.png";
 
 	public final static String SHORTUCT_FILE = "Shortcuts.txt";
 	public final static String Shortcut_FILE = "Shortcuts.txt";
 
-	final public static String IMPORT_ADE_PopUp = "Importer Ã  partir d'ADE";
+	final public static String IMPORT_ADE_PopUp = "Importer à partir d'ADE";
 
 	public static final String NAME = "Nom:";
 
