@@ -509,12 +509,14 @@ public class MainScreenControleur implements Initializable {
 
 	public static void setAddTabeHandler() {
 
-		Tab newtab = new Tab("add", me);
-		ImageView addImage = new ImageView(Constants.PICS_ADD_TAB);
+		Tab newtab = new Tab("", me);
+		newtab.setDisable(true);
+		
+		//ImageView addImage = new ImageView(Constants.PICS_ADD_TAB);
 
-		addImage.setFitWidth(20);
-		addImage.setFitHeight(20);
-		newtab.setGraphic(addImage);
+		//addImage.setFitWidth(20);
+		//addImage.setFitHeight(20);
+		//newtab.setGraphic(addImage);
 		newtab.setClosable(false);
 		// action event
 
