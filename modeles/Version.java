@@ -1,5 +1,6 @@
 package modeles;
 
+import java.io.File;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,6 +50,9 @@ public class Version {
 	}
 	public Map<Long, Version> getAlternativeVersions(){
 		return alternativeVersions;
+	}
+	public Version getParent(){
+		return parent;
 	}
 	
 	private static Long nowStamp() {
@@ -154,5 +158,9 @@ public class Version {
 	
 	public static void saveRoot(JFileChooser fileChooser) {
 		JsonFileManager.getInstance().saveVersion(rootVersion, (fileChooser.getSelectedFile().getAbsolutePath() + "/"));
+	}
+	
+	public static void loadRoot(File file){
+		rootVersion = JsonFileManager.getInstance().loadVersion(file);
 	}
 }
