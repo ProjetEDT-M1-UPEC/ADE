@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EmptyStackException;
@@ -1039,9 +1038,9 @@ public class MainScreenControleur implements Initializable {
 	private void Save_project(ActionEvent ae) {
 		try {
 			JFileChooser fileChooser = new JFileChooser(
-					new File(Version.getRootName() + Constants.REP_OPEN_FILECHOSER));
+					new File(Constants.REP_OPEN_FILECHOSER));
 
-			fileChooser.setDialogTitle(Constants.SAVE_FILE);
+			fileChooser.setDialogTitle(Constants.SAVE_VERSION);
 			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
 			if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {

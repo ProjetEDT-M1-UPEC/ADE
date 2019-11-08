@@ -18,7 +18,7 @@ import javafx.scene.image.ImageView;
 
 public class Version {
 	private static Version rootVersion = null;
-	private static String rootName = "";
+	private static String rootName = "saveFileVersion";
 
 	private Long timestamp;
 	private String name;
@@ -67,10 +67,6 @@ public class Version {
 		v2.setName(v1.name);
 
 		return v2;
-	}
-
-	public static Version2 rootToVersion2(){
-		return toVersion2(rootVersion);
 	}
 
 	private static Long nowStamp() {
@@ -175,10 +171,10 @@ public class Version {
 	}
 
 	public static void saveRoot(JFileChooser fileChooser) {
-		JsonFileManager.getInstance().saveVersion(rootToVersion2(), (fileChooser.getSelectedFile().getAbsolutePath() + "/blabla"));
+		JsonFileManager.getInstance().saveVersion(toVersion2(rootVersion), (fileChooser.getSelectedFile().getAbsolutePath() + "/"+ rootName));
 	}
 
 	public static void loadRoot(File file){
-		rootVersion = Version2.toVersion(JsonFileManager.getInstance().loadVersion(file));
+		rootVersion = Version2.toVersion(null, JsonFileManager.getInstance().loadVersion(file));
 	}
 }

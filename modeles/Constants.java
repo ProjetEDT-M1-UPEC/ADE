@@ -166,6 +166,8 @@ public class Constants {
 	public static final String SHORTCUT = "Raccourci_";
 
 	public static final String SAVE_FILE = "Save Time Table";
+	
+	public static final String SAVE_VERSION = "Save Versionning";
 
 	public static final String REP_OPEN_FILECHOSER = ".";
 
