@@ -121,8 +121,10 @@ public class PopUpController implements Initializable {
 			
 			
 		}
+		
 		Stage stage = (Stage) save.getScene().getWindow();
 		stage.close();
+		
 	}
 
 	private Boolean Controle(String new_, String exist, Label lab) {

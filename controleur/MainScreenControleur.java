@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EmptyStackException;
@@ -459,14 +460,16 @@ public class MainScreenControleur implements Initializable {
 
 	@FXML
 	private void initDatePicker() {
-
-		// Calendar c = Calendar.getInstance();
+//		Calendar c = Calendar.getInstance();
+//		c.set(datePicker.getValue().getYear(), datePicker.getValue().getMonthValue() - 1,
+//		datePicker.getValue().getDayOfMonth());
+//	
 		Agenda myagenda = getSelectedTab().getAgenda();
-		LocalDateTime time = myagenda.getDisplayedLocalDateTime().minusDays(1);
+		myagenda.getDisplayedLocalDateTime();
+		LocalDateTime time = LocalDateTime.of(datePicker.getValue().getYear(),datePicker.getValue().getMonthValue() - 1,datePicker.getValue().getDayOfMonth(),0,0);
 		myagenda.setDisplayedLocalDateTime(time);
 
-//		c.set(datePicker.getValue().getYear(), datePicker.getValue().getMonthValue() - 1,
-//				datePicker.getValue().getDayOfMonth());
+		
 //
 //		if (getSelectedTab().getAgenda().getTimeTable().getType() == (TimeTable.TYPE.ADE_BASED)) {
 //
