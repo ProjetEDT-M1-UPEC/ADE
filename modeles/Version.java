@@ -19,7 +19,7 @@ import javafx.scene.image.ImageView;
 public class Version {
 	private static Version rootVersion = null;
 	private static String rootName = "";
-	
+
 	private Long timestamp;
 	private String name;
 	private Map<Long, Version> alternativeVersions = new TreeMap<>();
@@ -32,7 +32,7 @@ public class Version {
 		name = str;
 		creneauxList = l;
 	}
-	
+
 	public static String getRootName() {
 		return rootName;
 	}
@@ -51,19 +51,39 @@ public class Version {
 	public Map<Long, Version> getAlternativeVersions(){
 		return alternativeVersions;
 	}
-	
-	
+	public void setAlternativeVersions(Map<Long, Version> map){
+		alternativeVersions = map;
+	}
+
+	public static Version2 toVersion2(Version v1) {
+		Version2 v2 = new Version2();
+		ArrayList<Version2> list = new ArrayList<>();
+		v1.alternativeVersions.entrySet().forEach(set -> {
+			list.add(toVersion2(set.getValue()));
+		});
+		v2.setCreneauxsList(Creneaux.toCreneauxVersion2(v1.creneauxList));
+		v2.setVersion2List(list);
+	    v2.setTimestamp(v1.timestamp);
+		v2.setName(v1.name);
+
+		return v2;
+	}
+
+	public static Version2 rootToVersion2(){
+		return toVersion2(rootVersion);
+	}
+
 	private static Long nowStamp() {
 		return new Timestamp(System.currentTimeMillis()).getTime();
 	}
 
 	public static void addNewVersion(String value) {
 		Long key = nowStamp();
-		
+
 		if (rootVersion == null) {
 			rootVersion = new Version(null, key, value, MainScreenControleur.getCreneauxList());
 		} else {
-			Version parent = rootVersion.getVersion(new Long(MainScreenControleur.getSelectedTabVersionId())); 
+			Version parent = rootVersion.getVersion(new Long(MainScreenControleur.getSelectedTabVersionId()));
 			parent.addAltVer(key, value);
 		}
 		MainScreenControleur.setSelectedTabVerID(value, key.longValue());
@@ -125,9 +145,9 @@ public class Version {
 	}
 
 	public TreeItem<String> toTreeItemString() {
-		Date date = new Date(timestamp);		
-		ImageView imageVersion = new ImageView(Constants.PICS_VERSION); 
-		
+		Date date = new Date(timestamp);
+		ImageView imageVersion = new ImageView(Constants.PICS_VERSION);
+
 		String s = new SimpleDateFormat(Constants.DATE_FORMAT).format(date);
 		TreeItem<String> tree = new TreeItem<>(name + " @ " + s, imageVersion);
 		if (alternativeVersions != null && !alternativeVersions.isEmpty()) {
@@ -147,18 +167,18 @@ public class Version {
 	public static boolean rootIsEmpty() {
 		return rootVersion == null;
 	}
-	
+
 	// comparaison de la list de crenaux d'une version a une autre
 	public boolean compareCreneaux(Version o) {
 		boolean isEqual = this.creneauxList.equals(o.creneauxList);
 		return isEqual;
 	}
-	
+
 	public static void saveRoot(JFileChooser fileChooser) {
-		JsonFileManager.getInstance().saveVersion(rootVersion, (fileChooser.getSelectedFile().getAbsolutePath() + "/"));
+		JsonFileManager.getInstance().saveVersion(rootToVersion2(), (fileChooser.getSelectedFile().getAbsolutePath() + "/blabla"));
 	}
-	
+
 	public static void loadRoot(File file){
-		rootVersion = JsonFileManager.getInstance().loadVersion(file);
+		rootVersion = Version2.toVersion(JsonFileManager.getInstance().loadVersion(file));
 	}
 }

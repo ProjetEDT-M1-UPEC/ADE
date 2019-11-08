@@ -29,7 +29,7 @@ public class JsonFileManager implements FileManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see modeles.FileManager#load(java.io.File)
 	 */
 	@Override
@@ -52,7 +52,7 @@ public class JsonFileManager implements FileManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see modeles.FileManager#save(modeles.TimeTable, java.lang.String)
 	 */
 	@Override
@@ -71,7 +71,7 @@ public class JsonFileManager implements FileManager {
 		return true;
 	}
 
-	public boolean saveVersion(Version tm, String path) {
+	public boolean saveVersion(Version2 tm, String path) {
 
 		try {
 			objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
@@ -85,10 +85,10 @@ public class JsonFileManager implements FileManager {
 		return true;
 	}
 
-	public Version loadVersion(File file) {
-		Version v;
+	public Version2 loadVersion(File file) {
+		Version2 v2;
 		try {
-			v = objectMapper.readValue(file, Version.class);
+			v2 = objectMapper.readValue(file, Version2.class);
 		} catch (MismatchedInputException e1) {
 			JOptionPane.showMessageDialog(null, modeles.Constants.errLoadFile + MismatchFile, modeles.Constants.errMssg,
 					JOptionPane.ERROR_MESSAGE);
@@ -98,6 +98,6 @@ public class JsonFileManager implements FileManager {
 					modeles.Constants.errMssg, JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
-		return v;
+		return v2;
 	}
 }
