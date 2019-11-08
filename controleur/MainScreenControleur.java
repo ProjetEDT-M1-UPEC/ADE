@@ -1031,8 +1031,7 @@ public class MainScreenControleur implements Initializable {
 		fileChooser.setFileFilter(filter);
 
 		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			File file = fileChooser.getSelectedFile();
-			System.out.println("Ouverture : " + file.getName());
+			Version.loadRoot(fileChooser.getSelectedFile());
 		}
 	}
 
