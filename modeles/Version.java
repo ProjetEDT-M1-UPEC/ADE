@@ -51,9 +51,7 @@ public class Version {
 	public Map<Long, Version> getAlternativeVersions(){
 		return alternativeVersions;
 	}
-	public Version getParent(){
-		return parent;
-	}
+	
 	
 	private static Long nowStamp() {
 		return new Timestamp(System.currentTimeMillis()).getTime();
