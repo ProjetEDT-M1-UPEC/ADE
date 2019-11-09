@@ -52,6 +52,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -120,7 +121,23 @@ public class MainScreenControleur implements Initializable {
 
 	@FXML
 	private Button saveButton;
-
+	
+	@FXML
+	private MenuItem Create_Pro;
+	
+	@FXML
+	private MenuItem Open_Pro;
+	
+	@FXML
+	private MenuItem Save_Pro;
+	
+	@FXML
+	private MenuItem Read_Pro;
+	
+	@FXML
+	private MenuItem Add_Ver;	
+	
+	
 	public static Button undoButtonS, redoButtonS;
 	private static int color = 0;
 	private TreeView<String> treeView = new TreeView<>();
@@ -159,9 +176,20 @@ public class MainScreenControleur implements Initializable {
 
 		setAddTabeHandler();
 		initButtons();
-
+		
+		initMenuItem();
 	}
-
+	
+	private void initMenuItem() {
+		Open_Pro.setAccelerator(KeyCombination.keyCombination("Ctrl+W"));
+		
+		Save_Pro.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
+		
+		Read_Pro.setAccelerator(KeyCombination.keyCombination("Ctrl+A"));
+		
+		Add_Ver.setAccelerator(KeyCombination.keyCombination("SHORTCUT+V"));
+	}
+	
 	/*
 	 * Initialise les styles des boutons présents sur l'écran principal
 	 */
@@ -370,7 +398,7 @@ public class MainScreenControleur implements Initializable {
 		// getState
 		State state = StateManager.getInstance().load();
 
-		if (state != null) {
+		if (state != null && !state.getList().isEmpty()) {
 
 			ArrayList<TimeTable> list = new ArrayList<TimeTable>();
 
@@ -465,7 +493,7 @@ public class MainScreenControleur implements Initializable {
 //	
 		Agenda myagenda = getSelectedTab().getAgenda();
 		myagenda.getDisplayedLocalDateTime();
-		LocalDateTime time = LocalDateTime.of(datePicker.getValue().getYear(),datePicker.getValue().getMonthValue() - 1,datePicker.getValue().getDayOfMonth(),0,0);
+		LocalDateTime time = LocalDateTime.of(datePicker.getValue().getYear(),datePicker.getValue().getMonthValue(),datePicker.getValue().getDayOfMonth(),0,0);
 		myagenda.setDisplayedLocalDateTime(time);
 
 		
@@ -1076,7 +1104,7 @@ public class MainScreenControleur implements Initializable {
 	}
 
 	@FXML
-	private void Create_version(ActionEvent ae) {
+	private void Add_version(ActionEvent ae) {
 		final Stage popUp = new Stage();
 
 		popUp.setTitle("Ajouter une version de l'agenda");
@@ -1097,7 +1125,7 @@ public class MainScreenControleur implements Initializable {
 			e1.printStackTrace();
 		}
 	}
-
+	
 	private Long getTimeStamp(String selectedVersion) throws ParseException {
 		DateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT);
 		Date date = formatter.parse(selectedVersion);
