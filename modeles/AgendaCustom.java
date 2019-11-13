@@ -1,7 +1,7 @@
 package modeles;
 
 import java.io.IOException;
-
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -214,7 +214,8 @@ public class AgendaCustom extends Agenda{
 		appointments().clear();
 		this.appointments().addAll(getTimeTable().getCreneauxsList());
 		if(getTimeTable().getCreneauxsList().size()>0) {
-			this.setDisplayedLocalDateTime(getTimeTable().getCreneauxsList().get(0).getStartLocalDateTime());
+			ArrayList<Creneaux> currenTcreneaux = getTimeTable().getCreneauxsList();
+			this.setDisplayedLocalDateTime(currenTcreneaux.get(currenTcreneaux.size()-1).getStartLocalDateTime());
 		}
 		super.refresh();
 	}
