@@ -1,23 +1,32 @@
 package modeles;
 
+import java.net.URL;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.swing.JFileChooser;
 
+import org.controlsfx.control.textfield.TextFields;
+
 import code.barbot.Creneaux;
 import controleur.MainScreenControleur;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
 
 public class Version {
 	private static Version rootVersion = null;
 	private static String rootName = "";
+	public static Set<Version> versions = new HashSet<>();
+
 	
 	private Long timestamp;
 	private String name;
@@ -30,7 +39,9 @@ public class Version {
 		timestamp = t;
 		name = str;
 		creneauxList = l;
+		
 	}
+
 	
 	public static String getRootName() {
 		return rootName;
@@ -60,6 +71,8 @@ public class Version {
 		
 		if (rootVersion == null) {
 			rootVersion = new Version(null, key, value, MainScreenControleur.getCreneauxList());
+			versions.add(rootVersion);
+			//System.out.println(versions);
 		} else {
 			Version parent = rootVersion.getVersion(new Long(MainScreenControleur.getSelectedTabVersionId())); 
 			parent.addAltVer(key, value);
@@ -69,7 +82,12 @@ public class Version {
 
 	private void addAltVer(Long t, String str) {
 		Version ver = new Version(this, t, str, MainScreenControleur.getCreneauxList());
+		versions.add(ver);
+		//System.out.println(versions);
+		
 		alternativeVersions.put(t, ver);
+		
+		
 	}
 
 	public Version getVersion(Long t) {
@@ -155,4 +173,6 @@ public class Version {
 	public static void saveRoot(JFileChooser fileChooser) {
 		JsonFileManager.getInstance().saveVersion(rootVersion, (fileChooser.getSelectedFile().getAbsolutePath() + "/"));
 	}
+	
+
 }

@@ -13,14 +13,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EmptyStackException;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import org.controlsfx.control.textfield.TextFields;
 
 import com.jfoenix.controls.JFXSpinner;
 
@@ -48,6 +53,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
@@ -79,7 +85,7 @@ public class MainScreenControleur implements Initializable {
 
 	private Screen screen = Screen.getPrimary();
 	private Rectangle2D bounds = screen.getVisualBounds();
-
+	private Set<String> nomsVersions = new HashSet<>();
 	public static final String Shortcut_FILE = "Shortcuts.txt";
 
 	public static TabPane tabPaneV2;
@@ -120,11 +126,16 @@ public class MainScreenControleur implements Initializable {
 
 	@FXML
 	private Button saveButton;
+	
+	@FXML
+	private TextField versionField;
 
 	public static Button undoButtonS, redoButtonS;
 	private static int color = 0;
 	private TreeView<String> treeView = new TreeView<>();
 	private String selectedVersion = null;
+	
+	private  int nbrAccesRecherch = 0;
 
 	public MainScreenControleur() {
 		treeView.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
@@ -146,22 +157,127 @@ public class MainScreenControleur implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		
 		me = this;
-
+		
+		
 		tabPaneV2 = tabPane;
 		redoButtonS = redoButton;
 		undoButtonS = undoButton;
 
+		
+		
+		
+		
 		setFavDiffItems();
 		setFavMenuItems();
 		initState();
 
 		setAddTabeHandler();
 		initButtons();
+		listerVersions();
+		chargerRecherche();
+		
 
 	}
 
+	public void chargerNomsVersions() {
+		 Set<Version> vers = Version.versions;
+		 Iterator<Version> it = vers.iterator();
+	      while(it.hasNext())
+	      {
+	    	  Version v = it.next();
+	    	  nomsVersions.add(v.getName());
+	    	  
+	      }
+	      
+	}
+
+	//permet la suggestion des versions lors de la saisie dans recherche version
+	private void listerVersions() {
+		versionField.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+
+				//System.out.println(Version.versions);
+				chargerNomsVersions();
+				TextFields.bindAutoCompletion(versionField, nomsVersions);
+				
+				
+				//System.out.println(Version.versions);
+
+			}
+		});
+		
+		
+	}
+
+	
+	//chercher une version a partir de son nom
+	public Version rechercheVers(String ver) {
+		
+		
+		
+		
+		Version versionRecherche=null;
+		
+		boolean pasTrouv = false;
+		
+		Set<Version> setVersions = Version.versions;
+		//System.out.println(setVersions);
+		
+		 Iterator<Version> it = setVersions.iterator();
+		
+	      while(it.hasNext() && !pasTrouv)
+	      {
+	    	  Version v = it.next();
+	    	 
+	    	 if (ver.equals(v.getName())) 
+	    		 {
+	    		 
+		    		 pasTrouv=true;
+		    		 versionRecherche = v;
+	    		 }
+	      }
+	      if (!pasTrouv)
+	      {
+	    		 pasTrouv=true;
+	    		 
+	    	 }
+	    	  
+	      
+		return versionRecherche;
+	}
+	
+	
+	
+	//charger une version a partir de recherche version
+	@FXML
+	public void chargerRecherche() {
+		
+		Version version = rechercheVers(versionField.getText());
+		
+		if (version != null)
+		{
+					Version.changeVersion(version.getTimestamp());
+	
+				
+		}
+		else
+		{
+			if (nbrAccesRecherch!=0)
+			{	JOptionPane.showMessageDialog(null, "La version recherch� n'existe pas !", "Erreur",
+ 					JOptionPane.ERROR_MESSAGE);
+				
+				
+			}
+			
+		}
+		nbrAccesRecherch++;
+	}
+	
+	
+	
 	/*
 	 * Initialise les styles des boutons présents sur l'écran principal
 	 */
@@ -169,9 +285,9 @@ public class MainScreenControleur implements Initializable {
 		int size = 20;
 
 		ImageView openImage = new ImageView(Constants.PICS_OPEN);
-		ImageView openImageHover = new ImageView(Constants.PICS_OPEN_hover); // lety*****
+		ImageView openImageHover = new ImageView(Constants.PICS_OPEN_hover); 
 
-		// deb lety**
+		
 
 		openButton.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
 			@Override
@@ -187,12 +303,11 @@ public class MainScreenControleur implements Initializable {
 				openButton.setGraphic(openImage);
 			}
 		});
-		// ** fin lety
 
 		openButton.setGraphic(openImage);
 		ImageView saveImage = new ImageView(Constants.PICS_SAVE);
 
-		// ---lety*****~~ debut ~~
+	
 		ImageView saveImageHover = new ImageView(Constants.PICS_SAVE_hover);
 
 		saveButton.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
@@ -207,7 +322,7 @@ public class MainScreenControleur implements Initializable {
 				saveButton.setGraphic(saveImage);
 			}
 		});
-		// ---lety*****~~ fin ~~
+		
 
 		saveButton.setGraphic(saveImage);
 		ImageView undoImage = new ImageView(Constants.PICS_UNDO);
@@ -579,6 +694,7 @@ public class MainScreenControleur implements Initializable {
 		newStage.setMaximized(true);
 		newStage.show();
 	}
+
 
 	public boolean Dialog_Import_ADE() {
 		boolean k = false;
@@ -1011,6 +1127,8 @@ public class MainScreenControleur implements Initializable {
 				}
 			}
 		});
+		
+		
 
 		contextMenu.getItems().addAll(itemSelect, itemDuplicate);
 		return contextMenu;
