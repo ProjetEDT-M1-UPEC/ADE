@@ -89,7 +89,7 @@ public class JsonFileManager implements FileManager {
 		Version2 v2;
 		try {
 			v2 = objectMapper.readValue(file, Version2.class);
-			Version.setRootName(file.getName());
+			Version.setRootName(file.getName().replaceAll(".json", ""));
 		} catch (MismatchedInputException e1) {
 			JOptionPane.showMessageDialog(null, modeles.Constants.errLoadFile + MismatchFile, modeles.Constants.errMssg,
 					JOptionPane.ERROR_MESSAGE);

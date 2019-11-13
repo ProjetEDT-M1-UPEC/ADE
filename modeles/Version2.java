@@ -17,12 +17,11 @@ public class Version2 {
 	}
 
 	public static Version toVersion(Version parent, Version2 v2) {
-		Version v1 = new Version(parent, v2.timestamp, v2.name, Creneaux.toCreneaux(v2.creneauxsList));
 		Map<Long, Version> map = new TreeMap<>();
+		Version v1 = new Version(parent, v2.timestamp, v2.name, Creneaux.toCreneaux(v2.creneauxsList), map);
 		v2.listVersion2.forEach(ver2 -> {
 			map.put(v2.timestamp, toVersion(v1, ver2));
 		});
-		v1.setAlternativeVersions(map);
 		return v1;
 	}
 

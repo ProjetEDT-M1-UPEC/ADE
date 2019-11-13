@@ -13,11 +13,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EmptyStackException;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,13 +24,13 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.controlsfx.control.textfield.TextFields;
-
 import com.jfoenix.controls.JFXSpinner;
 
 import application.Main;
 import code.barbot.Creneaux;
 import code.barbot.Parseur;
+import impl.org.controlsfx.autocompletion.AutoCompletionTextFieldBinding;
+import impl.org.controlsfx.autocompletion.SuggestionProvider;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -86,7 +85,7 @@ public class MainScreenControleur implements Initializable {
 
 	private Screen screen = Screen.getPrimary();
 	private Rectangle2D bounds = screen.getVisualBounds();
-	private Set<String> nomsVersions = new HashSet<>();
+
 	public static final String Shortcut_FILE = "Shortcuts.txt";
 
 	public static TabPane tabPaneV2;
@@ -127,34 +126,31 @@ public class MainScreenControleur implements Initializable {
 
 	@FXML
 	private Button saveButton;
-	
+
 	@FXML
-<<<<<<< HEAD
 	private TextField versionField;
 
-=======
+	@FXML
 	private MenuItem Create_Pro;
-	
+
 	@FXML
 	private MenuItem Open_Pro;
-	
+
 	@FXML
 	private MenuItem Save_Pro;
-	
+
 	@FXML
 	private MenuItem Read_Pro;
-	
+
 	@FXML
-	private MenuItem Add_Ver;	
-	
-	
->>>>>>> f523031855d6b31500f605d79c0ce5f5881854c9
+	private MenuItem Add_Ver;
+
+	private Map<String, Long> nomsVersions = new HashMap<>();
+	SuggestionProvider<String> provider;
 	public static Button undoButtonS, redoButtonS;
 	private static int color = 0;
 	private TreeView<String> treeView = new TreeView<>();
 	private String selectedVersion = null;
-	
-	private  int nbrAccesRecherch = 0;
 
 	public MainScreenControleur() {
 		treeView.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
@@ -176,202 +172,80 @@ public class MainScreenControleur implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+
 		me = this;
-		
-		
+
 		tabPaneV2 = tabPane;
 		redoButtonS = redoButton;
 		undoButtonS = undoButton;
 
-		
-		
-		
-		
 		setFavDiffItems();
 		setFavMenuItems();
 		initState();
 
 		setAddTabeHandler();
 		initButtons();
-<<<<<<< HEAD
+
+		initMenuItem();
+
 		listerVersions();
-		chargerRecherche();
-		
-
 	}
 
-	public void chargerNomsVersions() {
-		 Set<Version> vers = Version.versions;
-		 Iterator<Version> it = vers.iterator();
-	      while(it.hasNext())
-	      {
-	    	  Version v = it.next();
-	    	  nomsVersions.add(v.getName());
-	    	  
-	      }
-	      
+	private void initMenuItem() {
+		Open_Pro.setAccelerator(KeyCombination.keyCombination("Ctrl+W"));
+
+		Save_Pro.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
+
+		Read_Pro.setAccelerator(KeyCombination.keyCombination("Ctrl+A"));
+
+		Add_Ver.setAccelerator(KeyCombination.keyCombination("SHORTCUT+V"));
 	}
 
-	//permet la suggestion des versions lors de la saisie dans recherche version
+	// permet la suggestion des versions lors de la saisie dans recherche version
 	private void listerVersions() {
+		provider = SuggestionProvider.create(nomsVersions.keySet());
+		new AutoCompletionTextFieldBinding<>(versionField, provider);
+		
 		versionField.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-
-				//System.out.println(Version.versions);
-				chargerNomsVersions();
-				TextFields.bindAutoCompletion(versionField, nomsVersions);
+				nomsVersions = Version.getMapNames();
 				
-				
-				//System.out.println(Version.versions);
-
+				provider.clearSuggestions();
+				provider.addPossibleSuggestions(nomsVersions.keySet());
 			}
 		});
-		
-		
 	}
 
-	
-	//chercher une version a partir de son nom
-	public Version rechercheVers(String ver) {
-		
-		
-		
-		
-		Version versionRecherche=null;
-		
-		boolean pasTrouv = false;
-		
-		Set<Version> setVersions = Version.versions;
-		//System.out.println(setVersions);
-		
-		 Iterator<Version> it = setVersions.iterator();
-		
-	      while(it.hasNext() && !pasTrouv)
-	      {
-	    	  Version v = it.next();
-	    	 
-	    	 if (ver.equals(v.getName())) 
-	    		 {
-	    		 
-		    		 pasTrouv=true;
-		    		 versionRecherche = v;
-	    		 }
-	      }
-	      if (!pasTrouv)
-	      {
-	    		 pasTrouv=true;
-	    		 
-	    	 }
-	    	  
-	      
-		return versionRecherche;
-	}
-	
-	
-	
-	//charger une version a partir de recherche version
 	@FXML
-	public void chargerRecherche() {
-		
-		Version version = rechercheVers(versionField.getText());
-		
-		if (version != null)
-		{
-					Version.changeVersion(version.getTimestamp());
-	
-				
-		}
-		else
-		{
-			if (nbrAccesRecherch!=0)
-			{	JOptionPane.showMessageDialog(null, "La version recherché n'existe pas !", "Erreur",
- 					JOptionPane.ERROR_MESSAGE);
-				
-				
-			}
-			
-		}
-		nbrAccesRecherch++;
+	private void searchButton(ActionEvent ae) {
+		Version.changeVersion(nomsVersions.get(versionField.getText()));
 	}
-	
-	
-	
-=======
-		
-		initMenuItem();
-	}
-	
-	private void initMenuItem() {
-		Open_Pro.setAccelerator(KeyCombination.keyCombination("Ctrl+W"));
-		
-		Save_Pro.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
-		
-		Read_Pro.setAccelerator(KeyCombination.keyCombination("Ctrl+A"));
-		
-		Add_Ver.setAccelerator(KeyCombination.keyCombination("SHORTCUT+V"));
-	}
-	
->>>>>>> f523031855d6b31500f605d79c0ce5f5881854c9
+
 	/*
-	 * Initialise les styles des boutons prÃ©sents sur l'Ã©cran principal
+	 * Initialise les styles des boutons présents sur l'écran principal
 	 */
 	private void initButtons() {
-		int size = 20;
+		setHandleBtn(openButton, Constants.PICS_OPEN_hover, Constants.PICS_OPEN);
+		setHandleBtn(saveButton, Constants.PICS_SAVE_hover, Constants.PICS_SAVE);
 
-		ImageView openImage = new ImageView(Constants.PICS_OPEN);
-		ImageView openImageHover = new ImageView(Constants.PICS_OPEN_hover); 
+		setImageBtn(undoButton, Constants.PICS_UNDO);
+		setImageBtn(redoButton, Constants.PICS_REDO);
+	}
 
-		
+	private void setImageBtn(Button btn, String img) {
+		ImageView pic = new ImageView(img);
+		;
+		pic.setFitHeight(Constants.SIZE_BTN);
+		pic.setFitWidth(Constants.SIZE_BTN);
+		btn.setGraphic(pic);
+	}
 
-		openButton.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-
-				openButton.setGraphic(openImageHover);
-
-			}
-		});
-		openButton.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				openButton.setGraphic(openImage);
-			}
-		});
-
-		openButton.setGraphic(openImage);
-		ImageView saveImage = new ImageView(Constants.PICS_SAVE);
-
-	
-		ImageView saveImageHover = new ImageView(Constants.PICS_SAVE_hover);
-
-		saveButton.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				saveButton.setGraphic(saveImageHover);
-			}
-		});
-		saveButton.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				saveButton.setGraphic(saveImage);
-			}
-		});
-		
-
-		saveButton.setGraphic(saveImage);
-		ImageView undoImage = new ImageView(Constants.PICS_UNDO);
-		undoImage.setFitHeight(size);
-		undoImage.setFitWidth(size);
-		undoButton.setGraphic(undoImage);
-
-		ImageView redoImage = new ImageView(Constants.PICS_REDO);
-
-		redoImage.setFitHeight(size);
-		redoImage.setFitWidth(size);
-		redoButton.setGraphic(redoImage);
-
+	private void setHandleBtn(Button btn, String hov, String img) {
+		ImageView pic = new ImageView(img);
+		btn.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> btn.setGraphic(new ImageView(hov)));
+		btn.addEventHandler(MouseEvent.MOUSE_EXITED, e -> btn.setGraphic(pic));
+		btn.setGraphic(pic);
 	}
 
 	private void diff(TimeTable compared) {
@@ -553,7 +427,7 @@ public class MainScreenControleur implements Initializable {
 	@FXML
 	public void show_Filter_PopUp(ActionEvent ee) {
 		final Stage popUp = new Stage();
-		popUp.setTitle("Filtrer les donnÃ©es");
+		popUp.setTitle("Filtrer les données");
 		popUp.initModality(Modality.APPLICATION_MODAL);
 		AnchorPane root;
 		try {
@@ -616,10 +490,10 @@ public class MainScreenControleur implements Initializable {
 //	
 		Agenda myagenda = getSelectedTab().getAgenda();
 		myagenda.getDisplayedLocalDateTime();
-		LocalDateTime time = LocalDateTime.of(datePicker.getValue().getYear(),datePicker.getValue().getMonthValue(),datePicker.getValue().getDayOfMonth(),0,0);
+		LocalDateTime time = LocalDateTime.of(datePicker.getValue().getYear(), datePicker.getValue().getMonthValue(),
+				datePicker.getValue().getDayOfMonth(), 0, 0);
 		myagenda.setDisplayedLocalDateTime(time);
 
-		
 //
 //		if (getSelectedTab().getAgenda().getTimeTable().getType() == (TimeTable.TYPE.ADE_BASED)) {
 //
@@ -664,12 +538,12 @@ public class MainScreenControleur implements Initializable {
 
 		Tab newtab = new Tab("", me);
 		newtab.setDisable(true);
-		
-		//ImageView addImage = new ImageView(Constants.PICS_ADD_TAB);
 
-		//addImage.setFitWidth(20);
-		//addImage.setFitHeight(20);
-		//newtab.setGraphic(addImage);
+		// ImageView addImage = new ImageView(Constants.PICS_ADD_TAB);
+
+		// addImage.setFitWidth(20);
+		// addImage.setFitHeight(20);
+		// newtab.setGraphic(addImage);
 		newtab.setClosable(false);
 		// action event
 
@@ -733,12 +607,11 @@ public class MainScreenControleur implements Initializable {
 		newStage.show();
 	}
 
-
 	public boolean Dialog_Import_ADE() {
 		boolean k = false;
 
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setContentText("Vous voulez charger cet emploi sur le mÃªme agenda");
+		alert.setContentText("Vous voulez charger cet emploi sur le même agenda");
 		ButtonType oui = new ButtonType("Oui");
 		ButtonType non = new ButtonType("Non");
 		alert.getButtonTypes().setAll(oui, non);
@@ -943,7 +816,7 @@ public class MainScreenControleur implements Initializable {
 	}
 
 	/**
-	 * Supprimer tous les crÃ©neaux Ajouter la liste des crÃ©neaux Ã  l'agenda
+	 * Supprimer tous les créneaux Ajouter la liste des créneaux à l'agenda
 	 * 
 	 * @param timeTable
 	 */
@@ -1033,8 +906,8 @@ public class MainScreenControleur implements Initializable {
 	}
 
 	/**
-	 * action graphique "menu" Lancer le sÃ©lecteur de fichier pour choisir le
-	 * chemin oÃ¹ nous allons enregistrer le fichier
+	 * action graphique "menu" Lancer le sélecteur de fichier pour choisir le chemin
+	 * où nous allons enregistrer le fichier
 	 * 
 	 * @param event Evenement
 	 */
@@ -1165,8 +1038,6 @@ public class MainScreenControleur implements Initializable {
 				}
 			}
 		});
-		
-		
 
 		contextMenu.getItems().addAll(itemSelect, itemDuplicate);
 		return contextMenu;
@@ -1191,8 +1062,7 @@ public class MainScreenControleur implements Initializable {
 	@FXML
 	private void Save_project(ActionEvent ae) {
 		try {
-			JFileChooser fileChooser = new JFileChooser(
-					new File(Constants.REP_OPEN_FILECHOSER));
+			JFileChooser fileChooser = new JFileChooser(new File(Constants.REP_OPEN_FILECHOSER));
 
 			fileChooser.setDialogTitle(Constants.SAVE_VERSION);
 			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -1251,7 +1121,7 @@ public class MainScreenControleur implements Initializable {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	private Long getTimeStamp(String selectedVersion) throws ParseException {
 		DateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT);
 		Date date = formatter.parse(selectedVersion);

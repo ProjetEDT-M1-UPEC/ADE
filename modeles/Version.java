@@ -1,80 +1,62 @@
 package modeles;
 
-<<<<<<< HEAD
-import java.net.URL;
-=======
 import java.io.File;
->>>>>>> f523031855d6b31500f605d79c0ce5f5881854c9
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.TreeMap;
 
 import javax.swing.JFileChooser;
 
-import org.controlsfx.control.textfield.TextFields;
-
 import code.barbot.Creneaux;
 import controleur.MainScreenControleur;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
 
 public class Version {
 	private static Version rootVersion = null;
-<<<<<<< HEAD
-	private static String rootName = "";
-	public static Set<Version> versions = new HashSet<>();
-
-	
-=======
 	private static String rootName = "saveFileVersion";
 
->>>>>>> f523031855d6b31500f605d79c0ce5f5881854c9
-	private Long timestamp;
-	private String name;
-	private Map<Long, Version> alternativeVersions = new TreeMap<>();
-	private ArrayList<Creneaux> creneauxList;
-	private Version parent;
+	private final Long timestamp;
+	private final String name;
+	private final ArrayList<Creneaux> creneauxList;
+	private final Version parent;
+	private final Map<Long, Version> alternativeVersions;
 
-	public Version(Version parent, Long t, String str, ArrayList<Creneaux> l) {
+	public Version(Version parent, Long t, String str, ArrayList<Creneaux> l, Map<Long, Version> map) {
 		this.parent = parent;
 		timestamp = t;
 		name = str;
 		creneauxList = l;
-		
+		alternativeVersions = map;
 	}
 
-<<<<<<< HEAD
-	
-=======
->>>>>>> f523031855d6b31500f605d79c0ce5f5881854c9
+	public Version(Version parent, Long t, String str, ArrayList<Creneaux> l) {
+		this(parent, t, str, l, new TreeMap<>());
+	}
+
 	public static String getRootName() {
 		return rootName;
 	}
+
 	public static void setRootName(String str) {
 		rootName = str;
 	}
+
 	public String getName() {
 		return name;
 	}
-	public void setName(String str) {
-		name = str;
-	}
+
 	public Long getTimestamp() {
 		return timestamp;
 	}
-	public Map<Long, Version> getAlternativeVersions(){
+
+	public Map<Long, Version> getAlternativeVersions() {
 		return alternativeVersions;
-	}
-	public void setAlternativeVersions(Map<Long, Version> map){
-		alternativeVersions = map;
 	}
 
 	public static Version2 toVersion2(Version v1) {
@@ -85,7 +67,7 @@ public class Version {
 		});
 		v2.setCreneauxsList(Creneaux.toCreneauxVersion2(v1.creneauxList));
 		v2.setVersion2List(list);
-	    v2.setTimestamp(v1.timestamp);
+		v2.setTimestamp(v1.timestamp);
 		v2.setName(v1.name);
 
 		return v2;
@@ -100,8 +82,6 @@ public class Version {
 
 		if (rootVersion == null) {
 			rootVersion = new Version(null, key, value, MainScreenControleur.getCreneauxList());
-			versions.add(rootVersion);
-			//System.out.println(versions);
 		} else {
 			Version parent = rootVersion.getVersion(new Long(MainScreenControleur.getSelectedTabVersionId()));
 			parent.addAltVer(key, value);
@@ -111,12 +91,7 @@ public class Version {
 
 	private void addAltVer(Long t, String str) {
 		Version ver = new Version(this, t, str, MainScreenControleur.getCreneauxList());
-		versions.add(ver);
-		//System.out.println(versions);
-		
 		alternativeVersions.put(t, ver);
-		
-		
 	}
 
 	public Version getVersion(Long t) {
@@ -135,7 +110,8 @@ public class Version {
 	public static void changeVersion(Long t) {
 		Version wantedVersion = rootVersion.getVersion(t);
 		if (wantedVersion != null) {
-			MainScreenControleur.setNewTabForVersionning(wantedVersion.getCreneauxList(), wantedVersion.name, wantedVersion.timestamp);
+			MainScreenControleur.setNewTabForVersionning(wantedVersion.getCreneauxList(), wantedVersion.name,
+					wantedVersion.timestamp);
 		}
 	}
 
@@ -193,19 +169,31 @@ public class Version {
 		return rootVersion == null;
 	}
 
+	public static void saveRoot(JFileChooser fileChooser) {
+		JsonFileManager.getInstance().saveVersion(toVersion2(rootVersion),
+				(fileChooser.getSelectedFile().getAbsolutePath() + "/" + rootName));
+	}
+
+	public static void loadRoot(File file) {
+		rootVersion = Version2.toVersion(null, JsonFileManager.getInstance().loadVersion(file));
+	}
+
+	private static void fillNames(Version v, Map<String, Long> result) {
+		result.put(v.name, v.timestamp);
+		v.alternativeVersions.values().forEach(alt -> fillNames(alt, result));
+	}
+
+	public static Map<String, Long> getMapNames() {
+		Map<String, Long> result = new HashMap<>();
+		if (!rootIsEmpty())
+			fillNames(rootVersion, result);
+		return result;
+	}
+
 	// comparaison de la list de crenaux d'une version a une autre
-	public boolean compareCreneaux(Version o) {
+	@SuppressWarnings("unused")
+	private boolean compareCreneaux(Version o) {
 		boolean isEqual = this.creneauxList.equals(o.creneauxList);
 		return isEqual;
 	}
-
-	public static void saveRoot(JFileChooser fileChooser) {
-		JsonFileManager.getInstance().saveVersion(toVersion2(rootVersion), (fileChooser.getSelectedFile().getAbsolutePath() + "/"+ rootName));
-	}
-
-	public static void loadRoot(File file){
-		rootVersion = Version2.toVersion(null, JsonFileManager.getInstance().loadVersion(file));
-	}
-	
-
 }

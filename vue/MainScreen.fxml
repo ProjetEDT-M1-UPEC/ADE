@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controleur.MainScreenControleur">
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controleur.MainScreenControleur">
 	<children>
 		<MenuBar id="menuBar" cache="true" prefHeight="25.0" prefWidth="700.0">
 			<menus>
@@ -130,15 +130,15 @@
 
 				<VBox prefHeight="618.0" prefWidth="296.0">
 					<children>
-                  <AnchorPane prefHeight="476.0" prefWidth="296.0">
-                     <children>
-                        <Label layoutX="35.0" layoutY="189.0" prefHeight="17.0" prefWidth="119.0" text="Recherche de version " />
-                        <Label layoutX="32.0" layoutY="57.0" prefHeight="24.0" prefWidth="125.0" text="choisissez la semaine " />
-      						<DatePicker fx:id="datePicker" layoutX="32.0" layoutY="81.0" onAction="#initDatePicker" />
-                        <TextField fx:id="versionField" layoutX="32.0" layoutY="207.0" prefHeight="26.0" prefWidth="154.0" />
-                        <Button fx:id="chargeRechercheButton" layoutX="195.0" layoutY="207.0" minHeight="18.0" mnemonicParsing="false" onAction="#chargerRecherche" prefHeight="26.0" prefWidth="64.0" style="-fx-background-color: #035f90; -fx-border-radius: 22; -fx-background-radius: 22; -fx-border-color: #003e6b; -fx-text-fill: white; -fx-font-size: 11;" text="Charger" textAlignment="JUSTIFY" />
-                     </children>
-                  </AnchorPane>
+                  		<AnchorPane prefHeight="476.0" prefWidth="296.0">
+                     		<children>
+                        		<Label layoutX="35.0" layoutY="189.0" prefHeight="17.0" prefWidth="119.0" text="Chercher une version" />
+                        		<Label layoutX="32.0" layoutY="57.0" prefHeight="24.0" prefWidth="125.0" text="Choisir une semaine " />
+      							<DatePicker fx:id="datePicker" layoutX="32.0" layoutY="81.0" onAction="#initDatePicker" />
+                        		<TextField fx:id="versionField" layoutX="32.0" layoutY="207.0" prefHeight="26.0" prefWidth="154.0" />
+                        		<Button fx:id="searchButton" layoutX="195.0" layoutY="207.0" minHeight="18.0" mnemonicParsing="false" onAction="#searchButton" prefHeight="26.0" prefWidth="64.0" style="-fx-background-color: #035f90; -fx-border-radius: 22; -fx-background-radius: 22; -fx-border-color: #003e6b; -fx-text-fill: white; -fx-font-size: 11;" text="Charger" textAlignment="JUSTIFY" />
+                     		</children>
+                  		</AnchorPane>
 					</children>
 				</VBox>
 				<VBox>
