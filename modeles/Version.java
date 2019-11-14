@@ -5,9 +5,10 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.swing.JFileChooser;
@@ -79,51 +80,57 @@ public class Version {
 
 	public static void addNewVersion(String value) {
 		Long key = nowStamp();
+		String id;
 
 		if (rootVersion == null) {
 			rootVersion = new Version(null, key, value, MainScreenControleur.getCreneauxList());
+			id = rootVersion.getNameTimestamp();
 		} else {
-			Version parent = rootVersion.getVersion(new Long(MainScreenControleur.getSelectedTabVersionId()));
-			parent.addAltVer(key, value);
+			Version parent = rootVersion.getVersion(MainScreenControleur.getSelectedTabVersionId());
+			if (parent == null)
+				return;
+			id = parent.addAltVer(key, value);
 		}
-		MainScreenControleur.setSelectedTabVerID(value, key.longValue());
+		MainScreenControleur.setSelectedTabVerID(value, id);
 	}
 
-	private void addAltVer(Long t, String str) {
+	private String addAltVer(Long t, String str) {
 		Version ver = new Version(this, t, str, MainScreenControleur.getCreneauxList());
 		alternativeVersions.put(t, ver);
+		return ver.getNameTimestamp();
 	}
 
-	public Version getVersion(Long t) {
-		if (timestamp.compareTo(t) == 0)
+	public Version getVersion(String str) {
+		if (str.equals(getNameTimestamp()))
 			return this;
 		Iterator<Version> i = alternativeVersions.values().iterator();
 		Version v;
 		while (i.hasNext()) {
-			v = i.next().getVersion(t);
+			v = i.next().getVersion(str);
 			if (v != null)
 				return v;
 		}
 		return null;
 	}
 
-	public static void changeVersion(Long t) {
-		Version wantedVersion = rootVersion.getVersion(t);
+	public static void changeVersion(String str) {
+		Version wantedVersion = rootVersion.getVersion(str);
 		if (wantedVersion != null) {
 			MainScreenControleur.setNewTabForVersionning(wantedVersion.getCreneauxList(), wantedVersion.name,
-					wantedVersion.timestamp);
+					wantedVersion.getNameTimestamp());
 		}
 	}
 
-	public static boolean dupliVersion(Long t) {
-		Version v = rootVersion.getVersion(t);
-		if (v.parent == null)
+	public static boolean dupliVersion(String str) {
+		Version v = rootVersion.getVersion(str);
+		if (v == null || v.parent == null)
 			return false;
 		else {
 			Long time = nowStamp();
 			Version vDupli = new Version(v.parent, time, v.name, v.getCreneauxList());
 			v.parent.alternativeVersions.put(vDupli.timestamp, vDupli);
-			MainScreenControleur.setNewTabForVersionning(vDupli.getCreneauxList(), vDupli.name, vDupli.timestamp);
+			MainScreenControleur.setNewTabForVersionning(vDupli.getCreneauxList(), vDupli.name,
+					vDupli.getNameTimestamp());
 			return true;
 		}
 	}
@@ -146,11 +153,8 @@ public class Version {
 	}
 
 	public TreeItem<String> toTreeItemString() {
-		Date date = new Date(timestamp);
 		ImageView imageVersion = new ImageView(Constants.PICS_VERSION);
-
-		String s = new SimpleDateFormat(Constants.DATE_FORMAT).format(date);
-		TreeItem<String> tree = new TreeItem<>(name + " @ " + s, imageVersion);
+		TreeItem<String> tree = new TreeItem<>(getNameTimestamp(), imageVersion);
 		if (alternativeVersions != null && !alternativeVersions.isEmpty()) {
 			alternativeVersions.values().forEach(alt -> {
 				tree.getChildren().add(alt.toTreeItemString());
@@ -160,8 +164,8 @@ public class Version {
 	}
 
 	public static TreeItem<String> getTreeItem() {
-		if (rootVersion == null)
-			return new TreeItem<String>("Aucune version enregistrée");
+		if (rootIsEmpty())
+			return new TreeItem<String>(Constants.EMPTY_TREE);
 		return rootVersion.toTreeItemString();
 	}
 
@@ -178,16 +182,21 @@ public class Version {
 		rootVersion = Version2.toVersion(null, JsonFileManager.getInstance().loadVersion(file));
 	}
 
-	private static void fillNames(Version v, Map<String, Long> result) {
-		result.put(v.name, v.timestamp);
+	private static void fillNames(Version v, Set<String> result) {
+		result.add(v.getNameTimestamp());
 		v.alternativeVersions.values().forEach(alt -> fillNames(alt, result));
 	}
 
-	public static Map<String, Long> getMapNames() {
-		Map<String, Long> result = new HashMap<>();
+	public static Set<String> getSetNames() {
+		Set<String> result = new HashSet<>();
 		if (!rootIsEmpty())
 			fillNames(rootVersion, result);
 		return result;
+	}
+
+	private String getNameTimestamp() {
+		Date date = new Date(timestamp);
+		return name + " " + new SimpleDateFormat(Constants.DATE_FORMAT).format(date);
 	}
 
 	// comparaison de la list de crenaux d'une version a une autre

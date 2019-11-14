@@ -184,4 +184,6 @@ public class Constants {
 	public static final String errDup = "Vous ne pouvez pas dupliquer la racine de l'arborescence.";
 	
 	public static final int SIZE_BTN = 20;
+	
+	public static final String EMPTY_TREE = "Aucune version enregistrée";
 }

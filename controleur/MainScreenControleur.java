@@ -13,12 +13,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EmptyStackException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Set;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -145,7 +143,7 @@ public class MainScreenControleur implements Initializable {
 	@FXML
 	private MenuItem Add_Ver;
 
-	private Map<String, Long> nomsVersions = new HashMap<>();
+	private Set<String> nomsVersions = new HashSet<>();
 	SuggestionProvider<String> provider;
 	public static Button undoButtonS, redoButtonS;
 	private static int color = 0;
@@ -153,20 +151,11 @@ public class MainScreenControleur implements Initializable {
 	private String selectedVersion = null;
 
 	public MainScreenControleur() {
-		treeView.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				String str = e.getTarget().toString();
-				Pattern pattern = Pattern.compile("@ (.*?)\"", Pattern.DOTALL);
-				Matcher matcher = pattern.matcher(str);
-				if (matcher.find()) {
-					selectedVersion = matcher.group(1);
-					// System.out.println(selectedVersion);
-				} else {
-					selectedVersion = null;
-				}
-
-			}
+		treeView.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+			if (treeView.getSelectionModel().getSelectedItem() == null)
+				return;
+			selectedVersion = treeView.getSelectionModel().getSelectedItem().getValue();
+			selectedVersion = selectedVersion.equals(Constants.EMPTY_TREE) ? null : selectedVersion;
 		});
 	}
 
@@ -203,23 +192,23 @@ public class MainScreenControleur implements Initializable {
 
 	// permet la suggestion des versions lors de la saisie dans recherche version
 	private void listerVersions() {
-		provider = SuggestionProvider.create(nomsVersions.keySet());
+		provider = SuggestionProvider.create(nomsVersions);
 		new AutoCompletionTextFieldBinding<>(versionField, provider);
-		
+
 		versionField.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				nomsVersions = Version.getMapNames();
-				
+				nomsVersions = Version.getSetNames();
+
 				provider.clearSuggestions();
-				provider.addPossibleSuggestions(nomsVersions.keySet());
+				provider.addPossibleSuggestions(nomsVersions);
 			}
 		});
 	}
 
 	@FXML
 	private void searchButton(ActionEvent ae) {
-		Version.changeVersion(nomsVersions.get(versionField.getText()));
+		Version.changeVersion(versionField.getText());
 	}
 
 	/*
@@ -959,23 +948,23 @@ public class MainScreenControleur implements Initializable {
 		return (Tab) tabPane.getSelectionModel().getSelectedItem();
 	}
 
-	public static long getSelectedTabVersionId() {
+	public static String getSelectedTabVersionId() {
 		return ((Tab) tabPaneV2.getSelectionModel().getSelectedItem()).getVersionId();
 	}
 
-	public static void setNewTabForVersionning(ArrayList<Creneaux> list, String name, Long l) {
+	public static void setNewTabForVersionning(ArrayList<Creneaux> list, String name, String id) {
 		AgendaCustom agenda = new AgendaCustom(new TimeTable(name, "Path", list, TimeTable.TYPE.EMPTY_BASED));
 
-		Tab tab = new Tab(agenda, me, l.longValue());
+		Tab tab = new Tab(agenda, me, id);
 		agenda.setParent(tab);
 
 		tabPaneV2.getTabs().add(tabPaneV2.getTabs().size() - 1, tab);
 		tabPaneV2.getSelectionModel().select(tabPaneV2.getTabs().size() - 2);
 	}
 
-	public static void setSelectedTabVerID(String name, long l) {
+	public static void setSelectedTabVerID(String name, String id) {
 		Tab tab = ((Tab) tabPaneV2.getSelectionModel().getSelectedItem());
-		tab.setVersionId(l);
+		tab.setVersionId(id);
 		tab.setName(name);
 		tab.setText(name);
 		tab.getAgenda().getTimeTable().setName(name);
@@ -1011,7 +1000,7 @@ public class MainScreenControleur implements Initializable {
 			public void handle(ActionEvent e) {
 				if (selectedVersion != null) {
 					try {
-						Version.changeVersion(getTimeStamp(selectedVersion));
+						Version.changeVersion(selectedVersion);
 					} catch (Exception excep) {
 						System.out.println("Exception btnImport :" + excep);
 					}
@@ -1026,7 +1015,7 @@ public class MainScreenControleur implements Initializable {
 			public void handle(ActionEvent e) {
 				if (selectedVersion != null) {
 					try {
-						if (Version.dupliVersion(getTimeStamp(selectedVersion))) {
+						if (Version.dupliVersion(selectedVersion)) {
 							primaryStage.close();
 						} else {
 							JOptionPane.showMessageDialog(null, Constants.errDup, Constants.errMssg,
@@ -1122,6 +1111,7 @@ public class MainScreenControleur implements Initializable {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private Long getTimeStamp(String selectedVersion) throws ParseException {
 		DateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT);
 		Date date = formatter.parse(selectedVersion);
