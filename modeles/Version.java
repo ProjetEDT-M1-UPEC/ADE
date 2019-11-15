@@ -177,6 +177,7 @@ public class Version {
 	}
 
 	public static void saveRoot(JFileChooser fileChooser) {
+		if(rootIsEmpty()) return;
 		JsonFileManager.getInstance().saveVersion(toVersion2(rootVersion),
 				(fileChooser.getSelectedFile().getAbsolutePath() + "/" + rootName));
 	}

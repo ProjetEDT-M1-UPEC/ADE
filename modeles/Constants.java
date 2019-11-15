@@ -186,4 +186,5 @@ public class Constants {
 	public static final int SIZE_BTN = 20;
 	
 	public static final String EMPTY_TREE = "Aucune version enregistrée";
+	
 }

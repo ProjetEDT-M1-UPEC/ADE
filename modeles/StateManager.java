@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -23,7 +25,6 @@ public class StateManager {
 	static StateManager stateManager;
 	private static final String path="StateFileSave";
 
-
 	/**
 	 *utilisation de design singleton dans Constructeur pour l
 assuré une seule instociation de StateManager et ObjectMapper
@@ -40,6 +41,12 @@ assuré une seule instociation de StateManager et ObjectMapper
 	 * récupérer et sauvegarder l'état de systéme dans un fichier 
 	 */
 	public void saveState() {
+		
+		JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setSelectedFile(new File(Constants.REP_OPEN_FILECHOSER));
+        Version.saveRoot(fileChooser);
+        
+        
 		ArrayList<TimeTableV2> list=new ArrayList<TimeTableV2>();
 		ObservableList<Tab> tabs=MainScreenControleur.tabPaneV2.getTabs();
 		
@@ -52,8 +59,11 @@ assuré une seule instociation de StateManager et ObjectMapper
 		state.setList(list);
 		state.setTabNumber(MainScreenControleur.tabPaneV2.getSelectionModel().getSelectedIndex());
 		
+		
+		
 		try {
 			objectMapper.writeValue( new File(path+".json"),state );
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null,modeles.Constants.errSaveFile+e.getMessage() ,modeles.Constants.errMssg, JOptionPane.ERROR_MESSAGE);				
@@ -66,6 +76,13 @@ assuré une seule instociation de StateManager et ObjectMapper
 	public State load() {
 		
 		State st;
+		
+		try {
+            Version.loadRoot(new File("saveFileVersion.json"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+		
 		
 		try {
 			st=objectMapper.readValue( new File(path+".json"),State.class);
