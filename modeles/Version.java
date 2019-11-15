@@ -114,6 +114,9 @@ public class Version {
 	}
 
 	public static void changeVersion(String str) {
+		if(rootIsEmpty()){
+			return;
+		}
 		Version wantedVersion = rootVersion.getVersion(str);
 		if (wantedVersion != null) {
 			MainScreenControleur.setNewTabForVersionning(wantedVersion.getCreneauxList(), wantedVersion.name,
