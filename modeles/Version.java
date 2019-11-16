@@ -20,7 +20,7 @@ import javafx.scene.image.ImageView;
 
 public class Version {
 	private static Version rootVersion = null;
-	private static String rootName = "saveFileVersion";
+	public final static String rootName = "saveFileVersion";
 
 	private final Long timestamp;
 	private final String name;
@@ -38,14 +38,6 @@ public class Version {
 
 	public Version(Version parent, Long t, String str, ArrayList<Creneaux> l) {
 		this(parent, t, str, l, new TreeMap<>());
-	}
-
-	public static String getRootName() {
-		return rootName;
-	}
-
-	public static void setRootName(String str) {
-		rootName = str;
 	}
 
 	public String getName() {
@@ -100,41 +92,37 @@ public class Version {
 		return ver.getNameTimestamp();
 	}
 
-	public Version getVersion(String str) {
+	private Version searchVersion(String str) {
 		if (str.equals(getNameTimestamp()))
 			return this;
 		Iterator<Version> i = alternativeVersions.values().iterator();
 		Version v;
 		while (i.hasNext()) {
-			v = i.next().getVersion(str);
+			v = i.next().searchVersion(str);
 			if (v != null)
 				return v;
 		}
 		return null;
 	}
-
-	public static void changeVersion(String str) {
-		if(rootIsEmpty()){
-			return;
-		}
-		Version wantedVersion = rootVersion.getVersion(str);
-		if (wantedVersion != null) {
-			MainScreenControleur.setNewTabForVersionning(wantedVersion.getCreneauxList(), wantedVersion.name,
-					wantedVersion.getNameTimestamp());
-		}
+	
+	private Version getVersion(String id) {
+		if(id==null || id.isEmpty() || rootIsEmpty())
+			return null;
+		return searchVersion(id);
 	}
 
-	public static boolean dupliVersion(String str) {
+	public static Version changeVersion(String id) {
+		return rootVersion.getVersion(id);
+	}
+
+	public static Version dupliVersion(String str) {
 		Version v = rootVersion.getVersion(str);
 		if (v == null || v.parent == null)
-			return false;
+			return null;
 		else {
-			Long time = nowStamp();
-			Version vDupli = new Version(v.parent, time, v.name, v.getCreneauxList());
+			Version vDupli = new Version(v.parent, nowStamp(), v.name, v.getCreneauxList());
 			v.parent.alternativeVersions.put(vDupli.timestamp, vDupli);
-			MainScreenControleur.setNewTabForVersionning(vDupli.getCreneauxList(), vDupli.name,
-					vDupli.getNameTimestamp());
-			return true;
+			return vDupli;
 		}
 	}
 
@@ -177,15 +165,22 @@ public class Version {
 	}
 
 	public static void saveRoot(JFileChooser fileChooser) {
-		if(rootIsEmpty()) return;
+		if (rootIsEmpty())
+			return;
 		JsonFileManager.getInstance().saveVersion(toVersion2(rootVersion),
 				(fileChooser.getSelectedFile().getAbsolutePath() + "/" + rootName));
 	}
 
 	public static void loadRoot(File file) {
-		rootVersion = Version2.toVersion(null, JsonFileManager.getInstance().loadVersion(file));
+		Version2 v2 = JsonFileManager.getInstance().loadVersion(file);
+		if(v2 != null)
+			rootVersion = Version2.toVersion(null, v2);
 	}
-
+	
+	public static void putRootInState(State state) {
+		if(!rootIsEmpty())
+			state.setRoot(toVersion2(rootVersion));
+	}
 	private static void fillNames(Version v, Set<String> result) {
 		result.add(v.getNameTimestamp());
 		v.alternativeVersions.values().forEach(alt -> fillNames(alt, result));
@@ -198,7 +193,7 @@ public class Version {
 		return result;
 	}
 
-	private String getNameTimestamp() {
+	public String getNameTimestamp() {
 		Date date = new Date(timestamp);
 		return name + " " + new SimpleDateFormat(Constants.DATE_FORMAT).format(date);
 	}

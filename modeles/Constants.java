@@ -183,6 +183,12 @@ public class Constants {
 	
 	public static final String errDup = "Vous ne pouvez pas dupliquer la racine de l'arborescence.";
 	
+	public static final String errOpenVer = "Votre fichier n'est pas du bon format.";
+	
+	public static final String errSaveVer = "Un problème est survenu lors de la sauvegarde.";
+	
+	public static final String errSelect = "Un problème est survenu lors de la sélection d'une version.";
+	
 	public static final int SIZE_BTN = 20;
 	
 	public static final String EMPTY_TREE = "Aucune version enregistrée";

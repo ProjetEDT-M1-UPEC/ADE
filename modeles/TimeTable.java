@@ -35,20 +35,27 @@ public class TimeTable {
 		this.name = name;
 	}
 
+	public TimeTable(String name, String path, ArrayList<Creneaux> creneauxsList, TYPE type, String id) {
+		this(name, path, creneauxsList, type);
+		versionId = id;
+	}
+
 	public String getPath() {
 		return path;
 	}
+
 	public String getVersionId() {
-		return versionId ;
+		return versionId;
 	}
+
 	public void setVersionId(String newVersionId) {
-		this.versionId= newVersionId ;
+		this.versionId = newVersionId;
 	}
-    //copie de la list creneauxList
+	// copie de la list creneauxList
 
 	public ArrayList<Creneaux> getCopiedCreneauxList() {
-		ArrayList<Creneaux> newCreneauxsList=new ArrayList<Creneaux>();
-		for(Creneaux  o : creneauxsList) {
+		ArrayList<Creneaux> newCreneauxsList = new ArrayList<Creneaux>();
+		for (Creneaux o : creneauxsList) {
 			newCreneauxsList.add((Creneaux) o.clone());
 		}
 		return newCreneauxsList;

@@ -953,9 +953,9 @@ public class MainScreenControleur implements Initializable {
 	}
 
 	public static void setNewTabForVersionning(ArrayList<Creneaux> list, String name, String id) {
-		AgendaCustom agenda = new AgendaCustom(new TimeTable(name, "Path", list, TimeTable.TYPE.EMPTY_BASED));
+		AgendaCustom agenda = new AgendaCustom(new TimeTable(name, "Path", list, TimeTable.TYPE.EMPTY_BASED, id));
 
-		Tab tab = new Tab(agenda, me, id);
+		Tab tab = new Tab(agenda, me);
 		agenda.setParent(tab);
 
 		tabPaneV2.getTabs().add(tabPaneV2.getTabs().size() - 1, tab);
@@ -968,7 +968,6 @@ public class MainScreenControleur implements Initializable {
 		tab.setName(name);
 		tab.setText(name);
 		tab.getAgenda().getTimeTable().setName(name);
-		tab.getAgenda().getTimeTable().setVersionId(id);
 	}
 
 	public static ArrayList<Creneaux> getCreneauxList() {
@@ -1001,9 +1000,12 @@ public class MainScreenControleur implements Initializable {
 			public void handle(ActionEvent e) {
 				if (selectedVersion != null) {
 					try {
-						Version.changeVersion(selectedVersion);
+						Version wantedVersion = Version.changeVersion(selectedVersion);
+						setNewTabForVersionning(wantedVersion.getCreneauxList(), wantedVersion.getName(),
+								wantedVersion.getNameTimestamp());
 					} catch (Exception excep) {
-						System.out.println("Exception btnImport :" + excep);
+						JOptionPane.showMessageDialog(null, Constants.errSelect, Constants.errMssg,
+								JOptionPane.ERROR_MESSAGE);
 					}
 					primaryStage.close();
 				}
@@ -1016,7 +1018,10 @@ public class MainScreenControleur implements Initializable {
 			public void handle(ActionEvent e) {
 				if (selectedVersion != null) {
 					try {
-						if (Version.dupliVersion(selectedVersion)) {
+						Version vDupli = Version.dupliVersion(selectedVersion);
+						if (vDupli != null) {
+							setNewTabForVersionning(vDupli.getCreneauxList(), vDupli.getName(),
+									vDupli.getNameTimestamp());
 							primaryStage.close();
 						} else {
 							JOptionPane.showMessageDialog(null, Constants.errDup, Constants.errMssg,
@@ -1045,10 +1050,13 @@ public class MainScreenControleur implements Initializable {
 		fileChooser.setFileFilter(filter);
 
 		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			Version.loadRoot(fileChooser.getSelectedFile());
+			try {
+				Version.loadRoot(fileChooser.getSelectedFile());
+			} catch (Exception excep) {
+				JOptionPane.showMessageDialog(null, Constants.errOpenVer, Constants.errMssg, JOptionPane.ERROR_MESSAGE);
+			}
 		}
-		
-		
+
 	}
 
 	@FXML
@@ -1059,12 +1067,10 @@ public class MainScreenControleur implements Initializable {
 			fileChooser.setDialogTitle(Constants.SAVE_VERSION);
 			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-			if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
 				Version.saveRoot(fileChooser);
-			}
-
 		} catch (Exception excep) {
-			System.out.println("Exception Save project :" + excep);
+			JOptionPane.showMessageDialog(null, Constants.errSaveVer, Constants.errMssg, JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -1087,7 +1093,7 @@ public class MainScreenControleur implements Initializable {
 
 		b.setCenter(treeView);
 		primaryStage.setScene(new Scene(b, 600, 400));
-		primaryStage.setTitle("L'arborescence " + Version.getRootName());
+		primaryStage.setTitle("L'arborescence");
 		primaryStage.show();
 	}
 
