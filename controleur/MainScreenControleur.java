@@ -1045,6 +1045,9 @@ public class MainScreenControleur implements Initializable {
 
 	@FXML
 	private void Open_project(ActionEvent ae) {
+
+		tabPaneV2.getTabs().clear();
+		setAddTabeHandler();
 		JFileChooser fileChooser = new JFileChooser(new File("."));
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(Constants.FORMAT_JSON, "json");
 		fileChooser.setFileFilter(filter);
