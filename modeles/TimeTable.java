@@ -11,6 +11,7 @@ public class TimeTable {
 	}
 
 	private String name;
+	private String versionId;
 	private String path;
 	private ArrayList<Creneaux> creneauxsList;
 	private Boolean isValide;
@@ -36,6 +37,12 @@ public class TimeTable {
 
 	public String getPath() {
 		return path;
+	}
+	public String getVersionId() {
+		return versionId ;
+	}
+	public void setVersionId(String newVersionId) {
+		this.versionId= newVersionId ;
 	}
     //copie de la list creneauxList
 
@@ -113,7 +120,7 @@ public class TimeTable {
 		v2.setPath(path);
 		v2.setHashCode(hashCode);
 		v2.setName(name);
-
+		v2.setVersionId(versionId);
 		return v2;
 	}
 

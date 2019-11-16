@@ -968,6 +968,7 @@ public class MainScreenControleur implements Initializable {
 		tab.setName(name);
 		tab.setText(name);
 		tab.getAgenda().getTimeTable().setName(name);
+		tab.getAgenda().getTimeTable().setVersionId(id);
 	}
 
 	public static ArrayList<Creneaux> getCreneauxList() {
@@ -1046,6 +1047,8 @@ public class MainScreenControleur implements Initializable {
 		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			Version.loadRoot(fileChooser.getSelectedFile());
 		}
+		
+		
 	}
 
 	@FXML
