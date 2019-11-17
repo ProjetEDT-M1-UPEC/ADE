@@ -1,6 +1,5 @@
 package modeles;
 
-import java.io.File;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -104,9 +103,9 @@ public class Version {
 		}
 		return null;
 	}
-	
+
 	private Version getVersion(String id) {
-		if(id==null || id.isEmpty() || rootIsEmpty())
+		if (id == null || id.isEmpty() || rootIsEmpty())
 			return null;
 		return searchVersion(id);
 	}
@@ -115,8 +114,8 @@ public class Version {
 		return rootVersion.getVersion(id);
 	}
 
-	public static Version dupliVersion(String str) {
-		Version v = rootVersion.getVersion(str);
+	public static Version dupliVersion(String id) {
+		Version v = rootVersion.getVersion(id);
 		if (v == null || v.parent == null)
 			return null;
 		else {
@@ -150,6 +149,7 @@ public class Version {
 			alternativeVersions.values().forEach(alt -> {
 				tree.getChildren().add(alt.toTreeItemString());
 			});
+			tree.setExpanded(true);
 		}
 		return tree;
 	}
@@ -171,16 +171,16 @@ public class Version {
 				(fileChooser.getSelectedFile().getAbsolutePath() + "/" + rootName));
 	}
 
-	public static void loadRoot(File file) {
-		Version2 v2 = JsonFileManager.getInstance().loadVersion(file);
-		if(v2 != null)
+	public static void loadRoot(Version2 v2) {
+		if (v2 != null)
 			rootVersion = Version2.toVersion(null, v2);
 	}
-	
+
 	public static void putRootInState(State state) {
-		if(!rootIsEmpty())
-			state.setRoot(toVersion2(rootVersion));
+		if (!rootIsEmpty()) 
+			state.setVersion2(toVersion2(rootVersion));
 	}
+
 	private static void fillNames(Version v, Set<String> result) {
 		result.add(v.getNameTimestamp());
 		v.alternativeVersions.values().forEach(alt -> fillNames(alt, result));
@@ -198,6 +198,15 @@ public class Version {
 		return name + " " + new SimpleDateFormat(Constants.DATE_FORMAT).format(date);
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	// comparaison de la list de crenaux d'une version a une autre
 	@SuppressWarnings("unused")
 	private boolean compareCreneaux(Version o) {

@@ -208,7 +208,9 @@ public class MainScreenControleur implements Initializable {
 
 	@FXML
 	private void searchButton(ActionEvent ae) {
-		Version.changeVersion(versionField.getText());
+		Version wanted = Version.changeVersion(versionField.getText());
+		if (wanted != null)
+			setNewTabForVersionning(wanted.getCreneauxList(), wanted.getName(), wanted.getNameTimestamp());
 	}
 
 	/*
@@ -384,27 +386,30 @@ public class MainScreenControleur implements Initializable {
 		// getState
 		State state = StateManager.getInstance().load();
 
-		if (state != null && !state.getList().isEmpty()) {
+		if (state != null) {
+			Version.loadRoot(state.getVersion2());
+			if (!state.getList().isEmpty()) {
 
-			ArrayList<TimeTable> list = new ArrayList<TimeTable>();
+				ArrayList<TimeTable> list = new ArrayList<TimeTable>();
 
-			for (TimeTableV2 timeTableV2 : state.getList()) {
-				list.add(timeTableV2.toTimeTable());
+				for (TimeTableV2 timeTableV2 : state.getList()) {
+					list.add(timeTableV2.toTimeTable());
+				}
+
+				AgendaCustom agenda;
+				for (TimeTable timeTable : list) {
+
+					agenda = new AgendaCustom(timeTable);
+
+					// agenda.appointments().addAll(timeTable.getCreneauxsList());
+					agenda.setParent(new Tab(agenda, this));
+					tabPane.getTabs().add(agenda.getparent());
+
+				}
+
+				tabPane.getSelectionModel().select(state.getTabNumber());
+				updateUndoRedoStatic((Tab) tabPaneV2.getSelectionModel().getSelectedItem());
 			}
-
-			AgendaCustom agenda;
-			for (TimeTable timeTable : list) {
-
-				agenda = new AgendaCustom(timeTable);
-
-				// agenda.appointments().addAll(timeTable.getCreneauxsList());
-				agenda.setParent(new Tab(agenda, this));
-				tabPane.getTabs().add(agenda.getparent());
-
-			}
-
-			tabPane.getSelectionModel().select(state.getTabNumber());
-			updateUndoRedoStatic((Tab) tabPaneV2.getSelectionModel().getSelectedItem());
 		}
 	}
 
@@ -994,44 +999,29 @@ public class MainScreenControleur implements Initializable {
 		ContextMenu contextMenu = new ContextMenu();
 
 		MenuItem itemSelect = new MenuItem("Choisir cette version");
-		itemSelect.setOnAction(new EventHandler<ActionEvent>() {
+		itemSelect.setOnAction(e -> {
 
-			@Override
-			public void handle(ActionEvent e) {
-				if (selectedVersion != null) {
-					try {
-						Version wantedVersion = Version.changeVersion(selectedVersion);
-						setNewTabForVersionning(wantedVersion.getCreneauxList(), wantedVersion.getName(),
-								wantedVersion.getNameTimestamp());
-					} catch (Exception excep) {
-						JOptionPane.showMessageDialog(null, Constants.errSelect, Constants.errMssg,
-								JOptionPane.ERROR_MESSAGE);
-					}
-					primaryStage.close();
-				}
+			try {
+				Version wanted = Version.changeVersion(selectedVersion);
+				setNewTabForVersionning(wanted.getCreneauxList(), wanted.getName(), wanted.getNameTimestamp());
+			} catch (Exception excep) {
+				JOptionPane.showMessageDialog(null, Constants.errSelect, Constants.errMssg, JOptionPane.ERROR_MESSAGE);
 			}
+			primaryStage.close();
+
 		});
-		MenuItem itemDuplicate = new MenuItem("Dupliquer cette version");
-		itemDuplicate.setOnAction(new EventHandler<ActionEvent>() {
 
-			@Override
-			public void handle(ActionEvent e) {
-				if (selectedVersion != null) {
-					try {
-						Version vDupli = Version.dupliVersion(selectedVersion);
-						if (vDupli != null) {
-							setNewTabForVersionning(vDupli.getCreneauxList(), vDupli.getName(),
-									vDupli.getNameTimestamp());
-							primaryStage.close();
-						} else {
-							JOptionPane.showMessageDialog(null, Constants.errDup, Constants.errMssg,
-									JOptionPane.ERROR_MESSAGE);
-						}
-					} catch (Exception excep) {
-						System.out.println("Exception btnDuplic :" + excep);
-					}
-				}
+		MenuItem itemDuplicate = new MenuItem("Dupliquer cette version");
+		itemDuplicate.setOnAction(e -> {
+
+			try {
+				Version vDupli = Version.dupliVersion(selectedVersion);
+				setNewTabForVersionning(vDupli.getCreneauxList(), vDupli.getName(), vDupli.getNameTimestamp());
+			} catch (Exception excep) {
+				JOptionPane.showMessageDialog(null, Constants.errDup, Constants.errMssg, JOptionPane.ERROR_MESSAGE);
 			}
+			primaryStage.close();
+
 		});
 
 		contextMenu.getItems().addAll(itemSelect, itemDuplicate);
@@ -1045,16 +1035,15 @@ public class MainScreenControleur implements Initializable {
 
 	@FXML
 	private void Open_project(ActionEvent ae) {
-
-		tabPaneV2.getTabs().clear();
-		setAddTabeHandler();
 		JFileChooser fileChooser = new JFileChooser(new File("."));
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(Constants.FORMAT_JSON, "json");
 		fileChooser.setFileFilter(filter);
 
 		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			try {
-				Version.loadRoot(fileChooser.getSelectedFile());
+				tabPaneV2.getTabs().clear();
+				setAddTabeHandler();
+				Version.loadRoot(JsonFileManager.getInstance().loadVersion(fileChooser.getSelectedFile()));
 			} catch (Exception excep) {
 				JOptionPane.showMessageDialog(null, Constants.errOpenVer, Constants.errMssg, JOptionPane.ERROR_MESSAGE);
 			}
