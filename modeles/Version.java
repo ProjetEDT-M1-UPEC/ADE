@@ -177,7 +177,7 @@ public class Version {
 	}
 
 	public static void putRootInState(State state) {
-		if (!rootIsEmpty()) 
+		if (!rootIsEmpty())
 			state.setVersion2(toVersion2(rootVersion));
 	}
 
@@ -198,19 +198,15 @@ public class Version {
 		return name + " " + new SimpleDateFormat(Constants.DATE_FORMAT).format(date);
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	// comparaison de la list de crenaux d'une version a une autre
 	@SuppressWarnings("unused")
 	private boolean compareCreneaux(Version o) {
 		boolean isEqual = this.creneauxList.equals(o.creneauxList);
 		return isEqual;
+	}
+
+	public static void clearRoot() {
+		rootVersion = null;
+
 	}
 }

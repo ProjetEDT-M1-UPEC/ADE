@@ -182,7 +182,7 @@ public class MainScreenControleur implements Initializable {
 
 	private void initMenuItem() {
 		Create_Pro.setAccelerator(KeyCombination.keyCombination("F1"));
-
+		
 		Open_Pro.setAccelerator(KeyCombination.keyCombination("F2"));
 
 		Save_Pro.setAccelerator(KeyCombination.keyCombination("F3"));
@@ -192,8 +192,7 @@ public class MainScreenControleur implements Initializable {
 		Add_Ver.setAccelerator(KeyCombination.keyCombination("F5"));
 	}
 
-	// permet la suggestion des versions lors de la saisie dans recherche
-	// version
+	// permet la suggestion des versions lors de la saisie dans recherche version
 	private void listerVersions() {
 		provider = SuggestionProvider.create(nomsVersions);
 		new AutoCompletionTextFieldBinding<>(versionField, provider);
@@ -481,41 +480,35 @@ public class MainScreenControleur implements Initializable {
 
 	@FXML
 	private void initDatePicker() {
-		// Calendar c = Calendar.getInstance();
-		// c.set(datePicker.getValue().getYear(),
-		// datePicker.getValue().getMonthValue() - 1,
-		// datePicker.getValue().getDayOfMonth());
-		//
+//		Calendar c = Calendar.getInstance();
+//		c.set(datePicker.getValue().getYear(), datePicker.getValue().getMonthValue() - 1,
+//		datePicker.getValue().getDayOfMonth());
+//	
 		Agenda myagenda = getSelectedTab().getAgenda();
 		myagenda.getDisplayedLocalDateTime();
 		LocalDateTime time = LocalDateTime.of(datePicker.getValue().getYear(), datePicker.getValue().getMonthValue(),
 				datePicker.getValue().getDayOfMonth(), 0, 0);
 		myagenda.setDisplayedLocalDateTime(time);
 
-		//
-		// if (getSelectedTab().getAgenda().getTimeTable().getType() ==
-		// (TimeTable.TYPE.ADE_BASED)) {
-		//
-		// try {
-		// select(getSelectedTab().getAgenda().getTimeTable().getPathList());
-		// parseur.setWeek(calculWeek(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)),
-		// false);
-		// parseur.setWeek(calculWeek(c.get(Calendar.WEEK_OF_YEAR)), true);
-		// ArrayList<Creneaux> newTimeTbale = parseur.getTimeTable();
-		// ArrayList<Creneaux> oldTimeTbale =
-		// getSelectedTab().getAgenda().getTimeTable().getCreneauxsList();
-		// getSelectedTab().notifyChange(new
-		// AgendaEvent(getSelectedTab().getAgenda(), AgendaEvent.TYPE.WEEK,
-		// oldTimeTbale, newTimeTbale));
-		// getSelectedTab().getAgenda().getTimeTable().setCreneauxsList(newTimeTbale);
-		// getSelectedTab().getAgenda()
-		// .setDisplayedLocalDateTime(LocalDateTime.of(datePicker.getValue(),
-		// LocalTime.now()));
-		// getSelectedTab().getAgenda().newTimeTable(getSelectedTab().getAgenda().getTimeTable());
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
-		// }
+//
+//		if (getSelectedTab().getAgenda().getTimeTable().getType() == (TimeTable.TYPE.ADE_BASED)) {
+//
+//			try {
+//				select(getSelectedTab().getAgenda().getTimeTable().getPathList());
+//				parseur.setWeek(calculWeek(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)), false);
+//				parseur.setWeek(calculWeek(c.get(Calendar.WEEK_OF_YEAR)), true);
+//				ArrayList<Creneaux> newTimeTbale = parseur.getTimeTable();
+//				ArrayList<Creneaux> oldTimeTbale = getSelectedTab().getAgenda().getTimeTable().getCreneauxsList();
+//				getSelectedTab().notifyChange(new AgendaEvent(getSelectedTab().getAgenda(), AgendaEvent.TYPE.WEEK,
+//						oldTimeTbale, newTimeTbale));
+//				getSelectedTab().getAgenda().getTimeTable().setCreneauxsList(newTimeTbale);
+//				getSelectedTab().getAgenda()
+//						.setDisplayedLocalDateTime(LocalDateTime.of(datePicker.getValue(), LocalTime.now()));
+//				getSelectedTab().getAgenda().newTimeTable(getSelectedTab().getAgenda().getTimeTable());
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
 
 	}
 
@@ -723,8 +716,8 @@ public class MainScreenControleur implements Initializable {
 
 	/**
 	 * Add shortcuts to the menu ,
-	 *
-	 *
+	 * 
+	 * 
 	 */
 	private void setFavMenuItems() {
 		ArrayList<MenuItem> favorites = new ArrayList<>();
@@ -747,7 +740,7 @@ public class MainScreenControleur implements Initializable {
 
 	/**
 	 * Afficher un planning vide et permettre les modifications
-	 *
+	 * 
 	 * @param e
 	 */
 
@@ -759,7 +752,7 @@ public class MainScreenControleur implements Initializable {
 
 	/**
 	 * get the selected time table and set the list of Creneaux
-	 *
+	 * 
 	 * @param selectedShortcut
 	 */
 	private void select(ArrayList<String> path) {
@@ -820,7 +813,7 @@ public class MainScreenControleur implements Initializable {
 
 	/**
 	 * Supprimer tous les créneaux Ajouter la liste des créneaux à l'agenda
-	 *
+	 * 
 	 * @param timeTable
 	 */
 	private void setCalenderData(TimeTable timeTable) {
@@ -890,9 +883,8 @@ public class MainScreenControleur implements Initializable {
 	/**
 	 * action graphique "menu" Lancer le selecteur de fichier pour choisir le
 	 * fichier
-	 *
-	 * @param event
-	 *            Evenement
+	 * 
+	 * @param event Evenement
 	 */
 	@FXML
 	public void open_file(ActionEvent event) {
@@ -910,11 +902,10 @@ public class MainScreenControleur implements Initializable {
 	}
 
 	/**
-	 * action graphique "menu" Lancer le sélecteur de fichier pour choisir le
-	 * chemin où nous allons enregistrer le fichier
-	 *
-	 * @param event
-	 *            Evenement
+	 * action graphique "menu" Lancer le sélecteur de fichier pour choisir le chemin
+	 * où nous allons enregistrer le fichier
+	 * 
+	 * @param event Evenement
 	 */
 	@FXML
 	public void save_file(ActionEvent event) {
@@ -932,9 +923,8 @@ public class MainScreenControleur implements Initializable {
 
 	/**
 	 * Afficher le popup de gestion des favoris
-	 *
-	 * @param ae
-	 *            ActionEvent
+	 * 
+	 * @param ae ActionEvent
 	 */
 
 	@FXML
@@ -1042,10 +1032,6 @@ public class MainScreenControleur implements Initializable {
 
 	@FXML
 	private void Create_new_project(ActionEvent ae) {
-		clearTabs();
-		Version.clearRoot();
-		addNewTab(new AgendaCustom(new TimeTable(Constants.NEW_TAB + tabPaneV2.getTabs().size(), "Path",
-				new ArrayList<Creneaux>(), TimeTable.TYPE.EMPTY_BASED)));
 
 	}
 
@@ -1057,7 +1043,8 @@ public class MainScreenControleur implements Initializable {
 
 		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			try {
-				clearTabs();
+				tabPaneV2.getTabs().clear();
+				setAddTabeHandler();
 				Version.loadRoot(JsonFileManager.getInstance().loadVersion(fileChooser.getSelectedFile()));
 			} catch (Exception excep) {
 				JOptionPane.showMessageDialog(null, Constants.errOpenVer, Constants.errMssg, JOptionPane.ERROR_MESSAGE);
@@ -1125,11 +1112,6 @@ public class MainScreenControleur implements Initializable {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-	}
-
-	private void clearTabs() {
-		tabPaneV2.getTabs().clear();
-		setAddTabeHandler();
 	}
 
 	@SuppressWarnings("unused")
