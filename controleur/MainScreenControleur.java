@@ -1072,7 +1072,7 @@ public class MainScreenControleur implements Initializable {
 			JFileChooser fileChooser = new JFileChooser(new File(Constants.REP_OPEN_FILECHOSER));
 
 			fileChooser.setDialogTitle(Constants.SAVE_VERSION);
-			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			//fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
 			if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
 				Version.saveRoot(fileChooser);
