@@ -181,13 +181,15 @@ public class MainScreenControleur implements Initializable {
 	}
 
 	private void initMenuItem() {
-		Open_Pro.setAccelerator(KeyCombination.keyCombination("Ctrl+W"));
+		Create_Pro.setAccelerator(KeyCombination.keyCombination("F1"));
+		
+		Open_Pro.setAccelerator(KeyCombination.keyCombination("F2"));
 
-		Save_Pro.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
+		Save_Pro.setAccelerator(KeyCombination.keyCombination("F3"));
 
-		Read_Pro.setAccelerator(KeyCombination.keyCombination("Ctrl+A"));
+		Read_Pro.setAccelerator(KeyCombination.keyCombination("F4"));
 
-		Add_Ver.setAccelerator(KeyCombination.keyCombination("SHORTCUT+V"));
+		Add_Ver.setAccelerator(KeyCombination.keyCombination("F5"));
 	}
 
 	// permet la suggestion des versions lors de la saisie dans recherche version
