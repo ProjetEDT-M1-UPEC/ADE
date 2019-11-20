@@ -1023,20 +1023,7 @@ public class MainScreenControleur implements Initializable {
 
 		});
 
-		MenuItem itemDuplicate = new MenuItem("Dupliquer cette version");
-		itemDuplicate.setOnAction(e -> {
-
-			try {
-				Version vDupli = Version.dupliVersion(selectedVersion);
-				setNewTabForVersionning(vDupli.getCreneauxList(), vDupli.getName(), vDupli.getNameTimestamp());
-			} catch (Exception excep) {
-				JOptionPane.showMessageDialog(null, Constants.errDup, Constants.errMssg, JOptionPane.ERROR_MESSAGE);
-			}
-			primaryStage.close();
-
-		});
-
-		contextMenu.getItems().addAll(itemSelect, itemDuplicate);
+		contextMenu.getItems().addAll(itemSelect);
 		return contextMenu;
 	}
 

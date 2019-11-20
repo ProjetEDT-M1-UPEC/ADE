@@ -181,8 +181,6 @@ public class Constants {
 	
 	public static final String PICS_LOGO = "/pics/logo.png";
 	
-	public static final String errDup = "Vous ne pouvez pas dupliquer la racine de l'arborescence.";
-	
 	public static final String errOpenVer = "Votre fichier n'est pas du bon format.";
 	
 	public static final String errSaveVer = "Un problème est survenu lors de la sauvegarde.";

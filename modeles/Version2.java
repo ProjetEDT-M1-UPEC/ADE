@@ -1,8 +1,6 @@
 package modeles;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
 
 import code.barbot.Creneaux;
 
@@ -17,10 +15,10 @@ public class Version2 {
 	}
 
 	public static Version toVersion(Version parent, Version2 v2) {
-		Map<Long, Version> map = new TreeMap<>();
-		Version v1 = new Version(parent, v2.timestamp, v2.name, Creneaux.toCreneaux(v2.creneauxsList), map);
+		ArrayList<Version> listVer = new ArrayList<>();
+		Version v1 = new Version(parent, v2.timestamp, v2.name, Creneaux.toCreneaux(v2.creneauxsList), listVer);
 		v2.listVersion2.forEach(alt -> {
-			map.put(alt.timestamp, toVersion(v1, alt));
+			listVer.add(toVersion(v1, alt));
 		});
 		return v1;
 	}

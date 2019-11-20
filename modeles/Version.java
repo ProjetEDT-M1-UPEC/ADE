@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import javax.swing.JFileChooser;
 
@@ -24,18 +22,18 @@ public class Version {
 	private final String name;
 	private final ArrayList<Creneaux> creneauxList;
 	private final Version parent;
-	private final Map<Long, Version> alternativeVersions;
+	private final ArrayList<Version> alternativeVersions;
 
-	public Version(Version parent, Long t, String str, ArrayList<Creneaux> l, Map<Long, Version> map) {
+	public Version(Version parent, Long t, String str, ArrayList<Creneaux> l, ArrayList<Version> listVer) {
 		this.parent = parent;
 		timestamp = t;
 		name = str;
 		creneauxList = l;
-		alternativeVersions = map;
+		alternativeVersions = listVer;
 	}
 
 	public Version(Version parent, Long t, String str, ArrayList<Creneaux> l) {
-		this(parent, t, str, l, new TreeMap<>());
+		this(parent, t, str, l, new ArrayList<>());
 	}
 
 	public String getName() {
@@ -46,15 +44,15 @@ public class Version {
 		return timestamp;
 	}
 
-	public Map<Long, Version> getAlternativeVersions() {
+	public ArrayList<Version> getAlternativeVersions() {
 		return alternativeVersions;
 	}
 
 	public static Version2 toVersion2(Version v1) {
 		Version2 v2 = new Version2();
 		ArrayList<Version2> list = new ArrayList<>();
-		v1.alternativeVersions.entrySet().forEach(set -> {
-			list.add(toVersion2(set.getValue()));
+		v1.alternativeVersions.forEach(ver -> {
+			list.add(toVersion2(ver));
 		});
 		v2.setCreneauxsList(Creneaux.toCreneauxVersion2(v1.creneauxList));
 		v2.setVersion2List(list);
@@ -86,14 +84,14 @@ public class Version {
 
 	private String addAltVer(Long t, String str) {
 		Version ver = new Version(this, t, str, MainScreenControleur.getCreneauxList());
-		alternativeVersions.put(t, ver);
+		alternativeVersions.add(ver);
 		return ver.getNameTimestamp();
 	}
 
 	private Version searchVersion(String str) {
 		if (str.equals(getNameTimestamp()))
 			return this;
-		Iterator<Version> i = alternativeVersions.values().iterator();
+		Iterator<Version> i = alternativeVersions.iterator();
 		Version v;
 		while (i.hasNext()) {
 			v = i.next().searchVersion(str);
@@ -113,17 +111,6 @@ public class Version {
 		return rootVersion.getVersion(id);
 	}
 
-	public static Version dupliVersion(String id) {
-		Version v = rootVersion.getVersion(id);
-		if (v == null || v.parent == null)
-			return null;
-		else {
-			Version vDupli = new Version(v.parent, nowStamp(), v.name, v.getCreneauxList());
-			v.parent.alternativeVersions.put(vDupli.timestamp, vDupli);
-			return vDupli;
-		}
-	}
-
 	public ArrayList<Creneaux> getCreneauxList() {
 		ArrayList<Creneaux> clone = new ArrayList<>();
 		for (Creneaux o : creneauxList) {
@@ -135,7 +122,7 @@ public class Version {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(name + "\n");
-		alternativeVersions.values().forEach(v -> {
+		alternativeVersions.forEach(v -> {
 			sb.append(name + "->" + v.toString());
 		});
 		return sb.toString();
@@ -145,7 +132,7 @@ public class Version {
 		ImageView imageVersion = new ImageView(Constants.PICS_VERSION);
 		TreeItem<String> tree = new TreeItem<>(getNameTimestamp(), imageVersion);
 		if (alternativeVersions != null && !alternativeVersions.isEmpty()) {
-			alternativeVersions.values().forEach(alt -> {
+			alternativeVersions.forEach(alt -> {
 				tree.getChildren().add(alt.toTreeItemString());
 			});
 			tree.setExpanded(true);
@@ -161,6 +148,10 @@ public class Version {
 
 	public static boolean rootIsEmpty() {
 		return rootVersion == null;
+	}
+
+	public boolean hasParent() {
+		return parent != null;
 	}
 
 	public static void saveRoot(JFileChooser fileChooser) {
@@ -182,7 +173,7 @@ public class Version {
 
 	private static void fillNames(Version v, Set<String> result) {
 		result.add(v.getNameTimestamp());
-		v.alternativeVersions.values().forEach(alt -> fillNames(alt, result));
+		v.alternativeVersions.forEach(alt -> fillNames(alt, result));
 	}
 
 	public static Set<String> getSetNames() {
