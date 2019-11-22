@@ -80,6 +80,7 @@ public class Version {
 	 * @param value Le nom de la nouvelle version
 	 * @param creneaux La liste des créneaux de la nouvelle version
 	 * @param currentVersionId
+	 * @return Renvoie l'identifiant de la nouvelle version créée
 	 */
 	public static String addNewVersion(String value, ArrayList<Creneaux> creneaux, String currentVersionId) {
 		String id = null;
@@ -101,7 +102,7 @@ public class Version {
 	/**
 	 * Cette méthode cherche une version à l'aide de l'identifiant représentant son nom avec sa date de création
 	 * @param id L'identifiant de la version que l'on cherche est un String
-	 * @return
+	 * @return Renvoie la version que l'on cherche
 	 */
 	private Version searchVersion(String id) {
 		if (id.equals(getNameTimestamp()))
@@ -120,7 +121,7 @@ public class Version {
 	 * Vérifie si l'identifiant est cohérent
 	 * @see searchVersion
 	 * @param id L'identifiant de la version que l'on va chercher
-	 * @return
+	 * @return Renvoie la version que l'on cherche
 	 */
 	public static Version getVersion(String id) {
 		if (id == null || id.isEmpty() || rootIsEmpty())
