@@ -14,8 +14,11 @@ public class AddVersionController implements Initializable {
 
 	@FXML
 	TextField nameVersionField;
+	
+	private MainScreenControleur sc;
 
-	public AddVersionController() {
+	public AddVersionController(MainScreenControleur sc) {
+		this.sc = sc;
 	}
 
 	@Override
@@ -30,7 +33,10 @@ public class AddVersionController implements Initializable {
 
 	@FXML
 	private void add() {
-		Version.addNewVersion(nameVersionField.getText());
+		String value = nameVersionField.getText();
+		String id = Version.addNewVersion(value, sc.getCreneauxList(), sc.getSelectedTabVersionId());
+		if(id != null)
+			sc.setSelectedTabVerID(value, id);
 		this.close();
 	}
 

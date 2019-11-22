@@ -211,7 +211,7 @@ public class MainScreenControleur implements Initializable {
 
 	@FXML
 	private void searchButton(ActionEvent ae) {
-		Version wanted = Version.changeVersion(versionField.getText());
+		Version wanted = Version.getVersion(versionField.getText());
 		if (wanted != null)
 			setNewTabForVersionning(wanted.getCreneauxList(), wanted.getName(), wanted.getNameTimestamp());
 	}
@@ -965,7 +965,7 @@ public class MainScreenControleur implements Initializable {
 		return (Tab) tabPane.getSelectionModel().getSelectedItem();
 	}
 
-	public static String getSelectedTabVersionId() {
+	public String getSelectedTabVersionId() {
 		return ((Tab) tabPaneV2.getSelectionModel().getSelectedItem()).getVersionId();
 	}
 
@@ -979,7 +979,7 @@ public class MainScreenControleur implements Initializable {
 		tabPaneV2.getSelectionModel().select(tabPaneV2.getTabs().size() - 2);
 	}
 
-	public static void setSelectedTabVerID(String name, String id) {
+	public void setSelectedTabVerID(String name, String id) {
 		Tab tab = ((Tab) tabPaneV2.getSelectionModel().getSelectedItem());
 		tab.setVersionId(id);
 		tab.setName(name);
@@ -987,7 +987,7 @@ public class MainScreenControleur implements Initializable {
 		tab.getAgenda().getTimeTable().setName(name);
 	}
 
-	public static ArrayList<Creneaux> getCreneauxList() {
+	public ArrayList<Creneaux> getCreneauxList() {
 		return ((Tab) tabPaneV2.getSelectionModel().getSelectedItem()).getAgenda().getTimeTable()
 				.getCopiedCreneauxList();
 	}
@@ -1014,7 +1014,7 @@ public class MainScreenControleur implements Initializable {
 		itemSelect.setOnAction(e -> {
 
 			try {
-				Version wanted = Version.changeVersion(selectedVersion);
+				Version wanted = Version.getVersion(selectedVersion);
 				setNewTabForVersionning(wanted.getCreneauxList(), wanted.getName(), wanted.getNameTimestamp());
 			} catch (Exception excep) {
 				JOptionPane.showMessageDialog(null, Constants.errSelect, Constants.errMssg, JOptionPane.ERROR_MESSAGE);
@@ -1028,7 +1028,7 @@ public class MainScreenControleur implements Initializable {
 	}
 
 	@FXML
-	private void Create_new_project(ActionEvent ae) {
+	private void create_new_project(ActionEvent ae) {
 		clearTabs();
 		Version.clearRoot();
 		addNewTab(new AgendaCustom(new TimeTable(Constants.NEW_TAB + tabPaneV2.getTabs().size(), "Path",
@@ -1037,7 +1037,7 @@ public class MainScreenControleur implements Initializable {
 	}
 
 	@FXML
-	private void Open_project(ActionEvent ae) {
+	private void open_project(ActionEvent ae) {
 		JFileChooser fileChooser = new JFileChooser(new File("."));
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(Constants.FORMAT_JSON, "json");
 		fileChooser.setFileFilter(filter);
@@ -1054,7 +1054,7 @@ public class MainScreenControleur implements Initializable {
 	}
 
 	@FXML
-	private void Save_project(ActionEvent ae) {
+	private void save_project(ActionEvent ae) {
 		try {
 			JFileChooser fileChooser = new JFileChooser(new File(Constants.REP_OPEN_FILECHOSER));
 
@@ -1069,7 +1069,7 @@ public class MainScreenControleur implements Initializable {
 	}
 
 	@FXML
-	private void Read_project(ActionEvent ae) {
+	private void read_project(ActionEvent ae) {
 		treeView.setRoot(Version.getTreeItem());
 
 		Stage primaryStage = new Stage();
@@ -1092,7 +1092,7 @@ public class MainScreenControleur implements Initializable {
 	}
 
 	@FXML
-	private void Add_version(ActionEvent ae) {
+	private void add_version(ActionEvent ae) {
 		final Stage popUp = new Stage();
 
 		popUp.setTitle("Ajouter une version de l'agenda");
@@ -1102,7 +1102,7 @@ public class MainScreenControleur implements Initializable {
 
 		try {
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(Constants.ADDVERSION_POPUP));
-			AddVersionController controller = new AddVersionController();
+			AddVersionController controller = new AddVersionController(this);
 			fxmlLoader.setController(controller);
 			root = fxmlLoader.load();
 			Scene scene = new Scene(root);

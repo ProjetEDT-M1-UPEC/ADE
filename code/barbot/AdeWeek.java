@@ -11,6 +11,7 @@ public class AdeWeek {
 	public String week;
 	
 	private static final Pattern pid = Pattern.compile("javascript:([a-zA-Z]*)[(]([^),]*)");
+	@SuppressWarnings("unused")
 	private static final Pattern pweek = Pattern.compile("[(][ ]*([0-9]*)[ ]*[)]");
 	
 	public AdeWeek(Element w){

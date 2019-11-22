@@ -29,6 +29,7 @@ import modeles.Project;
 public class Parseur {
 
 	private String login;
+	@SuppressWarnings("unused")
 	private String password;
 	private  String cookie=null;
 	private Project project;

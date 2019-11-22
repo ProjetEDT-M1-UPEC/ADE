@@ -75,22 +75,22 @@
 						<MenuItem mnemonicParsing="false" onAction="#favPopUp" text="Gerer les favoris" />
 					</items>
 				</Menu>
-				 <Menu mnemonicParsing="false" text="Versionning">
+				 <Menu mnemonicParsing="false" text="Versionnage">
 
                     <items>
-                        <MenuItem fx:id="Create_Pro" mnemonicParsing="false" onAction="#Create_new_project" text="Concevoir une nouvelle arborescence" />
+                        <MenuItem fx:id="Create_Pro" mnemonicParsing="false" onAction="#create_new_project" text="Concevoir une nouvelle arborescence" />
                     </items>
                     <items>
-                        <MenuItem fx:id="Open_Pro" mnemonicParsing="false" onAction="#Open_project" text="Ouvrir une arborescence" />
+                        <MenuItem fx:id="Open_Pro" mnemonicParsing="false" onAction="#open_project" text="Charger une arborescence" />
                     </items>
                     <items>
-                        <MenuItem fx:id="Save_Pro" mnemonicParsing="false" onAction="#Save_project" text="Sauvegarder l'arborescence en cours" />
+                        <MenuItem fx:id="Save_Pro" mnemonicParsing="false" onAction="#save_project" text="Sauvegarder l'arborescence en cours" />
                     </items>
                     <items>
-                        <MenuItem fx:id="Read_Pro" mnemonicParsing="false" onAction="#Read_project" text="Visualiser l'arborescence en cours" />
+                        <MenuItem fx:id="Read_Pro" mnemonicParsing="false" onAction="#read_project" text="Visualiser l'arborescence en cours" />
                     </items>
                     <items>
-                        <MenuItem fx:id="Add_Ver" mnemonicParsing="false" onAction="#Add_version" text="Ajouter une version" />
+                        <MenuItem fx:id="Add_Ver" mnemonicParsing="false" onAction="#add_version" text="Ajouter une version" />
                     </items>
                 </Menu>
 				<Menu mnemonicParsing="false" text="Aide">

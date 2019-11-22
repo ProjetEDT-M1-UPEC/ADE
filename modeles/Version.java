@@ -11,7 +11,6 @@ import java.util.Set;
 import javax.swing.JFileChooser;
 
 import code.barbot.Creneaux;
-import controleur.MainScreenControleur;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
 
@@ -48,6 +47,12 @@ public class Version {
 		return alternativeVersions;
 	}
 
+	/**
+	 * Cette fonction prend en paramètre une Version et retourne la copie de celle-ci pour obtenir une Version2 
+	 * qui est par la suite utilisée pour la sauvegarde
+	 * @param v1 
+	 * @return Renvoie une copie de v1
+	 */
 	public static Version2 toVersion2(Version v1) {
 		Version2 v2 = new Version2();
 		ArrayList<Version2> list = new ArrayList<>();
@@ -62,55 +67,71 @@ public class Version {
 		return v2;
 	}
 
+	/**
+	 * 
+	 * @return Renvoie la date actuelle en Long
+	 */
 	private static Long nowStamp() {
 		return new Timestamp(System.currentTimeMillis()).getTime();
 	}
 
-	public static void addNewVersion(String value) {
-		Long key = nowStamp();
-		String id;
+	/**
+	 * Cette fonction crée une nouvelle version sous une version parente que l'on récupère
+	 * @param value Le nom de la nouvelle version
+	 * @param creneaux La liste des créneaux de la nouvelle version
+	 * @param currentVersionId
+	 */
+	public static String addNewVersion(String value, ArrayList<Creneaux> creneaux, String currentVersionId) {
+		String id = null;
 
 		if (rootVersion == null) {
-			rootVersion = new Version(null, key, value, MainScreenControleur.getCreneauxList());
+			rootVersion = new Version(null, nowStamp(), value, creneaux);
 			id = rootVersion.getNameTimestamp();
 		} else {
-			Version parent = rootVersion.getVersion(MainScreenControleur.getSelectedTabVersionId());
-			if (parent == null)
-				return;
-			id = parent.addAltVer(key, value);
+			Version parent = getVersion(currentVersionId);
+			if (parent != null) {
+				Version ver = new Version(parent, nowStamp(), value, creneaux);
+				parent.alternativeVersions.add(ver);
+				id = ver.getNameTimestamp();
+			}
 		}
-		MainScreenControleur.setSelectedTabVerID(value, id);
+		return id;
 	}
 
-	private String addAltVer(Long t, String str) {
-		Version ver = new Version(this, t, str, MainScreenControleur.getCreneauxList());
-		alternativeVersions.add(ver);
-		return ver.getNameTimestamp();
-	}
-
-	private Version searchVersion(String str) {
-		if (str.equals(getNameTimestamp()))
+	/**
+	 * Cette méthode cherche une version à l'aide de l'identifiant représentant son nom avec sa date de création
+	 * @param id L'identifiant de la version que l'on cherche est un String
+	 * @return
+	 */
+	private Version searchVersion(String id) {
+		if (id.equals(getNameTimestamp()))
 			return this;
 		Iterator<Version> i = alternativeVersions.iterator();
 		Version v;
 		while (i.hasNext()) {
-			v = i.next().searchVersion(str);
+			v = i.next().searchVersion(id);
 			if (v != null)
 				return v;
 		}
 		return null;
 	}
 
-	private Version getVersion(String id) {
+	/**
+	 * Vérifie si l'identifiant est cohérent
+	 * @see searchVersion
+	 * @param id L'identifiant de la version que l'on va chercher
+	 * @return
+	 */
+	public static Version getVersion(String id) {
 		if (id == null || id.isEmpty() || rootIsEmpty())
 			return null;
-		return searchVersion(id);
+		return rootVersion.searchVersion(id);
 	}
 
-	public static Version changeVersion(String id) {
-		return rootVersion.getVersion(id);
-	}
-
+	/**
+	 * 
+	 * @return Renvoie une copie de la liste de créneaux de cette version
+	 */
 	public ArrayList<Creneaux> getCreneauxList() {
 		ArrayList<Creneaux> clone = new ArrayList<>();
 		for (Creneaux o : creneauxList) {
@@ -128,6 +149,10 @@ public class Version {
 		return sb.toString();
 	}
 
+	/**
+	 * Cette méthode construit une TreeItem pour l'affichage de l'arborescence, le parcours est récurssif
+	 * @return
+	 */
 	public TreeItem<String> toTreeItemString() {
 		ImageView imageVersion = new ImageView(Constants.PICS_VERSION);
 		TreeItem<String> tree = new TreeItem<>(getNameTimestamp(), imageVersion);
@@ -140,12 +165,21 @@ public class Version {
 		return tree;
 	}
 
+	/**
+	 * Cette fonction vérifie si l'arborescence est vide avant de retourner une TreeItem 
+	 * @see toTreeItemString
+	 * @return
+	 */
 	public static TreeItem<String> getTreeItem() {
 		if (rootIsEmpty())
 			return new TreeItem<String>(Constants.EMPTY_TREE);
 		return rootVersion.toTreeItemString();
 	}
 
+	/**
+	 * 
+	 * @return Renvoie un boolean pour vérifier si l'arborescence est vide ou non
+	 */
 	public static boolean rootIsEmpty() {
 		return rootVersion == null;
 	}
@@ -154,6 +188,10 @@ public class Version {
 		return parent != null;
 	}
 
+	/**
+	 * Cette fonction sauvegarde l'arborescence en cours
+	 * @param fileChooser
+	 */
 	public static void saveRoot(JFileChooser fileChooser) {
 		if (rootIsEmpty())
 			return;
@@ -161,21 +199,38 @@ public class Version {
 				(fileChooser.getSelectedFile().getAbsolutePath()));
 	}
 
+	/**
+	 * Cette fonction charge l'arborescence donnée en paramètre
+	 * @param v2
+	 */
 	public static void loadRoot(Version2 v2) {
 		if (v2 != null)
 			rootVersion = Version2.toVersion(null, v2);
 	}
 
+	/**
+	 * Cette fonction sauvegarde l'état de l'arborescence pour la sauvegarde automatique lorsque l'on quitte l'application
+	 * @param state
+	 */
 	public static void putRootInState(State state) {
 		if (!rootIsEmpty())
 			state.setVersion2(toVersion2(rootVersion));
 	}
-
+	
+	/**
+	 * Cette fonction remplie la variable result en remplissant le nom de toutes les versions existantes
+	 * @param v
+	 * @param result Une liste de noms des versions
+	 */
 	private static void fillNames(Version v, Set<String> result) {
 		result.add(v.getNameTimestamp());
 		v.alternativeVersions.forEach(alt -> fillNames(alt, result));
 	}
-
+	
+	/**
+	 * @see fillNames
+	 * @return Une liste de noms des versions
+	 */
 	public static Set<String> getSetNames() {
 		Set<String> result = new HashSet<>();
 		if (!rootIsEmpty())
@@ -183,6 +238,10 @@ public class Version {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @return Renvoie la combinaison du nom avec la date de création d'une version
+	 */
 	public String getNameTimestamp() {
 		Date date = new Date(timestamp);
 		return name + " " + new SimpleDateFormat(Constants.DATE_FORMAT).format(date);
@@ -195,6 +254,9 @@ public class Version {
 		return isEqual;
 	}
 
+	/**
+	 * Cette fonction vide l'arborescence en cours
+	 */
 	public static void clearRoot() {
 		rootVersion = null;
 
