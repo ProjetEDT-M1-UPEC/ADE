@@ -18,10 +18,10 @@ import org.jsoup.nodes.Element;
 import jfxtras.scene.control.agenda.Agenda;
 import jfxtras.scene.control.agenda.Agenda.AppointmentGroup;
 import jfxtras.scene.control.agenda.Agenda.LocalDateTimeRange;
-import modeles.AgendaEvent;
-import modeles.CreneauxVersion2;
-import modeles.PairDate;
-import modeles.Tab;
+import models.AgendaEvent;
+import models.CreneauxVersion2;
+import models.PairDate;
+import models.Tab;
 
 
 /**

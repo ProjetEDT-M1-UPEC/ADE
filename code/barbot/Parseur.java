@@ -22,10 +22,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import modeles.Branch;
-import modeles.Category;
-import modeles.Constants;
-import modeles.Project;
+import models.Branch;
+import models.Category;
+import models.Constants;
+import models.Project;
 public class Parseur {
 
 	private String login;

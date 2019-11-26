@@ -7,7 +7,7 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import modeles.RoomV2;
+import models.RoomV2;
 
 public class Room implements Comparable<Room>, Serializable{
 	/**

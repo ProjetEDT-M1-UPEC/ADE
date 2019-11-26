@@ -13,8 +13,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import modeles.Constants;
-import modeles.StateManager;
+import models.Constants;
+import models.StateManager;
 
 public class Main extends Application {
 
