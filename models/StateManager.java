@@ -16,8 +16,8 @@ import javafx.scene.control.Tab;
 public class StateManager {
 
 	/**
-	 * une classe utiliser pour sauvegrder l'Ã©tat de systÃ©me aprÃ©s que
-	 * l'utilisateur ferme l'application et recharger l'Ã©tat Ã  la prochaine
+	 * une classe utiliser pour sauvegrder l'état de système après que
+	 * l'utilisateur ferme l'application et recharger l'état à la prochaine
 	 * ouverture
 	 */
 
@@ -26,8 +26,9 @@ public class StateManager {
 	private static final String path = "StateFileSave";
 
 	/**
-	 * utilisation de design singleton dans Constructeur pour l assurÃ© une seule
+	 * utilisation de design singleton dans Constructeur pour l assuré une seule
 	 * instociation de StateManager et ObjectMapper
+	 * @return Renvoie le stateManager actuel
 	 */
 	public static StateManager getInstance() {
 		if (stateManager == null)
@@ -38,7 +39,7 @@ public class StateManager {
 	}
 
 	/**
-	 * rÃ©cupÃ©rer et sauvegarder l'Ã©tat de systÃ©me dans un fichier
+	 * récupérer et sauvegarder l'état de système dans un fichier
 	 */
 	public void saveState() {
 
@@ -67,7 +68,8 @@ public class StateManager {
 	}
 
 	/**
-	 * recharger l'Ã©tat de systÃ©me en lisant le fichier
+	 * recharger l'état de système en lisant le fichier
+	 * @return Renvoie l'état du système actuel
 	 */
 	public State load() {
 

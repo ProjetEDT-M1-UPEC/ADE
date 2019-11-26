@@ -1,5 +1,9 @@
 package models;
-
+/**
+ * Cette classe contient les constantes utilisées dans tous les packages
+ * @author Pionan
+ *
+ */
 public class Constants {
 
 	public final static String DISPLAY_COOKIE_PART = "-displaysav52="

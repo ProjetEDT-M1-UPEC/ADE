@@ -3,7 +3,11 @@ package models;
 import java.util.ArrayList;
 
 import code.barbot.Creneaux;
-
+/**
+ * Cette classe contient la liste des créneaux d'un onglet d'emploi du temps
+ * @author Pionan
+ *
+ */
 public class TimeTable {
 
 	public enum TYPE {

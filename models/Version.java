@@ -13,7 +13,11 @@ import javax.swing.JFileChooser;
 import code.barbot.Creneaux;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
-
+/**
+ * Il s'agit d'une classe qui représente une version d'un emploi du temps de l'agenda
+ * @author Pionan
+ *
+ */
 public class Version {
 	private static Version rootVersion = null;
 
@@ -211,7 +215,7 @@ public class Version {
 
 	/**
 	 * Cette fonction sauvegarde l'état de l'arborescence pour la sauvegarde automatique lorsque l'on quitte l'application
-	 * @param state
+	 * @param state Représente l'état du système actuel
 	 */
 	public static void putRootInState(State state) {
 		if (!rootIsEmpty())

@@ -3,7 +3,11 @@ package models;
 import java.util.ArrayList;
 
 import code.barbot.Creneaux;
-
+/**
+ * Il s'agit d'une classe qui représente la classe Version, elle est faite pour la sauvegarde
+ * @author Pionan
+ *
+ */
 public class Version2 {
 	private Long timestamp;
 	private ArrayList<CreneauxVersion2> creneauxsList;

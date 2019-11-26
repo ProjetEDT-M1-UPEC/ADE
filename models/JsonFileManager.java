@@ -8,7 +8,11 @@ import javax.swing.JOptionPane;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
-
+/**
+ * Cette classe s'occupe de la sauvegarde et de l'ouverture de l'emploi du temps et du versionnage
+ * @author Pionan
+ *
+ */
 public class JsonFileManager implements FileManager {
 	static ObjectMapper objectMapper;
 	static JsonFileManager jsonFileManager;
@@ -16,7 +20,7 @@ public class JsonFileManager implements FileManager {
 	private String MismatchFile = "Format de fichier invalid";
 
 	/*
-	 * utilisation de design singleton dans Constructeur pour l assurÃ© une
+	 * utilisation de design singleton dans Constructeur pour l assuré une
 	 * seule instociation de JsonFileManage et ObjectMapper
 	 */
 	public static JsonFileManager getInstance() {

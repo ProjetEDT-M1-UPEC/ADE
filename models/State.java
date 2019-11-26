@@ -3,7 +3,7 @@ package models;
 import java.util.ArrayList;
 
 /**
- * une classe reprsente un Ã©tat de notre systÃ©me
+ * une classe reprsente un état de notre système
  */
 public class State {
 

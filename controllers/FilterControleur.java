@@ -36,7 +36,7 @@ public class FilterControleur implements Initializable {
 	
 	/**
 	 * Contructeur de la classe
-	 * @param tab
+	 * @param tab Représente un onglet
 	 */
 	public FilterControleur(Tab tab) {
 		selectedTab=tab;

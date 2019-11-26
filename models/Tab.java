@@ -8,7 +8,11 @@ import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
-
+/**
+ * Cette classe représente un onglet de l'agenda
+ * @author Pionan
+ *
+ */
 public class Tab extends javafx.scene.control.Tab {
 	/**
 	 * une classe qui represente un onglet
