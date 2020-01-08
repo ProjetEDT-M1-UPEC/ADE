@@ -1,4 +1,4 @@
-package models;
+package backup;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +12,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import controllers.MainScreenControleur;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Tab;
+import models.State;
+import models.TimeTableV2;
+import models.Version;
 
 public class StateManager {
 
@@ -47,7 +50,7 @@ public class StateManager {
 		ObservableList<Tab> tabs = MainScreenControleur.tabPaneV2.getTabs();
 
 		for (int i = 0; i < tabs.size() - 1; i++) {
-			models.Tab tt = (models.Tab) tabs.get(i);
+			view.Tab tt = (view.Tab) tabs.get(i);
 			list.add(tt.getAgenda().getTimeTable().toTimeTableV2());
 		}
 

@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import jfxtras.scene.control.LocalDateTimeTextField;
 import jfxtras.scene.control.agenda.Agenda.Appointment;
-import models.AgendaCustom;
+import view.AgendaCustom;
 import models.AgendaEvent;
 
 public class PopUpController implements Initializable {

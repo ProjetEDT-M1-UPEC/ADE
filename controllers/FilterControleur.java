@@ -13,7 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import jfxtras.scene.control.agenda.Agenda.Appointment;
-import models.Tab;
+import view.Tab;
 
 
 

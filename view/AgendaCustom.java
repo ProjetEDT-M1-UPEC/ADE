@@ -1,4 +1,4 @@
-package models;
+package view;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,6 +16,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import jfxtras.scene.control.agenda.Agenda;
+import models.AgendaEvent;
+import models.Constants;
+import models.PairDate;
+import models.TimeTable;
 
 /**
  * 

@@ -65,16 +65,16 @@ import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import jfxtras.scene.control.agenda.Agenda;
-import models.AgendaCustom;
+import view.AgendaCustom;
 import models.Branch;
 import models.Category;
 import models.Constants;
-import models.JsonFileManager;
+import backup.JsonFileManager;
 import models.Project;
 import models.Shortcut;
 import models.State;
-import models.StateManager;
-import models.Tab;
+import backup.StateManager;
+import view.Tab;
 import models.TimeTable;
 import models.TimeTableV2;
 import models.Version;
@@ -1026,8 +1026,25 @@ public class MainScreenControleur implements Initializable {
 			primaryStage.close();
 
 		});
+		MenuItem itemBranch = new MenuItem("Sauvegarder cette branche");
+		itemBranch.setOnAction(e -> {
 
-		contextMenu.getItems().addAll(itemSelect);
+			try {
+				primaryStage.close();
+				Version wanted = Version.getVersion(selectedVersion);
+				JFileChooser fileChooser = new JFileChooser(new File(Constants.REP_OPEN_FILECHOSER));
+				fileChooser.setDialogTitle(Constants.SAVE_VERSION);
+
+				if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
+					Version.saveBranch(fileChooser, wanted);
+			} catch (Exception excep) {
+				JOptionPane.showMessageDialog(null, Constants.errSelect, Constants.errMssg, JOptionPane.ERROR_MESSAGE);
+			}
+			
+
+		});
+
+		contextMenu.getItems().addAll(itemSelect, itemBranch);
 		return contextMenu;
 	}
 

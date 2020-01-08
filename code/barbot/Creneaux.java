@@ -21,7 +21,7 @@ import jfxtras.scene.control.agenda.Agenda.LocalDateTimeRange;
 import models.AgendaEvent;
 import models.CreneauxVersion2;
 import models.PairDate;
-import models.Tab;
+import view.Tab;
 
 
 /**

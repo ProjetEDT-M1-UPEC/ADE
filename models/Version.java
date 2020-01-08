@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.swing.JFileChooser;
 
+import backup.JsonFileManager;
 import code.barbot.Creneaux;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
@@ -191,6 +192,41 @@ public class Version {
 
 	public boolean hasParent() {
 		return parent != null;
+	}
+	
+	/**
+	 * Cette fonction crée une copie d'une version sans ses versions filles
+	 * @param v Une version que l'on souhaite copier
+	 * @return Renvoie une copie simplifiée d'une version
+	 */
+	private static Version getSimpleCopiedVersion(Version v) {
+		return new Version(v.parent, v.timestamp, v.name, v.creneauxList);
+	}
+	
+	/**
+	 * Cette fonction récursive trouve le parent d'une version pour construire sa branche d'origine
+	 * @param wanted Une version sélectionnée
+	 * @return Renvoie la branche de la version sélectionnée
+	 */
+	private static Version getSelectedBranch(Version wanted) {
+		if(wanted.parent == null)
+			return wanted;
+		Version prevV = getSimpleCopiedVersion(wanted.parent);
+		prevV.alternativeVersions.add(wanted);
+		return getSelectedBranch(prevV);
+	}
+	
+	/**
+	 * Cette fonction sauvegarde une branche sélectionnée à partir d'un nœud de version
+	 * @param fileChooser est le chemin de sauvegarde
+	 * @param wanted est la version sélectionnée
+	 */
+	public static void saveBranch(JFileChooser fileChooser, Version wanted) {
+		if (wanted == null)
+			return;
+		
+		JsonFileManager.getInstance().saveVersion(toVersion2(getSelectedBranch(getSimpleCopiedVersion(wanted))),
+				(fileChooser.getSelectedFile().getAbsolutePath()));
 	}
 
 	/**

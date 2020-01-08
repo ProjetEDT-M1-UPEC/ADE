@@ -1,4 +1,4 @@
-package models;
+package view;
 
 import java.util.EmptyStackException;
 
@@ -8,6 +8,10 @@ import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
+import view.AgendaCustom;
+import models.AgendaEvent;
+import models.Constants;
+import models.UndoRedoManager;
 /**
  * Cette classe représente un onglet de l'agenda
  * @author Pionan

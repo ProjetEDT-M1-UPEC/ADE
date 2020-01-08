@@ -1,6 +1,8 @@
-package models;
+package backup;
 
 import java.io.File;
+
+import models.TimeTable;
 
 public interface FileManager {
 
