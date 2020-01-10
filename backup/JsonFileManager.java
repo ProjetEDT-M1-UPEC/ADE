@@ -3,6 +3,7 @@ package backup;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 
 import models.TimeTable;
 import models.TimeTableV2;
+import models.Version;
 import models.Version2;
 /**
  * Cette classe s'occupe de la sauvegarde et de l'ouverture de l'emploi du temps et du versionnage
@@ -93,6 +95,7 @@ public class JsonFileManager implements FileManager {
 		return true;
 	}
 
+
 	public Version2 loadVersion(File file) {
 		Version2 v2;
 		try {
@@ -107,5 +110,27 @@ public class JsonFileManager implements FileManager {
 			return null;
 		}
 		return v2;
+	}
+
+	public void loadBranch(File file){
+		Version2 v2 = null;
+		try {
+			v2 = objectMapper.readValue(file, Version2.class);
+		} catch (MismatchedInputException e1) {
+			JOptionPane.showMessageDialog(null, models.Constants.errLoadFile + MismatchFile, models.Constants.errMssg,
+					JOptionPane.ERROR_MESSAGE);
+
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, models.Constants.errLoadFile + e.getMessage(),
+					models.Constants.errMssg, JOptionPane.ERROR_MESSAGE);
+
+		}
+		Version p;
+		p=Version.getVersion(v2.getName()).getParent();
+		if(p!=null){
+		Version v1 = null;
+		v1=v2.toVersion(p, v2);
+		Version.getVersion(v1.getName()).getParent().addNewVersion(v1.getName(), v1.getCreneauxList(),Version.getVersion(v2.getName()).getParent().getName());
+		}
 	}
 }

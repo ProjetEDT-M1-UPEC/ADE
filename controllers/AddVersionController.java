@@ -10,11 +10,11 @@ import javafx.stage.Stage;
 import models.Version;
 
 public class AddVersionController implements Initializable {
-	
+
 
 	@FXML
 	TextField nameVersionField;
-	
+
 	private MainScreenControleur sc;
 
 	public AddVersionController(MainScreenControleur sc) {

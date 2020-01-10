@@ -28,6 +28,10 @@ public class Version {
 	private final Version parent;
 	private final ArrayList<Version> alternativeVersions;
 
+	public Version getParent(){
+		return this.parent;
+	}
+
 	public Version(Version parent, Long t, String str, ArrayList<Creneaux> l, ArrayList<Version> listVer) {
 		this.parent = parent;
 		timestamp = t;
@@ -53,7 +57,7 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction prend en paramètre une Version et retourne la copie de celle-ci pour obtenir une Version2 
+	 * Cette fonction prend en paramètre une Version et retourne la copie de celle-ci pour obtenir une Version2
 	 * qui est par la suite utilisée pour la sauvegarde
 	 * @param v1 en Version
 	 * @return Renvoie une copie de v1 en Version2
@@ -73,7 +77,7 @@ public class Version {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Renvoie la date actuelle en Long
 	 */
 	private static Long nowStamp() {
@@ -135,7 +139,7 @@ public class Version {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Renvoie une copie de la liste de créneaux de cette version
 	 */
 	public ArrayList<Creneaux> getCreneauxList() {
@@ -172,7 +176,7 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction vérifie si l'arborescence est vide avant de retourner une TreeItem 
+	 * Cette fonction vérifie si l'arborescence est vide avant de retourner une TreeItem
 	 * @see toTreeItemString
 	 * @return TreeItem
 	 */
@@ -183,7 +187,7 @@ public class Version {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Renvoie un boolean pour vérifier si l'arborescence est vide ou non
 	 */
 	public static boolean rootIsEmpty() {
@@ -193,7 +197,7 @@ public class Version {
 	public boolean hasParent() {
 		return parent != null;
 	}
-	
+
 	/**
 	 * Cette fonction crée une copie d'une version sans ses versions filles
 	 * @param v Une version que l'on souhaite copier
@@ -202,7 +206,7 @@ public class Version {
 	private static Version getSimpleCopiedVersion(Version v) {
 		return new Version(v.parent, v.timestamp, v.name, v.creneauxList);
 	}
-	
+
 	/**
 	 * Cette fonction récursive trouve le parent d'une version pour construire sa branche d'origine
 	 * @param wanted Une version sélectionnée
@@ -215,7 +219,7 @@ public class Version {
 		prevV.alternativeVersions.add(wanted);
 		return getSelectedBranch(prevV);
 	}
-	
+
 	/**
 	 * Cette fonction sauvegarde une branche sélectionnée à partir d'un nœud de version
 	 * @param fileChooser est le chemin de sauvegarde
@@ -224,7 +228,7 @@ public class Version {
 	public static void saveBranch(JFileChooser fileChooser, Version wanted) {
 		if (wanted == null)
 			return;
-		
+
 		JsonFileManager.getInstance().saveVersion(toVersion2(getSelectedBranch(getSimpleCopiedVersion(wanted))),
 				(fileChooser.getSelectedFile().getAbsolutePath()));
 	}
@@ -257,7 +261,7 @@ public class Version {
 		if (!rootIsEmpty())
 			state.setVersion2(toVersion2(rootVersion));
 	}
-	
+
 	/**
 	 * Cette fonction remplie la variable result en remplissant le nom de toutes les versions existantes
 	 * @param v Version en cours que l'on parcourt
@@ -268,7 +272,7 @@ public class Version {
 		result.add(v.getNameTimestamp());
 		v.alternativeVersions.forEach(alt -> fillNames(alt, result));
 	}
-	
+
 	/**
 	 * @see fillNames
 	 * @return Une liste de noms des versions
@@ -281,7 +285,7 @@ public class Version {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Renvoie la combinaison du nom avec la date de création d'une version
 	 */
 	public String getNameTimestamp() {
