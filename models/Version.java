@@ -14,8 +14,11 @@ import backup.JsonFileManager;
 import code.barbot.Creneaux;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
+
 /**
- * Il s'agit d'une classe qui représente une version d'un emploi du temps de l'agenda
+ * Il s'agit d'une classe qui représente une version d'un emploi du temps de
+ * l'agenda
+ * 
  * @author Pionan
  *
  */
@@ -27,10 +30,6 @@ public class Version {
 	private final ArrayList<Creneaux> creneauxList;
 	private final Version parent;
 	private final ArrayList<Version> alternativeVersions;
-
-	public Version getParent(){
-		return this.parent;
-	}
 
 	public Version(Version parent, Long t, String str, ArrayList<Creneaux> l, ArrayList<Version> listVer) {
 		this.parent = parent;
@@ -57,8 +56,10 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction prend en paramètre une Version et retourne la copie de celle-ci pour obtenir une Version2
-	 * qui est par la suite utilisée pour la sauvegarde
+	 * Cette fonction prend en paramètre une Version et retourne la copie de
+	 * celle-ci pour obtenir une Version2 qui est par la suite utilisée pour la
+	 * sauvegarde
+	 * 
 	 * @param v1 en Version
 	 * @return Renvoie une copie de v1 en Version2
 	 */
@@ -85,9 +86,11 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction crée une nouvelle version sous une version parente que l'on récupère
-	 * @param value Le nom de la nouvelle version
-	 * @param creneaux La liste des créneaux de la nouvelle version
+	 * Cette fonction crée une nouvelle version sous une version parente que l'on
+	 * récupère
+	 * 
+	 * @param value            Le nom de la nouvelle version
+	 * @param creneaux         La liste des créneaux de la nouvelle version
 	 * @param currentVersionId L'identifiant de la version parente
 	 * @return Renvoie l'identifiant de la nouvelle version créée
 	 */
@@ -109,7 +112,9 @@ public class Version {
 	}
 
 	/**
-	 * Cette méthode cherche une version à l'aide de l'identifiant représentant son nom avec sa date de création
+	 * Cette méthode cherche une version à l'aide de l'identifiant représentant son
+	 * nom avec sa date de création
+	 * 
 	 * @param id L'identifiant de la version que l'on cherche est un String
 	 * @return Renvoie la version que l'on cherche
 	 */
@@ -128,6 +133,7 @@ public class Version {
 
 	/**
 	 * Vérifie si l'identifiant est cohérent
+	 * 
 	 * @see searchVersion
 	 * @param id L'identifiant de la version que l'on va chercher
 	 * @return Renvoie la version que l'on cherche
@@ -160,7 +166,9 @@ public class Version {
 	}
 
 	/**
-	 * Cette méthode construit une TreeItem pour l'affichage de l'arborescence, le parcours est récurssif
+	 * Cette méthode construit une TreeItem pour l'affichage de l'arborescence, le
+	 * parcours est récurssif
+	 * 
 	 * @return TreeItem
 	 */
 	public TreeItem<String> toTreeItemString() {
@@ -176,7 +184,9 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction vérifie si l'arborescence est vide avant de retourner une TreeItem
+	 * Cette fonction vérifie si l'arborescence est vide avant de retourner une
+	 * TreeItem
+	 * 
 	 * @see toTreeItemString
 	 * @return TreeItem
 	 */
@@ -200,6 +210,7 @@ public class Version {
 
 	/**
 	 * Cette fonction crée une copie d'une version sans ses versions filles
+	 * 
 	 * @param v Une version que l'on souhaite copier
 	 * @return Renvoie une copie simplifiée d'une version
 	 */
@@ -208,12 +219,14 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction récursive trouve le parent d'une version pour construire sa branche d'origine
+	 * Cette fonction récursive trouve le parent d'une version pour construire sa
+	 * branche d'origine
+	 * 
 	 * @param wanted Une version sélectionnée
 	 * @return Renvoie la branche de la version sélectionnée
 	 */
 	private static Version getSelectedBranch(Version wanted) {
-		if(wanted.parent == null)
+		if (wanted.parent == null)
 			return wanted;
 		Version prevV = getSimpleCopiedVersion(wanted.parent);
 		prevV.alternativeVersions.add(wanted);
@@ -221,9 +234,11 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction sauvegarde une branche sélectionnée à partir d'un nœud de version
+	 * Cette fonction sauvegarde une branche sélectionnée à partir d'un nœud de
+	 * version
+	 * 
 	 * @param fileChooser est le chemin de sauvegarde
-	 * @param wanted est la version sélectionnée
+	 * @param wanted      est la version sélectionnée
 	 */
 	public static void saveBranch(JFileChooser fileChooser, Version wanted) {
 		if (wanted == null)
@@ -235,7 +250,9 @@ public class Version {
 
 	/**
 	 * Cette fonction sauvegarde l'arborescence en cours
-	 * @param fileChooser Contient le chemin dans lequel nous sauvegardons l'arborescence
+	 * 
+	 * @param fileChooser Contient le chemin dans lequel nous sauvegardons
+	 *                    l'arborescence
 	 */
 	public static void saveRoot(JFileChooser fileChooser) {
 		if (rootIsEmpty())
@@ -246,15 +263,47 @@ public class Version {
 
 	/**
 	 * Cette fonction charge l'arborescence donnée en paramètre
+	 * 
 	 * @param v2 Version2
 	 */
-	public static void loadRoot(Version2 v2) {
-		if (v2 != null)
-			rootVersion = Version2.toVersion(null, v2);
+	public static void loadRoot(Version v) {
+		if (v != null)
+			rootVersion = v;
+	}
+
+	/***
+	 * Cette fonction ajoute la branche à l'arborescence
+	 * 
+	 * @param v2 Une branche récupérée
+	 * @throws Exception
+	 */
+	public static void loadBranch(Version branch) throws Exception {
+		if (branch == null)
+			throw new Exception(Constants.EMPTY_TREE);
+		else if (rootVersion == null)
+			rootVersion = branch;
+		else if (!rootVersion.equals(branch))
+			throw new Exception(Constants.WRONG_TREE);
+		loadingBranch(rootVersion, branch.alternativeVersions.get(0));
+	}
+
+	private static void loadingBranch(Version current, Version branch) {
+		if (current.alternativeVersions.stream().allMatch(alt -> {
+			if (alt.equals(branch)) {
+				if (!branch.alternativeVersions.isEmpty())
+					loadingBranch(alt, branch.alternativeVersions.get(0));
+				return false;
+			}
+			return true;
+		})) {
+			current.alternativeVersions.add(branch);
+		}
 	}
 
 	/**
-	 * Cette fonction sauvegarde l'état de l'arborescence pour la sauvegarde automatique lorsque l'on quitte l'application
+	 * Cette fonction sauvegarde l'état de l'arborescence pour la sauvegarde
+	 * automatique lorsque l'on quitte l'application
+	 * 
 	 * @param state Représente l'état du système actuel
 	 */
 	public static void putRootInState(State state) {
@@ -263,8 +312,10 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction remplie la variable result en remplissant le nom de toutes les versions existantes
-	 * @param v Version en cours que l'on parcourt
+	 * Cette fonction remplie la variable result en remplissant le nom de toutes les
+	 * versions existantes
+	 * 
+	 * @param v      Version en cours que l'on parcourt
 	 * @param result Contient l'ensemble des noms de toutes les versions
 	 * @param result Une liste de noms des versions
 	 */
@@ -293,11 +344,14 @@ public class Version {
 		return name + " " + new SimpleDateFormat(Constants.DATE_FORMAT).format(date);
 	}
 
-	// comparaison de la list de crenaux d'une version a une autre
-	@SuppressWarnings("unused")
-	private boolean compareCreneaux(Version o) {
-		boolean isEqual = this.creneauxList.equals(o.creneauxList);
-		return isEqual;
+	/***
+	 * Cette fonction compare l'identifiant de deux versions
+	 * 
+	 * @param v Version comparée
+	 * @return Renvoie vrai si les deux versions sont égales, faux sinon
+	 */
+	private boolean equals(Version v) {
+		return getNameTimestamp().equals(v.getNameTimestamp());
 	}
 
 	/**

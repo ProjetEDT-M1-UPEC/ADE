@@ -64,7 +64,9 @@ public class Constants {
 	
 	public static String infoMssg = "Message D'information";
 	
-	public static String allRight = "L'arborescence a bel et bien été chargée, ouvrez-le avec la commande F4.";
+	public static String allRight = "L'arborescence a bel et bien été ouverte, consultez-la avec la commande F4.";
+	
+	public static String allRight2 = "La branche a bel et bien été chargée, consultez-le avec la commande F4.";
 
 	public static String errConnection = "Impossible de parser le site \n" + "probléme de Conection\n";
 
@@ -200,4 +202,5 @@ public class Constants {
 	
 	public static final String EMPTY_TREE = "Aucune version enregistrée";
 	
+	public static final String WRONG_TREE = "Votre arborescence ne correspond pas à cette branche";
 }

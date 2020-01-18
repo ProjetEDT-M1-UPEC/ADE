@@ -92,6 +92,9 @@
                     <items>
                         <MenuItem fx:id="Add_Ver" mnemonicParsing="false" onAction="#add_version" text="Ajouter une version" />
                     </items>
+                    <items>
+                        <MenuItem fx:id="Load_Bra" mnemonicParsing="false" onAction="#load_branch" text="Charger une branche" />
+                    </items>
                 </Menu>
 				<Menu mnemonicParsing="false" text="Aide">
 					<items>

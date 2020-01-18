@@ -3,7 +3,6 @@ package backup;
 import java.io.File;
 import java.io.IOException;
 
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,8 +13,11 @@ import models.TimeTable;
 import models.TimeTableV2;
 import models.Version;
 import models.Version2;
+
 /**
- * Cette classe s'occupe de la sauvegarde et de l'ouverture de l'emploi du temps et du versionnage
+ * Cette classe s'occupe de la sauvegarde et de l'ouverture de l'emploi du temps
+ * et du versionnage
+ * 
  * @author Pionan
  *
  */
@@ -26,8 +28,8 @@ public class JsonFileManager implements FileManager {
 	private String MismatchFile = "Format de fichier invalid";
 
 	/*
-	 * utilisation de design singleton dans Constructeur pour l assuré une
-	 * seule instociation de JsonFileManage et ObjectMapper
+	 * utilisation de design singleton dans Constructeur pour l assuré une seule
+	 * instociation de JsonFileManage et ObjectMapper
 	 */
 	public static JsonFileManager getInstance() {
 		if (jsonFileManager == null)
@@ -53,8 +55,8 @@ public class JsonFileManager implements FileManager {
 			return null;
 		} catch (IOException e) {
 
-			JOptionPane.showMessageDialog(null, models.Constants.errLoadFile + e.getMessage(),
-					models.Constants.errMssg, JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, models.Constants.errLoadFile + e.getMessage(), models.Constants.errMssg,
+					JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
 		return tmv2.toTimeTable();
@@ -74,8 +76,8 @@ public class JsonFileManager implements FileManager {
 			objectMapper.writeValue(new File(path + ".json"), listCr);
 		} catch (IOException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, models.Constants.errSaveFile + e.getMessage(),
-					models.Constants.errMssg, JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, models.Constants.errSaveFile + e.getMessage(), models.Constants.errMssg,
+					JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 		return true;
@@ -88,15 +90,14 @@ public class JsonFileManager implements FileManager {
 			objectMapper.writeValue(new File(path + ".json"), tm);
 		} catch (IOException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, models.Constants.errSaveFile + e.getMessage(),
-					models.Constants.errMssg, JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, models.Constants.errSaveFile + e.getMessage(), models.Constants.errMssg,
+					JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 		return true;
 	}
 
-
-	public Version2 loadVersion(File file) {
+	public Version loadVersion(File file) {
 		Version2 v2;
 		try {
 			v2 = objectMapper.readValue(file, Version2.class);
@@ -105,32 +106,10 @@ public class JsonFileManager implements FileManager {
 					JOptionPane.ERROR_MESSAGE);
 			return null;
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, models.Constants.errLoadFile + e.getMessage(),
-					models.Constants.errMssg, JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, models.Constants.errLoadFile + e.getMessage(), models.Constants.errMssg,
+					JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
-		return v2;
-	}
-
-	public void loadBranch(File file){
-		Version2 v2 = null;
-		try {
-			v2 = objectMapper.readValue(file, Version2.class);
-		} catch (MismatchedInputException e1) {
-			JOptionPane.showMessageDialog(null, models.Constants.errLoadFile + MismatchFile, models.Constants.errMssg,
-					JOptionPane.ERROR_MESSAGE);
-
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, models.Constants.errLoadFile + e.getMessage(),
-					models.Constants.errMssg, JOptionPane.ERROR_MESSAGE);
-
-		}
-		Version p;
-		p=Version.getVersion(v2.getName()).getParent();
-		if(p!=null){
-		Version v1 = null;
-		v1=v2.toVersion(p, v2);
-		Version.getVersion(v1.getName()).getParent().addNewVersion(v1.getName(), v1.getCreneauxList(),Version.getVersion(v2.getName()).getParent().getName());
-		}
+		return Version2.toVersion(null, v2);
 	}
 }

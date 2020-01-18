@@ -78,6 +78,7 @@ import view.Tab;
 import models.TimeTable;
 import models.TimeTableV2;
 import models.Version;
+import models.Version2;
 /**
  * Il s'agit du contrôleur principal de l'application
  * @author Pionan
@@ -146,6 +147,9 @@ public class MainScreenControleur implements Initializable {
 
 	@FXML
 	private MenuItem Add_Ver;
+	
+	@FXML
+	private MenuItem Load_Bra;
 
 	private Set<String> nomsVersions = new HashSet<>();
 	SuggestionProvider<String> provider;
@@ -194,6 +198,8 @@ public class MainScreenControleur implements Initializable {
 		Read_Pro.setAccelerator(KeyCombination.keyCombination("F4"));
 
 		Add_Ver.setAccelerator(KeyCombination.keyCombination("F5"));
+		
+		Load_Bra.setAccelerator(KeyCombination.keyCombination("F6"));
 	}
 
 	// permet la suggestion des versions lors de la saisie dans recherche
@@ -394,7 +400,7 @@ public class MainScreenControleur implements Initializable {
 		State state = StateManager.getInstance().load();
 
 		if (state != null) {
-			Version.loadRoot(state.getVersion2());
+			Version.loadRoot(Version2.toVersion(null, state.getVersion2()));
 			if (!state.getList().isEmpty()) {
 
 				ArrayList<TimeTable> list = new ArrayList<TimeTable>();
@@ -1069,10 +1075,9 @@ public class MainScreenControleur implements Initializable {
 				Version.loadRoot(JsonFileManager.getInstance().loadVersion(fileChooser.getSelectedFile()));
 				JOptionPane.showMessageDialog(null, Constants.allRight, Constants.infoMssg, JOptionPane.INFORMATION_MESSAGE);
 			} catch (Exception excep) {
-				JOptionPane.showMessageDialog(null, Constants.errOpenVer, Constants.errMssg, JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, Constants.errOpenVer+" : "+excep, Constants.errMssg, JOptionPane.ERROR_MESSAGE);
 			}
 		}
-
 	}
 
 	@FXML
@@ -1086,7 +1091,7 @@ public class MainScreenControleur implements Initializable {
 			if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
 				Version.saveRoot(fileChooser);
 		} catch (Exception excep) {
-			JOptionPane.showMessageDialog(null, Constants.errSaveVer, Constants.errMssg, JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, Constants.errSaveVer+" : "+excep, Constants.errMssg, JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -1135,7 +1140,23 @@ public class MainScreenControleur implements Initializable {
 			e1.printStackTrace();
 		}
 	}
+	
+	@FXML
+	private void load_branch(ActionEvent ae) {
+		JFileChooser fileChooser = new JFileChooser(new File("."));
+		FileNameExtensionFilter filter = new FileNameExtensionFilter(Constants.FORMAT_JSON, "json");
+		fileChooser.setFileFilter(filter);
 
+		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			try {
+				Version.loadBranch(JsonFileManager.getInstance().loadVersion(fileChooser.getSelectedFile()));
+				JOptionPane.showMessageDialog(null, Constants.allRight2, Constants.infoMssg, JOptionPane.INFORMATION_MESSAGE);
+			} catch (Exception excep) {
+				JOptionPane.showMessageDialog(null, Constants.errOpenVer+" : "+excep, Constants.errMssg, JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+	
 	private void clearTabs() {
 		tabPaneV2.getTabs().clear();
 		setAddTabeHandler();
