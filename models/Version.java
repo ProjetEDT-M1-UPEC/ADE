@@ -287,6 +287,14 @@ public class Version {
 		loadingBranch(rootVersion, branch.alternativeVersions.get(0));
 	}
 
+	/***
+	 * Cette fonction récurssive cherche dans la Version current la présence de la
+	 * version Branch et ajoute la branche une fois que la dernière Version en commun
+	 * a été trouvée
+	 * 
+	 * @param current
+	 * @param branch
+	 */
 	private static void loadingBranch(Version current, Version branch) {
 		if (current.alternativeVersions.stream().allMatch(alt -> {
 			if (alt.equals(branch)) {
