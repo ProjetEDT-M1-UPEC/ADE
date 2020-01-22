@@ -18,7 +18,7 @@ import javafx.scene.image.ImageView;
 /**
  * Il s'agit d'une classe qui représente une version d'un emploi du temps de
  * l'agenda
- * 
+ *
  * @author Pionan
  *
  */
@@ -59,7 +59,7 @@ public class Version {
 	 * Cette fonction prend en paramètre une Version et retourne la copie de
 	 * celle-ci pour obtenir une Version2 qui est par la suite utilisée pour la
 	 * sauvegarde
-	 * 
+	 *
 	 * @param v1 en Version
 	 * @return Renvoie une copie de v1 en Version2
 	 */
@@ -88,7 +88,7 @@ public class Version {
 	/**
 	 * Cette fonction crée une nouvelle version sous une version parente que l'on
 	 * récupère
-	 * 
+	 *
 	 * @param value            Le nom de la nouvelle version
 	 * @param creneaux         La liste des créneaux de la nouvelle version
 	 * @param currentVersionId L'identifiant de la version parente
@@ -114,7 +114,7 @@ public class Version {
 	/**
 	 * Cette méthode cherche une version à l'aide de l'identifiant représentant son
 	 * nom avec sa date de création
-	 * 
+	 *
 	 * @param id L'identifiant de la version que l'on cherche est un String
 	 * @return Renvoie la version que l'on cherche
 	 */
@@ -133,7 +133,7 @@ public class Version {
 
 	/**
 	 * Vérifie si l'identifiant est cohérent
-	 * 
+	 *
 	 * @see searchVersion
 	 * @param id L'identifiant de la version que l'on va chercher
 	 * @return Renvoie la version que l'on cherche
@@ -168,7 +168,7 @@ public class Version {
 	/**
 	 * Cette méthode construit une TreeItem pour l'affichage de l'arborescence, le
 	 * parcours est récurssif
-	 * 
+	 *
 	 * @return TreeItem
 	 */
 	public TreeItem<String> toTreeItemString() {
@@ -186,7 +186,7 @@ public class Version {
 	/**
 	 * Cette fonction vérifie si l'arborescence est vide avant de retourner une
 	 * TreeItem
-	 * 
+	 *
 	 * @see toTreeItemString
 	 * @return TreeItem
 	 */
@@ -210,7 +210,7 @@ public class Version {
 
 	/**
 	 * Cette fonction crée une copie d'une version sans ses versions filles
-	 * 
+	 *
 	 * @param v Une version que l'on souhaite copier
 	 * @return Renvoie une copie simplifiée d'une version
 	 */
@@ -221,7 +221,7 @@ public class Version {
 	/**
 	 * Cette fonction récursive trouve le parent d'une version pour construire sa
 	 * branche d'origine
-	 * 
+	 *
 	 * @param wanted Une version sélectionnée
 	 * @return Renvoie la branche de la version sélectionnée
 	 */
@@ -236,7 +236,7 @@ public class Version {
 	/**
 	 * Cette fonction sauvegarde une branche sélectionnée à partir d'un nœud de
 	 * version
-	 * 
+	 *
 	 * @param fileChooser est le chemin de sauvegarde
 	 * @param wanted      est la version sélectionnée
 	 */
@@ -250,7 +250,7 @@ public class Version {
 
 	/**
 	 * Cette fonction sauvegarde l'arborescence en cours
-	 * 
+	 *
 	 * @param fileChooser Contient le chemin dans lequel nous sauvegardons
 	 *                    l'arborescence
 	 */
@@ -263,7 +263,7 @@ public class Version {
 
 	/**
 	 * Cette fonction charge l'arborescence donnée en paramètre
-	 * 
+	 *
 	 * @param v2 Version2
 	 */
 	public static void loadRoot(Version v) {
@@ -273,7 +273,7 @@ public class Version {
 
 	/***
 	 * Cette fonction ajoute la branche à l'arborescence
-	 * 
+	 *
 	 * @param v2 Une branche récupérée
 	 * @throws Exception
 	 */
@@ -291,7 +291,7 @@ public class Version {
 	 * Cette fonction récurssive cherche dans la Version current la présence de la
 	 * version Branch et ajoute la branche une fois que la dernière Version en commun
 	 * a été trouvée
-	 * 
+	 *
 	 * @param current
 	 * @param branch
 	 */
@@ -311,18 +311,18 @@ public class Version {
 	/**
 	 * Cette fonction sauvegarde l'état de l'arborescence pour la sauvegarde
 	 * automatique lorsque l'on quitte l'application
-	 * 
+	 *
 	 * @param state Représente l'état du système actuel
 	 */
 	public static void putRootInState(State state) {
 		if (!rootIsEmpty())
-			state.setVersion2(toVersion2(rootVersion));
+			state.setRoot(toVersion2(rootVersion));
 	}
 
 	/**
 	 * Cette fonction remplie la variable result en remplissant le nom de toutes les
 	 * versions existantes
-	 * 
+	 *
 	 * @param v      Version en cours que l'on parcourt
 	 * @param result Contient l'ensemble des noms de toutes les versions
 	 * @param result Une liste de noms des versions
@@ -354,7 +354,7 @@ public class Version {
 
 	/***
 	 * Cette fonction compare l'identifiant de deux versions
-	 * 
+	 *
 	 * @param v Version comparée
 	 * @return Renvoie vrai si les deux versions sont égales, faux sinon
 	 */

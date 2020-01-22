@@ -517,26 +517,6 @@ public class Creneaux extends Agenda.AppointmentImpl implements Comparable<Crene
 		old_StartCal=getStartTime();
 		super.setStartTime(value);
 	}
-	/*
-	//**** lety deb
-	@Override
-	public void setStartTime(Calendar value) { //*****************lety
-		System.out.println("kikouu000!!!!");
-      TimeZone tz = value.getTimeZone();
-      ZoneId zid = tz == null ? ZoneId.systemDefault() : tz.toZoneId();
-      LocalDateTime newD = LocalDateTime.ofInstant(value.toInstant(), zid);
-		if ( this.getEndLocalDateTime().isAfter(newD) ) { //** letyy 
-			System.out.println("kikouu11!!!!");
-		old_StartCal=getStartTime();
-		super.setStartTime(value);
-		
-		}
-		else {
-			System.out.println("kikouu2222!!!!");
-			//JOptionPane.showMessageDialog(null, "votre date et/ou heure de debut et de fin sont incohérant", "Erreur", JOptionPane.ERROR_MESSAGE);
-		}
-	}*/
-	//** fin lety
 
 	public void back() {
 		super.setStartTime(old_StartCal);

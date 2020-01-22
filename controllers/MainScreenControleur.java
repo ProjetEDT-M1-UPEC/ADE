@@ -147,7 +147,7 @@ public class MainScreenControleur implements Initializable {
 
 	@FXML
 	private MenuItem Add_Ver;
-	
+
 	@FXML
 	private MenuItem Load_Bra;
 
@@ -198,7 +198,7 @@ public class MainScreenControleur implements Initializable {
 		Read_Pro.setAccelerator(KeyCombination.keyCombination("F4"));
 
 		Add_Ver.setAccelerator(KeyCombination.keyCombination("F5"));
-		
+
 		Load_Bra.setAccelerator(KeyCombination.keyCombination("F6"));
 	}
 
@@ -400,7 +400,9 @@ public class MainScreenControleur implements Initializable {
 		State state = StateManager.getInstance().load();
 
 		if (state != null) {
-			Version.loadRoot(Version2.toVersion(null, state.getVersion2()));
+			Version2 v2 = state.getRoot();
+			if(v2!=null)
+				Version.loadRoot(Version2.toVersion(null, v2));
 			if (!state.getList().isEmpty()) {
 
 				ArrayList<TimeTable> list = new ArrayList<TimeTable>();
@@ -1046,7 +1048,7 @@ public class MainScreenControleur implements Initializable {
 			} catch (Exception excep) {
 				JOptionPane.showMessageDialog(null, Constants.errSelect, Constants.errMssg, JOptionPane.ERROR_MESSAGE);
 			}
-			
+
 
 		});
 
@@ -1140,7 +1142,7 @@ public class MainScreenControleur implements Initializable {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	@FXML
 	private void load_branch(ActionEvent ae) {
 		JFileChooser fileChooser = new JFileChooser(new File("."));
@@ -1156,7 +1158,7 @@ public class MainScreenControleur implements Initializable {
 			}
 		}
 	}
-	
+
 	private void clearTabs() {
 		tabPaneV2.getTabs().clear();
 		setAddTabeHandler();
