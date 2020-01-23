@@ -1003,6 +1003,11 @@ public class MainScreenControleur implements Initializable {
 		return ((Tab) tabPaneV2.getSelectionModel().getSelectedItem()).getAgenda().getTimeTable()
 				.getCopiedCreneauxList();
 	}
+	
+	public ArrayList<Creneaux> getCreneauxModified() {
+		return ((Tab) tabPaneV2.getSelectionModel().getSelectedItem()).getAgenda().getTimeTable()
+				.getCreneauxModified();
+	}
 
 	private String getFileName() {
 

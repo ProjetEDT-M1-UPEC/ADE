@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 
 import code.barbot.Creneaux;
+import code.barbot.Creneaux.TYPE;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -74,11 +75,10 @@ public class PopUpController implements Initializable {
 	 */
 	public void saveApt() {
 		// Kenza job ... extends Khaled job implemetns Lety job
-		
+
 		if (start.getLocalDateTime().isAfter(end.getLocalDateTime())) {
-			System.out.println("bad kikouu !!!");
-			JOptionPane.showMessageDialog(null, "Votre date et/ou heure de debut et de fin sont incohérentes !", "Erreur",
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Votre date et/ou heure de debut et de fin sont incohérentes !",
+					"Erreur", JOptionPane.ERROR_MESSAGE);
 		} else {
 			for (Appointment app : agenda.appointments()) {
 				Creneaux creneaux = (Creneaux) app;
@@ -98,33 +98,35 @@ public class PopUpController implements Initializable {
 						return;
 				}
 			}
-						
+
 			if (!cours.getText().equals(creneaux.getCours()))
 				creneaux.setCours(cours.getText());
-						
+
 			if (!classroom.getText().equals(creneaux.getSalle()))
 				creneaux.setSalle(classroom.getText());
-			
+
 			if (!prof.getText().equals(creneaux.getProf()))
 				creneaux.setProf(prof.getText());
-			
+
 			if (!group.getText().equals(creneaux.getGroup()))
 				creneaux.setGroup(group.getText());
-			
+
 			// from localdatetime to cal
-			
-			if ((!start.getLocalDateTime().equals(creneaux.getStartLocalDateTime()))) 
+
+			if ((!start.getLocalDateTime().equals(creneaux.getStartLocalDateTime())))
 				creneaux.setStartLocalDateTime(start.getLocalDateTime());
-			
-			if (!end.getLocalDateTime().equals(creneaux.getEndLocalDateTime())) 
+
+			if (!end.getLocalDateTime().equals(creneaux.getEndLocalDateTime()))
 				creneaux.setEndLocalDateTime(end.getLocalDateTime());
 			
-			
+			creneaux.status = TYPE.Modified;
+			agenda.getTimeTable().addCreneauModified(creneaux);
+
 		}
-		
+
 		Stage stage = (Stage) save.getScene().getWindow();
 		stage.close();
-		
+
 	}
 
 	private Boolean Controle(String new_, String exist, Label lab) {
@@ -148,6 +150,8 @@ public class PopUpController implements Initializable {
 	 */
 	public void delete() {
 		// agenda.appointments().remove(creneaux);
+		creneaux.status = TYPE.Delete;
+		agenda.getTimeTable().addCreneauModified(creneaux);
 		agenda.getTimeTable().getCreneauxsList().remove(creneaux);
 		creneaux.notify(new AgendaEvent(creneaux, AgendaEvent.TYPE.DELETE, creneaux, null));
 		// faire sï¿½r

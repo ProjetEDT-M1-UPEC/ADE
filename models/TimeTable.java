@@ -18,6 +18,7 @@ public class TimeTable {
 	private String versionId;
 	private String path;
 	private ArrayList<Creneaux> creneauxsList;
+	private ArrayList<Creneaux> creneauxModified;
 	private Boolean isValide;
 	private String hashCode;
 	private TYPE type;
@@ -27,7 +28,9 @@ public class TimeTable {
 	}
 
 	public void addCreneaux(Creneaux cr) {
+		cr.status = Creneaux.TYPE.Created ;
 		this.creneauxsList.add(cr);
+		this.creneauxModified.add(cr);
 	}
 
 	public TimeTable(String name, String path, ArrayList<Creneaux> creneauxsList, TYPE type) {
@@ -102,6 +105,13 @@ public class TimeTable {
 
 	public ArrayList<Creneaux> getCreneauxsList() {
 		return creneauxsList;
+	}
+	
+	public ArrayList<Creneaux> getCreneauxModified() {
+		return creneauxModified;
+	}
+	public void addCreneauModified(Creneaux cr) {
+		creneauxModified.add(cr);
 	}
 
 	public void setCreneauxsList(ArrayList<Creneaux> creneauxsList) {

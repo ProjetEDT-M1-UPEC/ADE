@@ -1,8 +1,10 @@
 package controllers;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import code.barbot.Creneaux;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
@@ -34,7 +36,12 @@ public class AddVersionController implements Initializable {
 	@FXML
 	private void add() {
 		String value = nameVersionField.getText();
-		String id = Version.addNewVersion(value, sc.getCreneauxList(), sc.getSelectedTabVersionId());
+		ArrayList<Creneaux> kikou;
+		if(Version.rootIsEmpty())
+			kikou = sc.getCreneauxList() ;
+		else 
+			kikou = sc.getCreneauxModified();
+		String id = Version.addNewVersion(value, kikou, sc.getSelectedTabVersionId());
 		if(id != null)
 			sc.setSelectedTabVerID(value, id);
 		this.close();

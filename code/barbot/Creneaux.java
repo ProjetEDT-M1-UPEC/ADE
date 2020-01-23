@@ -33,6 +33,16 @@ import view.Tab;
 public class Creneaux extends Agenda.AppointmentImpl implements Comparable<Creneaux>, Serializable ,Cloneable{
 
 
+	static public enum TYPE {
+	   Delete,
+	   Modified,
+	   Created,
+	   Nochange,
+	}
+	
+	public TYPE status = TYPE.Nochange;
+	
+	
 	private static final long serialVersionUID = 1136538406936247910L;
 
 	private static  Pattern pid = Pattern.compile("javascript:([a-zA-Z]*)[(]([^),]*)");
