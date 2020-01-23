@@ -1,6 +1,8 @@
 package controllers;
 
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
@@ -10,7 +12,6 @@ import javafx.stage.Stage;
 import models.Version;
 
 public class AddVersionController implements Initializable {
-
 
 	@FXML
 	TextField nameVersionField;
@@ -33,10 +34,19 @@ public class AddVersionController implements Initializable {
 
 	@FXML
 	private void add() {
-		String value = nameVersionField.getText();
+		byte[] array = new byte[7];
+		new Random().nextBytes(array);
+		String generatedString = new String(array, Charset.forName("UTF-8"));
+		int hash = generatedString.hashCode();
+		int i = 0;
+		String value = nameVersionField.getText() + hash;
+		// while (i <5) {
 		String id = Version.addNewVersion(value, sc.getCreneauxList(), sc.getSelectedTabVersionId());
-		if(id != null)
+		if (id != null)
 			sc.setSelectedTabVerID(value, id);
+
+		// i++;
+		// }
 		this.close();
 	}
 

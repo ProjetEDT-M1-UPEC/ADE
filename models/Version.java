@@ -60,7 +60,8 @@ public class Version {
 	 * celle-ci pour obtenir une Version2 qui est par la suite utilisée pour la
 	 * sauvegarde
 	 *
-	 * @param v1 en Version
+	 * @param v1
+	 *            en Version
 	 * @return Renvoie une copie de v1 en Version2
 	 */
 	public static Version2 toVersion2(Version v1) {
@@ -86,13 +87,20 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction crée une nouvelle version sous une version parente que l'on
-	 * récupère
+	 * Cette fonction crée une nouvelle version sous une version parente que
+	 * l'on récupère
 	 *
-	 * @param value            Le nom de la nouvelle version
-	 * @param creneaux         La liste des créneaux de la nouvelle version
-	 * @param currentVersionId L'identifiant de la version parente
+	 * @param value
+	 *            Le nom de la nouvelle version
+	 * @param creneaux
+	 *            La liste des créneaux de la nouvelle version
+	 * @param currentVersionId
+	 *            L'identifiant de la version parente
 	 * @return Renvoie l'identifiant de la nouvelle version créée
+	 */
+
+	/**Pour effectuer notre test on creer un arbre en largeur avec la fonction addnewVersion
+	 * on pourra atteindre les 300000 version avant d'avoir l'erreur outOfMemory
 	 */
 	public static String addNewVersion(String value, ArrayList<Creneaux> creneaux, String currentVersionId) {
 		String id = null;
@@ -100,22 +108,29 @@ public class Version {
 		if (rootVersion == null) {
 			rootVersion = new Version(null, nowStamp(), value, creneaux);
 			id = rootVersion.getNameTimestamp();
-		} else {
+		}
+
+		else {
 			Version parent = getVersion(currentVersionId);
 			if (parent != null) {
-				Version ver = new Version(parent, nowStamp(), value, creneaux);
-				parent.alternativeVersions.add(ver);
-				id = ver.getNameTimestamp();
+//				int i = 0;
+//				while (i < 350000) {
+					Version ver = new Version(parent, nowStamp(), value, creneaux);
+					parent.alternativeVersions.add(ver);
+					id = ver.getNameTimestamp();
+				// i++;
+				// }
 			}
 		}
 		return id;
 	}
 
 	/**
-	 * Cette méthode cherche une version à l'aide de l'identifiant représentant son
-	 * nom avec sa date de création
+	 * Cette méthode cherche une version à l'aide de l'identifiant représentant
+	 * son nom avec sa date de création
 	 *
-	 * @param id L'identifiant de la version que l'on cherche est un String
+	 * @param id
+	 *            L'identifiant de la version que l'on cherche est un String
 	 * @return Renvoie la version que l'on cherche
 	 */
 	private Version searchVersion(String id) {
@@ -135,7 +150,8 @@ public class Version {
 	 * Vérifie si l'identifiant est cohérent
 	 *
 	 * @see searchVersion
-	 * @param id L'identifiant de la version que l'on va chercher
+	 * @param id
+	 *            L'identifiant de la version que l'on va chercher
 	 * @return Renvoie la version que l'on cherche
 	 */
 	public static Version getVersion(String id) {
@@ -166,8 +182,8 @@ public class Version {
 	}
 
 	/**
-	 * Cette méthode construit une TreeItem pour l'affichage de l'arborescence, le
-	 * parcours est récurssif
+	 * Cette méthode construit une TreeItem pour l'affichage de l'arborescence,
+	 * le parcours est récurssif
 	 *
 	 * @return TreeItem
 	 */
@@ -198,7 +214,8 @@ public class Version {
 
 	/**
 	 *
-	 * @return Renvoie un boolean pour vérifier si l'arborescence est vide ou non
+	 * @return Renvoie un boolean pour vérifier si l'arborescence est vide ou
+	 *         non
 	 */
 	public static boolean rootIsEmpty() {
 		return rootVersion == null;
@@ -211,7 +228,8 @@ public class Version {
 	/**
 	 * Cette fonction crée une copie d'une version sans ses versions filles
 	 *
-	 * @param v Une version que l'on souhaite copier
+	 * @param v
+	 *            Une version que l'on souhaite copier
 	 * @return Renvoie une copie simplifiée d'une version
 	 */
 	private static Version getSimpleCopiedVersion(Version v) {
@@ -219,10 +237,11 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction récursive trouve le parent d'une version pour construire sa
-	 * branche d'origine
+	 * Cette fonction récursive trouve le parent d'une version pour construire
+	 * sa branche d'origine
 	 *
-	 * @param wanted Une version sélectionnée
+	 * @param wanted
+	 *            Une version sélectionnée
 	 * @return Renvoie la branche de la version sélectionnée
 	 */
 	private static Version getSelectedBranch(Version wanted) {
@@ -237,8 +256,10 @@ public class Version {
 	 * Cette fonction sauvegarde une branche sélectionnée à partir d'un nœud de
 	 * version
 	 *
-	 * @param fileChooser est le chemin de sauvegarde
-	 * @param wanted      est la version sélectionnée
+	 * @param fileChooser
+	 *            est le chemin de sauvegarde
+	 * @param wanted
+	 *            est la version sélectionnée
 	 */
 	public static void saveBranch(JFileChooser fileChooser, Version wanted) {
 		if (wanted == null)
@@ -251,8 +272,9 @@ public class Version {
 	/**
 	 * Cette fonction sauvegarde l'arborescence en cours
 	 *
-	 * @param fileChooser Contient le chemin dans lequel nous sauvegardons
-	 *                    l'arborescence
+	 * @param fileChooser
+	 *            Contient le chemin dans lequel nous sauvegardons
+	 *            l'arborescence
 	 */
 	public static void saveRoot(JFileChooser fileChooser) {
 		if (rootIsEmpty())
@@ -264,7 +286,8 @@ public class Version {
 	/**
 	 * Cette fonction charge l'arborescence donnée en paramètre
 	 *
-	 * @param v2 Version2
+	 * @param v2
+	 *            Version2
 	 */
 	public static void loadRoot(Version v) {
 		if (v != null)
@@ -274,7 +297,8 @@ public class Version {
 	/***
 	 * Cette fonction ajoute la branche à l'arborescence
 	 *
-	 * @param v2 Une branche récupérée
+	 * @param v2
+	 *            Une branche récupérée
 	 * @throws Exception
 	 */
 	public static void loadBranch(Version branch) throws Exception {
@@ -288,9 +312,9 @@ public class Version {
 	}
 
 	/***
-	 * Cette fonction récurssive cherche dans la Version current la présence de la
-	 * version Branch et ajoute la branche une fois que la dernière Version en commun
-	 * a été trouvée
+	 * Cette fonction récurssive cherche dans la Version current la présence de
+	 * la version Branch et ajoute la branche une fois que la dernière Version
+	 * en commun a été trouvée
 	 *
 	 * @param current
 	 * @param branch
@@ -312,7 +336,8 @@ public class Version {
 	 * Cette fonction sauvegarde l'état de l'arborescence pour la sauvegarde
 	 * automatique lorsque l'on quitte l'application
 	 *
-	 * @param state Représente l'état du système actuel
+	 * @param state
+	 *            Représente l'état du système actuel
 	 */
 	public static void putRootInState(State state) {
 		if (!rootIsEmpty())
@@ -320,12 +345,15 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction remplie la variable result en remplissant le nom de toutes les
-	 * versions existantes
+	 * Cette fonction remplie la variable result en remplissant le nom de toutes
+	 * les versions existantes
 	 *
-	 * @param v      Version en cours que l'on parcourt
-	 * @param result Contient l'ensemble des noms de toutes les versions
-	 * @param result Une liste de noms des versions
+	 * @param v
+	 *            Version en cours que l'on parcourt
+	 * @param result
+	 *            Contient l'ensemble des noms de toutes les versions
+	 * @param result
+	 *            Une liste de noms des versions
 	 */
 	private static void fillNames(Version v, Set<String> result) {
 		result.add(v.getNameTimestamp());
@@ -345,7 +373,8 @@ public class Version {
 
 	/**
 	 *
-	 * @return Renvoie la combinaison du nom avec la date de création d'une version
+	 * @return Renvoie la combinaison du nom avec la date de création d'une
+	 *         version
 	 */
 	public String getNameTimestamp() {
 		Date date = new Date(timestamp);
@@ -355,7 +384,8 @@ public class Version {
 	/***
 	 * Cette fonction compare l'identifiant de deux versions
 	 *
-	 * @param v Version comparée
+	 * @param v
+	 *            Version comparée
 	 * @return Renvoie vrai si les deux versions sont égales, faux sinon
 	 */
 	private boolean equals(Version v) {
