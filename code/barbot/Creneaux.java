@@ -688,7 +688,7 @@ public class Creneaux extends Agenda.AppointmentImpl implements Comparable<Crene
 			if (other.getStartTime() == null) {
 				return false;
 			}
-		} else if (!getStartTime().getTime().equals(other.getStartTime().getTime())) {
+		} else if (Math.abs(getStartTime().getTimeInMillis() - other.getStartTime().getTimeInMillis()) > 1000) {
 			return false;
 		}
 
@@ -792,9 +792,12 @@ public class Creneaux extends Agenda.AppointmentImpl implements Comparable<Crene
 
 	@Override
 	public Object clone() {
-		Creneaux crx = new Creneaux(nom, cal, cours, prof, group, salle, type, id, duree, rooms, codeApoge, codePromo, status);
-		crx.old_StartCal = old_StartCal;
-		crx.old_EndCal = old_EndCal;
+		Creneaux crx = new Creneaux(nom, (Calendar) cal.clone(), cours, prof, group, salle, type, id, duree, rooms,
+				codeApoge, codePromo, status);
+		if (old_StartCal != null)
+			crx.old_StartCal = (Calendar) old_StartCal.clone();
+		if (old_EndCal != null)
+			crx.old_EndCal = (Calendar) old_EndCal.clone();
 		return crx;
 	}
 

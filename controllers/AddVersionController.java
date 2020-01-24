@@ -1,7 +1,6 @@
 package controllers;
 
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
