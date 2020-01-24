@@ -9,6 +9,7 @@ public class TimeTableV2 {
 
 	private String path;
 	private ArrayList<CreneauxVersion2> creneauxsList;
+	private ArrayList<CreneauxVersion2> diffList;
 	private Boolean isValide;
 	private String hashCode;
 	private TYPE type;
@@ -46,7 +47,15 @@ public class TimeTableV2 {
 	public void setCreneauxsList(ArrayList<CreneauxVersion2> creneauxsList) {
 		this.creneauxsList = creneauxsList;
 	}
+	
+	public ArrayList<CreneauxVersion2> getDiffList() {
+		return diffList;
+	}
 
+	public void setDiffList(ArrayList<CreneauxVersion2> diff) {
+		this.diffList = diff;
+	}
+	
 	public Boolean getIsValide() {
 		return isValide;
 	}
@@ -66,8 +75,8 @@ public class TimeTableV2 {
 	public TimeTable toTimeTable() {
 		TimeTable tt = new TimeTable(name, path, Creneaux.toCreneaux(creneauxsList), isValide, hashCode, type);
 		tt.setVersionId(versionId);
+		tt.setCreneauxModified(Creneaux.toCreneaux(diffList));
 		return tt;
-
 	}
 
 	public TYPE getType() {

@@ -562,7 +562,8 @@ public class Creneaux extends Agenda.AppointmentImpl implements Comparable<Crene
 	 */
 	public static ArrayList<Creneaux> toCreneaux(ArrayList<CreneauxVersion2> listV2) {
 		ArrayList<Creneaux> list = new ArrayList<Creneaux>();
-
+		if (listV2 == null)
+			return list;
 		for (CreneauxVersion2 v2 : listV2) {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(v2.startDate);

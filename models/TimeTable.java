@@ -142,7 +142,7 @@ public class TimeTable {
 		v2.setHashCode(hashCode);
 		v2.setName(name);
 		v2.setVersionId(versionId);
-	//	v2.setDiffList(Crebeayx.toCreneauxVersion2(cr))
+		v2.setDiffList(Creneaux.toCreneauxVersion2(creneauxModified));
 		return v2;
 	}
 
