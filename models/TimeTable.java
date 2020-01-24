@@ -10,7 +10,7 @@ import code.barbot.Creneaux;
  */
 public class TimeTable {
 
-	public enum TYPE {
+	public static enum TYPE {
 		EMPTY_BASED, ADE_BASED, EXTERN_BASED
 	}
 
@@ -18,7 +18,7 @@ public class TimeTable {
 	private String versionId;
 	private String path;
 	private ArrayList<Creneaux> creneauxsList;
-	private ArrayList<Creneaux> creneauxModified;
+	private ArrayList<Creneaux> creneauxModified = new ArrayList<>();
 	private Boolean isValide;
 	private String hashCode;
 	private TYPE type;
@@ -28,9 +28,7 @@ public class TimeTable {
 	}
 
 	public void addCreneaux(Creneaux cr) {
-		cr.status = Creneaux.TYPE.Created ;
 		this.creneauxsList.add(cr);
-		this.creneauxModified.add(cr);
 	}
 
 	public TimeTable(String name, String path, ArrayList<Creneaux> creneauxsList, TYPE type) {
@@ -56,6 +54,7 @@ public class TimeTable {
 	}
 
 	public void setVersionId(String newVersionId) {
+		creneauxModified = new ArrayList<>();
 		this.versionId = newVersionId;
 	}
 	// copie de la list creneauxList
@@ -110,8 +109,9 @@ public class TimeTable {
 	public ArrayList<Creneaux> getCreneauxModified() {
 		return creneauxModified;
 	}
-	public void addCreneauModified(Creneaux cr) {
-		creneauxModified.add(cr);
+	
+	public void setCreneauxModified(ArrayList<Creneaux> crL) {
+		creneauxModified = crL;
 	}
 
 	public void setCreneauxsList(ArrayList<Creneaux> creneauxsList) {

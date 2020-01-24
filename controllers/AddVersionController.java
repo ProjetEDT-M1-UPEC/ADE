@@ -1,13 +1,11 @@
 package controllers;
 
 import java.net.URL;
-<<<<<<< HEAD
-import java.util.ArrayList;
-=======
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Random;
->>>>>>> 149f45ebf5605ea1e1b173c81fe69858e312eed0
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 import code.barbot.Creneaux;
 import javafx.fxml.FXML;
@@ -41,19 +39,20 @@ public class AddVersionController implements Initializable {
 	private void add() {
 		byte[] array = new byte[7];
 		new Random().nextBytes(array);
-		String generatedString = new String(array, Charset.forName("UTF-8"));
-		int hash = generatedString.hashCode();
-		
-		String value = nameVersionField.getText() + hash;
-		ArrayList<Creneaux> kikou;
-		if(Version.rootIsEmpty())
-			kikou = sc.getCreneauxList() ;
-		else 
-			kikou = sc.getCreneauxModified();
+		String generatedString = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+		// String generatedString = new String(array, Charset.forName("UTF-8"));
+		// int hash = generatedString.hashCode();
+
+		String value = nameVersionField.getText() + "[" + generatedString + "]";
+		ArrayList<Creneaux> crList;
+		if (Version.rootIsEmpty())
+			crList = sc.getCreneauxList();
+		else
+			crList = sc.getCreneauxModified();
 		// int i = 0;
 		// while (i <5) {
-		String id = Version.addNewVersion(value, kikou, sc.getSelectedTabVersionId());
-		if(id != null)
+		String id = Version.addNewVersion(value, crList, sc.getSelectedTabVersionId());
+		if (id != null)
 			sc.setSelectedTabVerID(value, id);
 
 		// i++;

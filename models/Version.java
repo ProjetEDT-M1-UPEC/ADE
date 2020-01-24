@@ -16,7 +16,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
 
 /**
- * Il s'agit d'une classe qui représente une version d'un emploi du temps de
+ * Il s'agit d'une classe qui reprï¿½sente une version d'un emploi du temps de
  * l'agenda
  *
  * @author Pionan
@@ -56,12 +56,11 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction prend en paramètre une Version et retourne la copie de
-	 * celle-ci pour obtenir une Version2 qui est par la suite utilisée pour la
+	 * Cette fonction prend en paramï¿½tre une Version et retourne la copie de
+	 * celle-ci pour obtenir une Version2 qui est par la suite utilisï¿½e pour la
 	 * sauvegarde
 	 *
-	 * @param v1
-	 *            en Version
+	 * @param v1 en Version
 	 * @return Renvoie une copie de v1 en Version2
 	 */
 	public static Version2 toVersion2(Version v1) {
@@ -87,20 +86,19 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction crée une nouvelle version sous une version parente que
-	 * l'on récupère
+	 * Cette fonction crï¿½e une nouvelle version sous une version parente que l'on
+	 * rï¿½cupï¿½re
 	 *
-	 * @param value
-	 *            Le nom de la nouvelle version
-	 * @param creneaux
-	 *            La liste des créneaux de la nouvelle version
-	 * @param currentVersionId
-	 *            L'identifiant de la version parente
-	 * @return Renvoie l'identifiant de la nouvelle version créée
+	 * @param value            Le nom de la nouvelle version
+	 * @param creneaux         La liste des crï¿½neaux de la nouvelle version
+	 * @param currentVersionId L'identifiant de la version parente
+	 * @return Renvoie l'identifiant de la nouvelle version crï¿½ï¿½e
 	 */
 
-	/**Pour effectuer notre test on creer un arbre en largeur avec la fonction addnewVersion
-	 * on pourra atteindre les 300000 version avant d'avoir l'erreur outOfMemory
+	/**
+	 * Pour effectuer notre test on creer un arbre en largeur avec la fonction
+	 * addnewVersion on pourra atteindre les 300000 version avant d'avoir l'erreur
+	 * outOfMemory
 	 */
 	public static String addNewVersion(String value, ArrayList<Creneaux> creneaux, String currentVersionId) {
 		String id = null;
@@ -115,9 +113,9 @@ public class Version {
 			if (parent != null) {
 //				int i = 0;
 //				while (i < 350000) {
-					Version ver = new Version(parent, nowStamp(), value, creneaux);
-					parent.alternativeVersions.add(ver);
-					id = ver.getNameTimestamp();
+				Version ver = new Version(parent, nowStamp(), value, creneaux);
+				parent.alternativeVersions.add(ver);
+				id = ver.getNameTimestamp();
 				// i++;
 				// }
 			}
@@ -126,11 +124,10 @@ public class Version {
 	}
 
 	/**
-	 * Cette méthode cherche une version à l'aide de l'identifiant représentant
-	 * son nom avec sa date de création
+	 * Cette mï¿½thode cherche une version ï¿½ l'aide de l'identifiant reprï¿½sentant son
+	 * nom avec sa date de crï¿½ation
 	 *
-	 * @param id
-	 *            L'identifiant de la version que l'on cherche est un String
+	 * @param id L'identifiant de la version que l'on cherche est un String
 	 * @return Renvoie la version que l'on cherche
 	 */
 	private Version searchVersion(String id) {
@@ -147,11 +144,10 @@ public class Version {
 	}
 
 	/**
-	 * Vérifie si l'identifiant est cohérent
+	 * Vï¿½rifie si l'identifiant est cohï¿½rent
 	 *
 	 * @see searchVersion
-	 * @param id
-	 *            L'identifiant de la version que l'on va chercher
+	 * @param id L'identifiant de la version que l'on va chercher
 	 * @return Renvoie la version que l'on cherche
 	 */
 	public static Version getVersion(String id) {
@@ -161,15 +157,59 @@ public class Version {
 	}
 
 	/**
-	 *
-	 * @return Renvoie une copie de la liste de créneaux de cette version
+	 * 
+	 * @return Renvoie une copie de la liste de crÃ©neaux de cette version
 	 */
-	public ArrayList<Creneaux> getCreneauxList() {
+	private ArrayList<Creneaux> getCloningList() {
 		ArrayList<Creneaux> clone = new ArrayList<>();
 		for (Creneaux o : creneauxList) {
 			clone.add((Creneaux) o.clone());
 		}
 		return clone;
+	}
+
+	/**
+	 *
+	 * @return Construction de la liste de crÃ©neaux de cette version
+	 */
+	public ArrayList<Creneaux> getCreneauxList() {
+		if (parent == null)
+			return getCloningList();
+		else {
+			ArrayList<Creneaux> crParentList = parent.getCreneauxList();
+			for (Creneaux crDiff : getCloningList()) {
+				switch (crDiff.getStatus()) {
+				case Created:
+					crParentList.add(crDiff);
+					break;
+				case Modified:
+					crParentList.add(crDiff);
+					break;
+				case Deleted:
+					applyDiff(crDiff, crParentList);
+				case NoChange:
+					break;
+				}
+			}
+			return crParentList;
+		}
+	}
+
+	private void applyDiff(Creneaux crDiff, ArrayList<Creneaux> crParentList) {
+		Iterator<Creneaux> it = crParentList.iterator();
+		Creneaux cr;
+		while (it.hasNext()) {
+			cr = it.next();
+			if (crDiff.equals(cr)) {
+				switch (crDiff.getStatus()) {
+				case Deleted:
+					it.remove();
+					break;
+				default:
+					break;
+				}
+			}
+		}
 	}
 
 	public String toString() {
@@ -182,8 +222,8 @@ public class Version {
 	}
 
 	/**
-	 * Cette méthode construit une TreeItem pour l'affichage de l'arborescence,
-	 * le parcours est récurssif
+	 * Cette mï¿½thode construit une TreeItem pour l'affichage de l'arborescence, le
+	 * parcours est rï¿½curssif
 	 *
 	 * @return TreeItem
 	 */
@@ -200,7 +240,7 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction vérifie si l'arborescence est vide avant de retourner une
+	 * Cette fonction vï¿½rifie si l'arborescence est vide avant de retourner une
 	 * TreeItem
 	 *
 	 * @see toTreeItemString
@@ -214,8 +254,7 @@ public class Version {
 
 	/**
 	 *
-	 * @return Renvoie un boolean pour vérifier si l'arborescence est vide ou
-	 *         non
+	 * @return Renvoie un boolean pour vï¿½rifier si l'arborescence est vide ou non
 	 */
 	public static boolean rootIsEmpty() {
 		return rootVersion == null;
@@ -226,23 +265,21 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction crée une copie d'une version sans ses versions filles
+	 * Cette fonction crï¿½e une copie d'une version sans ses versions filles
 	 *
-	 * @param v
-	 *            Une version que l'on souhaite copier
-	 * @return Renvoie une copie simplifiée d'une version
+	 * @param v Une version que l'on souhaite copier
+	 * @return Renvoie une copie simplifiï¿½e d'une version
 	 */
 	private static Version getSimpleCopiedVersion(Version v) {
 		return new Version(v.parent, v.timestamp, v.name, v.creneauxList);
 	}
 
 	/**
-	 * Cette fonction récursive trouve le parent d'une version pour construire
-	 * sa branche d'origine
+	 * Cette fonction rï¿½cursive trouve le parent d'une version pour construire sa
+	 * branche d'origine
 	 *
-	 * @param wanted
-	 *            Une version sélectionnée
-	 * @return Renvoie la branche de la version sélectionnée
+	 * @param wanted Une version sï¿½lectionnï¿½e
+	 * @return Renvoie la branche de la version sï¿½lectionnï¿½e
 	 */
 	private static Version getSelectedBranch(Version wanted) {
 		if (wanted.parent == null)
@@ -253,13 +290,11 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction sauvegarde une branche sélectionnée à partir d'un nœud de
+	 * Cette fonction sauvegarde une branche sï¿½lectionnï¿½e ï¿½ partir d'un nï¿½ud de
 	 * version
 	 *
-	 * @param fileChooser
-	 *            est le chemin de sauvegarde
-	 * @param wanted
-	 *            est la version sélectionnée
+	 * @param fileChooser est le chemin de sauvegarde
+	 * @param wanted      est la version sï¿½lectionnï¿½e
 	 */
 	public static void saveBranch(JFileChooser fileChooser, Version wanted) {
 		if (wanted == null)
@@ -272,9 +307,8 @@ public class Version {
 	/**
 	 * Cette fonction sauvegarde l'arborescence en cours
 	 *
-	 * @param fileChooser
-	 *            Contient le chemin dans lequel nous sauvegardons
-	 *            l'arborescence
+	 * @param fileChooser Contient le chemin dans lequel nous sauvegardons
+	 *                    l'arborescence
 	 */
 	public static void saveRoot(JFileChooser fileChooser) {
 		if (rootIsEmpty())
@@ -284,10 +318,9 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction charge l'arborescence donnée en paramètre
+	 * Cette fonction charge l'arborescence donnï¿½e en paramï¿½tre
 	 *
-	 * @param v2
-	 *            Version2
+	 * @param v2 Version2
 	 */
 	public static void loadRoot(Version v) {
 		if (v != null)
@@ -295,10 +328,9 @@ public class Version {
 	}
 
 	/***
-	 * Cette fonction ajoute la branche à l'arborescence
+	 * Cette fonction ajoute la branche ï¿½ l'arborescence
 	 *
-	 * @param v2
-	 *            Une branche récupérée
+	 * @param v2 Une branche rï¿½cupï¿½rï¿½e
 	 * @throws Exception
 	 */
 	public static void loadBranch(Version branch) throws Exception {
@@ -312,9 +344,9 @@ public class Version {
 	}
 
 	/***
-	 * Cette fonction récurssive cherche dans la Version current la présence de
-	 * la version Branch et ajoute la branche une fois que la dernière Version
-	 * en commun a été trouvée
+	 * Cette fonction rï¿½curssive cherche dans la Version current la prï¿½sence de la
+	 * version Branch et ajoute la branche une fois que la derniï¿½re Version en
+	 * commun a ï¿½tï¿½ trouvï¿½e
 	 *
 	 * @param current
 	 * @param branch
@@ -333,11 +365,10 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction sauvegarde l'état de l'arborescence pour la sauvegarde
+	 * Cette fonction sauvegarde l'ï¿½tat de l'arborescence pour la sauvegarde
 	 * automatique lorsque l'on quitte l'application
 	 *
-	 * @param state
-	 *            Représente l'état du système actuel
+	 * @param state Reprï¿½sente l'ï¿½tat du systï¿½me actuel
 	 */
 	public static void putRootInState(State state) {
 		if (!rootIsEmpty())
@@ -345,15 +376,12 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction remplie la variable result en remplissant le nom de toutes
-	 * les versions existantes
+	 * Cette fonction remplie la variable result en remplissant le nom de toutes les
+	 * versions existantes
 	 *
-	 * @param v
-	 *            Version en cours que l'on parcourt
-	 * @param result
-	 *            Contient l'ensemble des noms de toutes les versions
-	 * @param result
-	 *            Une liste de noms des versions
+	 * @param v      Version en cours que l'on parcourt
+	 * @param result Contient l'ensemble des noms de toutes les versions
+	 * @param result Une liste de noms des versions
 	 */
 	private static void fillNames(Version v, Set<String> result) {
 		result.add(v.getNameTimestamp());
@@ -373,8 +401,7 @@ public class Version {
 
 	/**
 	 *
-	 * @return Renvoie la combinaison du nom avec la date de création d'une
-	 *         version
+	 * @return Renvoie la combinaison du nom avec la date de crï¿½ation d'une version
 	 */
 	public String getNameTimestamp() {
 		Date date = new Date(timestamp);
@@ -384,9 +411,8 @@ public class Version {
 	/***
 	 * Cette fonction compare l'identifiant de deux versions
 	 *
-	 * @param v
-	 *            Version comparée
-	 * @return Renvoie vrai si les deux versions sont égales, faux sinon
+	 * @param v Version comparï¿½e
+	 * @return Renvoie vrai si les deux versions sont ï¿½gales, faux sinon
 	 */
 	private boolean equals(Version v) {
 		return getNameTimestamp().equals(v.getNameTimestamp());

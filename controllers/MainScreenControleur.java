@@ -27,6 +27,7 @@ import com.jfoenix.controls.JFXSpinner;
 import application.Main;
 import code.barbot.Creneaux;
 import code.barbot.Parseur;
+import code.barbot.Creneaux.TYPE;
 import impl.org.controlsfx.autocompletion.AutoCompletionTextFieldBinding;
 import impl.org.controlsfx.autocompletion.SuggestionProvider;
 import javafx.event.ActionEvent;
@@ -79,8 +80,10 @@ import models.TimeTable;
 import models.TimeTableV2;
 import models.Version;
 import models.Version2;
+
 /**
  * Il s'agit du contrôleur principal de l'application
+ * 
  * @author Pionan
  *
  */
@@ -401,7 +404,7 @@ public class MainScreenControleur implements Initializable {
 
 		if (state != null) {
 			Version2 v2 = state.getRoot();
-			if(v2!=null)
+			if (v2 != null)
 				Version.loadRoot(Version2.toVersion(null, v2));
 			if (!state.getList().isEmpty()) {
 
@@ -784,6 +787,9 @@ public class MainScreenControleur implements Initializable {
 			list.add(b);
 		}
 
+		if (path == null)
+			return;
+
 		for (int i = 1; i < path.size(); i++) {
 			int index = 0;
 
@@ -820,10 +826,16 @@ public class MainScreenControleur implements Initializable {
 		color++;
 		TimeTable newTimeTable = new TimeTable(path.get(path.size() - 1), path.toString(), parseur.getTimeTable(),
 				TimeTable.TYPE.ADE_BASED);
+		Creneaux clone;
+
 		for (Creneaux c : newTimeTable.getCreneauxsList()) {
 			c.setParent(getSelectedTab().getAgenda().getparent());
 			c.withAppointmentGroup(new Agenda.AppointmentGroupImpl().withStyleClass("group" + color));
 
+			clone = (Creneaux) c.clone();
+			clone.setStatus(TYPE.Created);
+			getSelectedTab().getAgenda().getTimeTable().getCreneauxModified().add(clone);
+			System.out.println("ajouté par ade");
 		}
 		getSelectedTab().getAgenda().getTimeTable().getCreneauxsList().addAll(newTimeTable.getCreneauxsList());
 		getSelectedTab().getAgenda().refresh();
@@ -903,8 +915,7 @@ public class MainScreenControleur implements Initializable {
 	 * action graphique "menu" Lancer le selecteur de fichier pour choisir le
 	 * fichier
 	 *
-	 * @param event
-	 *            Evenement
+	 * @param event Evenement
 	 */
 	@FXML
 	public void open_file(ActionEvent event) {
@@ -922,11 +933,10 @@ public class MainScreenControleur implements Initializable {
 	}
 
 	/**
-	 * action graphique "menu" Lancer le sélecteur de fichier pour choisir le
-	 * chemin où nous allons enregistrer le fichier
+	 * action graphique "menu" Lancer le sélecteur de fichier pour choisir le chemin
+	 * où nous allons enregistrer le fichier
 	 *
-	 * @param event
-	 *            Evenement
+	 * @param event Evenement
 	 */
 	@FXML
 	public void save_file(ActionEvent event) {
@@ -945,8 +955,7 @@ public class MainScreenControleur implements Initializable {
 	/**
 	 * Afficher le popup de gestion des favoris
 	 *
-	 * @param ae
-	 *            ActionEvent
+	 * @param ae ActionEvent
 	 */
 
 	@FXML
@@ -1003,10 +1012,9 @@ public class MainScreenControleur implements Initializable {
 		return ((Tab) tabPaneV2.getSelectionModel().getSelectedItem()).getAgenda().getTimeTable()
 				.getCopiedCreneauxList();
 	}
-	
+
 	public ArrayList<Creneaux> getCreneauxModified() {
-		return ((Tab) tabPaneV2.getSelectionModel().getSelectedItem()).getAgenda().getTimeTable()
-				.getCreneauxModified();
+		return ((Tab) tabPaneV2.getSelectionModel().getSelectedItem()).getAgenda().getTimeTable().getCreneauxModified();
 	}
 
 	private String getFileName() {
@@ -1054,7 +1062,6 @@ public class MainScreenControleur implements Initializable {
 				JOptionPane.showMessageDialog(null, Constants.errSelect, Constants.errMssg, JOptionPane.ERROR_MESSAGE);
 			}
 
-
 		});
 
 		contextMenu.getItems().addAll(itemSelect, itemBranch);
@@ -1080,9 +1087,11 @@ public class MainScreenControleur implements Initializable {
 			try {
 				clearTabs();
 				Version.loadRoot(JsonFileManager.getInstance().loadVersion(fileChooser.getSelectedFile()));
-				JOptionPane.showMessageDialog(null, Constants.allRight, Constants.infoMssg, JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, Constants.allRight, Constants.infoMssg,
+						JOptionPane.INFORMATION_MESSAGE);
 			} catch (Exception excep) {
-				JOptionPane.showMessageDialog(null, Constants.errOpenVer+" : "+excep, Constants.errMssg, JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, Constants.errOpenVer + " : " + excep, Constants.errMssg,
+						JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
@@ -1093,12 +1102,13 @@ public class MainScreenControleur implements Initializable {
 			JFileChooser fileChooser = new JFileChooser(new File(Constants.REP_OPEN_FILECHOSER));
 
 			fileChooser.setDialogTitle(Constants.SAVE_VERSION);
-			//fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			// fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
 			if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
 				Version.saveRoot(fileChooser);
 		} catch (Exception excep) {
-			JOptionPane.showMessageDialog(null, Constants.errSaveVer+" : "+excep, Constants.errMssg, JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, Constants.errSaveVer + " : " + excep, Constants.errMssg,
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -1157,9 +1167,11 @@ public class MainScreenControleur implements Initializable {
 		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			try {
 				Version.loadBranch(JsonFileManager.getInstance().loadVersion(fileChooser.getSelectedFile()));
-				JOptionPane.showMessageDialog(null, Constants.allRight2, Constants.infoMssg, JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, Constants.allRight2, Constants.infoMssg,
+						JOptionPane.INFORMATION_MESSAGE);
 			} catch (Exception excep) {
-				JOptionPane.showMessageDialog(null, Constants.errOpenVer+" : "+excep, Constants.errMssg, JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, Constants.errOpenVer + " : " + excep, Constants.errMssg,
+						JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}

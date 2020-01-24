@@ -3,6 +3,8 @@ package models;
 import java.util.Date;
 import java.util.TreeSet;
 
+import code.barbot.Creneaux;
+
 /*
  * c'est la meme que la classe creneaux 
  * Pour satisfaire mes conditions de la bibliotheque jackson
@@ -21,11 +23,15 @@ public class CreneauxVersion2 {
 	public  int duree;
 	public  TreeSet<RoomV2> rooms;
 	public  Date startDate;
-	
+	public Creneaux.TYPE status = Creneaux.TYPE.NoChange;
 
 	
-	
-	
+	public void setStatus(Creneaux.TYPE status) {
+		this.status = status;
+	}
+	public Creneaux.TYPE getStatus() {
+		return status;
+	}
 	public void setNom(String nom) {
 		this.nom = nom;
 	}

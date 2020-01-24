@@ -98,6 +98,9 @@ public class PopUpController implements Initializable {
 						return;
 				}
 			}
+			Creneaux clone = (Creneaux) creneaux.clone();
+			clone.setStatus(TYPE.Deleted);
+			agenda.getTimeTable().getCreneauxModified().add(clone);
 
 			if (!cours.getText().equals(creneaux.getCours()))
 				creneaux.setCours(cours.getText());
@@ -119,9 +122,10 @@ public class PopUpController implements Initializable {
 			if (!end.getLocalDateTime().equals(creneaux.getEndLocalDateTime()))
 				creneaux.setEndLocalDateTime(end.getLocalDateTime());
 			
-			creneaux.status = TYPE.Modified;
-			agenda.getTimeTable().addCreneauModified(creneaux);
-
+			clone = (Creneaux) creneaux.clone();
+			clone.setStatus(TYPE.Modified);
+			agenda.getTimeTable().getCreneauxModified().add(clone);
+			System.out.println("modifié kura");
 		}
 
 		Stage stage = (Stage) save.getScene().getWindow();
@@ -150,11 +154,17 @@ public class PopUpController implements Initializable {
 	 */
 	public void delete() {
 		// agenda.appointments().remove(creneaux);
-		creneaux.status = TYPE.Delete;
-		agenda.getTimeTable().addCreneauModified(creneaux);
+		
+		
 		agenda.getTimeTable().getCreneauxsList().remove(creneaux);
 		creneaux.notify(new AgendaEvent(creneaux, AgendaEvent.TYPE.DELETE, creneaux, null));
 		// faire sï¿½r
+		
+		Creneaux clone = (Creneaux) creneaux.clone();
+		clone.setStatus(TYPE.Deleted);
+		agenda.getTimeTable().getCreneauxModified().add(clone);
+		System.out.println("supprimé kura");
+		
 		Stage stage = (Stage) save.getScene().getWindow();
 		stage.close();
 	}
