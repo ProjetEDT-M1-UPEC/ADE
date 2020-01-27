@@ -71,7 +71,7 @@ public class PopUpController implements Initializable {
 	}
 
 	/**
-	 * Sauvegarder la modification apportï¿½e ï¿½ un creneau
+	 * Sauvegarder la modification apportée à un creneau
 	 */
 	public void saveApt() {
 		// Kenza job ... extends Khaled job implemetns Lety job
@@ -158,12 +158,12 @@ public class PopUpController implements Initializable {
 		
 		agenda.getTimeTable().getCreneauxsList().remove(creneaux);
 		creneaux.notify(new AgendaEvent(creneaux, AgendaEvent.TYPE.DELETE, creneaux, null));
-		// faire sï¿½r
+		// faire savoir
 		
 		Creneaux clone = (Creneaux) creneaux.clone();
 		clone.setStatus(TYPE.Deleted);
 		agenda.getTimeTable().getCreneauxModified().add(clone);
-		System.out.println("supprimé kura");
+		//System.out.println("supprimé kura");
 		
 		Stage stage = (Stage) save.getScene().getWindow();
 		stage.close();

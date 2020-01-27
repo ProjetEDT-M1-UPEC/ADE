@@ -16,7 +16,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
 
 /**
- * Il s'agit d'une classe qui reprï¿½sente une version d'un emploi du temps de
+ * Il s'agit d'une classe qui représente une version d'un emploi du temps de
  * l'agenda
  *
  * @author Pionan
@@ -56,8 +56,8 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction prend en paramï¿½tre une Version et retourne la copie de
-	 * celle-ci pour obtenir une Version2 qui est par la suite utilisï¿½e pour la
+	 * Cette fonction prend en paramètre une Version et retourne la copie de
+	 * celle-ci pour obtenir une Version2 qui est par la suite utilisée pour la
 	 * sauvegarde
 	 *
 	 * @param v1 en Version
@@ -86,13 +86,13 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction crï¿½e une nouvelle version sous une version parente que l'on
-	 * rï¿½cupï¿½re
+	 * Cette fonction crée une nouvelle version sous une version parente que l'on
+	 * récupère
 	 *
 	 * @param value            Le nom de la nouvelle version
-	 * @param creneaux         La liste des crï¿½neaux de la nouvelle version
+	 * @param creneaux         La liste des créneaux de la nouvelle version
 	 * @param currentVersionId L'identifiant de la version parente
-	 * @return Renvoie l'identifiant de la nouvelle version crï¿½ï¿½e
+	 * @return Renvoie l'identifiant de la nouvelle version créée
 	 */
 
 	/**
@@ -124,8 +124,8 @@ public class Version {
 	}
 
 	/**
-	 * Cette mï¿½thode cherche une version ï¿½ l'aide de l'identifiant reprï¿½sentant son
-	 * nom avec sa date de crï¿½ation
+	 * Cette méthode cherche une version à l'aide de l'identifiant représentant son
+	 * nom avec sa date de création
 	 *
 	 * @param id L'identifiant de la version que l'on cherche est un String
 	 * @return Renvoie la version que l'on cherche
@@ -144,7 +144,7 @@ public class Version {
 	}
 
 	/**
-	 * Vï¿½rifie si l'identifiant est cohï¿½rent
+	 * Vérifie si l'identifiant est cohérent
 	 *
 	 * @see searchVersion
 	 * @param id L'identifiant de la version que l'on va chercher
@@ -222,8 +222,8 @@ public class Version {
 	}
 
 	/**
-	 * Cette mï¿½thode construit une TreeItem pour l'affichage de l'arborescence, le
-	 * parcours est rï¿½curssif
+	 * Cette méthode construit une TreeItem pour l'affichage de l'arborescence, le
+	 * parcours est récursif
 	 *
 	 * @return TreeItem
 	 */
@@ -240,7 +240,7 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction vï¿½rifie si l'arborescence est vide avant de retourner une
+	 * Cette fonction vérifie si l'arborescence est vide avant de retourner une
 	 * TreeItem
 	 *
 	 * @see toTreeItemString
@@ -254,7 +254,7 @@ public class Version {
 
 	/**
 	 *
-	 * @return Renvoie un boolean pour vï¿½rifier si l'arborescence est vide ou non
+	 * @return Renvoie un boolean pour vérifier si l'arborescence est vide ou non
 	 */
 	public static boolean rootIsEmpty() {
 		return rootVersion == null;
@@ -265,21 +265,21 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction crï¿½e une copie d'une version sans ses versions filles
+	 * Cette fonction crée une copie d'une version sans ses versions filles
 	 *
 	 * @param v Une version que l'on souhaite copier
-	 * @return Renvoie une copie simplifiï¿½e d'une version
+	 * @return Renvoie une copie simplifiée d'une version
 	 */
 	private static Version getSimpleCopiedVersion(Version v) {
 		return new Version(v.parent, v.timestamp, v.name, v.creneauxList);
 	}
 
 	/**
-	 * Cette fonction rï¿½cursive trouve le parent d'une version pour construire sa
+	 * Cette fonction récursive trouve le parent d'une version pour construire sa
 	 * branche d'origine
 	 *
-	 * @param wanted Une version sï¿½lectionnï¿½e
-	 * @return Renvoie la branche de la version sï¿½lectionnï¿½e
+	 * @param wanted Une version sélectionnée
+	 * @return Renvoie la branche de la version sélectionnée
 	 */
 	private static Version getSelectedBranch(Version wanted) {
 		if (wanted.parent == null)
@@ -290,11 +290,11 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction sauvegarde une branche sï¿½lectionnï¿½e ï¿½ partir d'un nï¿½ud de
+	 * Cette fonction sauvegarde une branche sélectionnée à partir d'un nœud de
 	 * version
 	 *
 	 * @param fileChooser est le chemin de sauvegarde
-	 * @param wanted      est la version sï¿½lectionnï¿½e
+	 * @param wanted      est la version sélectionnée
 	 */
 	public static void saveBranch(JFileChooser fileChooser, Version wanted) {
 		if (wanted == null)
@@ -318,7 +318,7 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction charge l'arborescence donnï¿½e en paramï¿½tre
+	 * Cette fonction charge l'arborescence donnée en paramètre
 	 *
 	 * @param v2 Version2
 	 */
@@ -328,9 +328,9 @@ public class Version {
 	}
 
 	/***
-	 * Cette fonction ajoute la branche ï¿½ l'arborescence
+	 * Cette fonction ajoute la branche à l'arborescence
 	 *
-	 * @param v2 Une branche rï¿½cupï¿½rï¿½e
+	 * @param v2 Une branche récupérée
 	 * @throws Exception
 	 */
 	public static void loadBranch(Version branch) throws Exception {
@@ -344,9 +344,9 @@ public class Version {
 	}
 
 	/***
-	 * Cette fonction rï¿½curssive cherche dans la Version current la prï¿½sence de la
-	 * version Branch et ajoute la branche une fois que la derniï¿½re Version en
-	 * commun a ï¿½tï¿½ trouvï¿½e
+	 * Cette fonction récursive  cherche dans la Version current la présence de la
+	 * version Branch et ajoute la branche une fois que la dernière Version en
+	 * commun a été trouvée
 	 *
 	 * @param current
 	 * @param branch
@@ -365,10 +365,10 @@ public class Version {
 	}
 
 	/**
-	 * Cette fonction sauvegarde l'ï¿½tat de l'arborescence pour la sauvegarde
+	 * Cette fonction sauvegarde l'état de l'arborescence pour la sauvegarde
 	 * automatique lorsque l'on quitte l'application
 	 *
-	 * @param state Reprï¿½sente l'ï¿½tat du systï¿½me actuel
+	 * @param state Représente l'état du système actuel
 	 */
 	public static void putRootInState(State state) {
 		if (!rootIsEmpty())
@@ -401,7 +401,7 @@ public class Version {
 
 	/**
 	 *
-	 * @return Renvoie la combinaison du nom avec la date de crï¿½ation d'une version
+	 * @return Renvoie la combinaison du nom avec la date de création d'une version
 	 */
 	public String getNameTimestamp() {
 		Date date = new Date(timestamp);
@@ -411,8 +411,8 @@ public class Version {
 	/***
 	 * Cette fonction compare l'identifiant de deux versions
 	 *
-	 * @param v Version comparï¿½e
-	 * @return Renvoie vrai si les deux versions sont ï¿½gales, faux sinon
+	 * @param v Version comparée
+	 * @return Renvoie vrai si les deux versions sont égales, faux sinon
 	 */
 	private boolean equals(Version v) {
 		return getNameTimestamp().equals(v.getNameTimestamp());

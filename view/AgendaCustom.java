@@ -94,7 +94,7 @@ public class AgendaCustom extends Agenda {
 				clone = (Creneaux) param.clone();
 				clone.setStatus(TYPE.Modified);
 				timeTable.getCreneauxModified().add(clone);
-				System.out.println("déplacé kura");
+				//System.out.println("déplacé kura");
 				
 				return null;
 			}
@@ -158,7 +158,7 @@ public class AgendaCustom extends Agenda {
 			Creneaux clone = (Creneaux) c.clone();
 			clone.setStatus(Creneaux.TYPE.Created);
 			getTimeTable().getCreneauxModified().add(clone);
-			System.out.println("ajouté kura");
+			//System.out.println("ajouté kura");
 			return c;
 		});
 
