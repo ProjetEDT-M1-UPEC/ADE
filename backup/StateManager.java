@@ -15,7 +15,11 @@ import javafx.scene.control.Tab;
 import models.State;
 import models.TimeTableV2;
 import models.Version;
-
+/***
+ * Cette classe sauvegarde l'état de l'application lorsque l'on la quitte et restaure l'état de l'application lorsque l'on la réouvre
+ * @author Pionan
+ *
+ */
 public class StateManager {
 
 	/**

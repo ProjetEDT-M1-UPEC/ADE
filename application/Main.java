@@ -15,7 +15,11 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import models.Constants;
 import backup.StateManager;
-
+/***
+ * Classe qui démarre l'application
+ * @author Pionan
+ *
+ */
 public class Main extends Application {
 
 	public final static String PROPERTY_FILE = "src/remember.properties";
