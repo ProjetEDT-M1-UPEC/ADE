@@ -95,10 +95,14 @@ public class Version {
 	 * @return Renvoie l'identifiant de la nouvelle version créée
 	 */
 
-	/**
+	/***
 	 * Pour effectuer notre test on creer un arbre en largeur avec la fonction
-	 * addnewVersion on pourra atteindre les 300000 version avant d'avoir l'erreur
-	 * outOfMemory
+	 * addnewVersion on pourra atteindre les 300000 version avant d'avoir l'erreur outOfMemory
+	 * 
+	 * @param value Nom de la nouvelle version
+	 * @param creneaux Liste des créneaux de la nouvelle version
+	 * @param currentVersionId Parent où ne version serait créée
+	 * @return Retourne l'identifiant de la nouvelle version si elle est créée
 	 */
 	public static String addNewVersion(String value, ArrayList<Creneaux> creneaux, String currentVersionId) {
 		String id = null;
@@ -307,8 +311,8 @@ public class Version {
 	/**
 	 * Cette fonction sauvegarde l'arborescence en cours
 	 *
-	 * @param fileChooser Contient le chemin dans lequel nous sauvegardons
-	 *                    l'arborescence
+	 * @param fileChooser Contient le chemin dans lequel nous sauvegardons l'arborescence
+	 *                    
 	 */
 	public static void saveRoot(JFileChooser fileChooser) {
 		if (rootIsEmpty())
@@ -320,7 +324,7 @@ public class Version {
 	/**
 	 * Cette fonction charge l'arborescence donnée en paramètre
 	 *
-	 * @param v2 Version2
+	 * @param v Version à charger
 	 */
 	public static void loadRoot(Version v) {
 		if (v != null)
@@ -330,8 +334,8 @@ public class Version {
 	/***
 	 * Cette fonction ajoute la branche à l'arborescence
 	 *
-	 * @param v2 Une branche récupérée
-	 * @throws Exception
+	 * @param branch Une branche récupérée
+	 * @throws Exception Envoyée lorsque la racine diffère
 	 */
 	public static void loadBranch(Version branch) throws Exception {
 		if (branch == null)
